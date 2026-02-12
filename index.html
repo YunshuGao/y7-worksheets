@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Year 7 Technology — Engineering Worksheets</title>
+<style>
+  :root {
+    --steel-blue: #2B5F8A;
+    --bright-orange: #E8712B;
+    --charcoal: #333333;
+    --light-grey: #F2F2F2;
+    --teal: #1A8A6E;
+    --white: #FFFFFF;
+    --dark-blue: #1A3D5C;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Calibri, 'Segoe UI', Arial, sans-serif;
+    background: var(--light-grey);
+    color: var(--charcoal);
+    line-height: 1.6;
+  }
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 24px 20px;
+  }
+  .header {
+    background: var(--steel-blue);
+    color: var(--white);
+    padding: 28px 32px;
+    border-radius: 10px;
+    margin-bottom: 24px;
+    text-align: center;
+  }
+  .header h1 { font-size: 24px; margin-bottom: 4px; }
+  .header p { font-size: 14px; opacity: 0.9; }
+  .phase {
+    margin-bottom: 20px;
+  }
+  .phase-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--steel-blue);
+    margin-bottom: 8px;
+    padding-left: 4px;
+  }
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  a.card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--white);
+    padding: 14px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--charcoal);
+    border-left: 5px solid var(--steel-blue);
+    transition: transform 0.15s, box-shadow 0.2s;
+  }
+  a.card:hover {
+    transform: translateX(4px);
+    box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+  }
+  .card .num {
+    background: var(--steel-blue);
+    color: var(--white);
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .card .title { font-size: 14px; font-weight: 600; }
+  .card .subtitle { font-size: 12px; color: #888; }
+
+  /* Phase colours */
+  .phase-design a.card { border-left-color: var(--bright-orange); }
+  .phase-design .num { background: var(--bright-orange); }
+  .phase-skills a.card { border-left-color: var(--teal); }
+  .phase-skills .num { background: var(--teal); }
+  .phase-bridge a.card { border-left-color: var(--dark-blue); }
+  .phase-bridge .num { background: var(--dark-blue); }
+
+  .footer {
+    text-align: center;
+    font-size: 11px;
+    color: #999;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #ddd;
+  }
+
+  @media (max-width: 500px) {
+    .container { padding: 12px; }
+    .header { padding: 20px 16px; }
+    .header h1 { font-size: 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>📐 Year 7 Technology Mandatory</h1>
+    <p>Engineering Technologies &amp; Systems — Bridge It</p>
+  </div>
+
+  <!-- Phase 1: Design Foundations -->
+  <div class="phase phase-design">
+    <div class="phase-title">Phase 1 — Design Foundations (Weeks 1–3)</div>
+    <div class="card-grid">
+      <a class="card" href="T1-L01-Worksheet.html">
+        <div class="num">01</div>
+        <div><div class="title">What is Technology Mandatory? / What is Design?</div></div>
+      </a>
+      <a class="card" href="T1-L02-Worksheet.html">
+        <div class="num">02</div>
+        <div><div class="title">Design Careers &amp; Elements of Design</div></div>
+      </a>
+      <a class="card" href="T1-L03-Worksheet.html">
+        <div class="num">03</div>
+        <div><div class="title">Principles of Design &amp; Characteristics</div></div>
+      </a>
+      <a class="card" href="T1-L04-Worksheet.html">
+        <div class="num">04</div>
+        <div><div class="title">Design Challenges — Circle, Texture &amp; Paper Boat</div></div>
+      </a>
+      <a class="card" href="T1-L05-Worksheet.html">
+        <div class="num">05</div>
+        <div><div class="title">Engineering Structures — Tower &amp; Phone Stand</div></div>
+      </a>
+      <a class="card" href="T1-L06-Worksheet.html">
+        <div class="num">06</div>
+        <div><div class="title">Marble Run &amp; Marble Maze Challenges</div></div>
+      </a>
+    </div>
+  </div>
+
+  <!-- Phase 2: Design Process & Skills -->
+  <div class="phase phase-skills">
+    <div class="phase-title">Phase 2 — Design Process &amp; Skills (Weeks 4–7)</div>
+    <div class="card-grid">
+      <a class="card" href="T1-L07-Worksheet.html">
+        <div class="num">07</div>
+        <div><div class="title">The Design Process</div></div>
+      </a>
+      <a class="card" href="T1-L08-Worksheet.html">
+        <div class="num">08</div>
+        <div><div class="title">Paper Boat No. 2 — Applying the Design Process</div></div>
+      </a>
+      <a class="card" href="T1-L09-Worksheet.html">
+        <div class="num">09</div>
+        <div><div class="title">Measurement &amp; Estimation</div></div>
+      </a>
+      <a class="card" href="T1-L10-Worksheet.html">
+        <div class="num">10</div>
+        <div><div class="title">Perimeter, Area, Volume &amp; Capacity</div></div>
+      </a>
+      <a class="card" href="T1-L11-Worksheet.html">
+        <div class="num">11</div>
+        <div><div class="title">Technical Lettering &amp; Scale</div></div>
+      </a>
+      <a class="card" href="T1-L12-Worksheet.html">
+        <div class="num">12</div>
+        <div><div class="title">Isometric Drawing</div></div>
+      </a>
+      <a class="card" href="T1-L13-Worksheet.html">
+        <div class="num">13</div>
+        <div><div class="title">Orthogonal (Multi-View) Drawing</div></div>
+      </a>
+      <a class="card" href="T1-L14-Worksheet.html">
+        <div class="num">14</div>
+        <div><div class="title">Colour in Design &amp; Digital File Types</div></div>
+      </a>
+      <a class="card" href="T1-L15-Worksheet.html">
+        <div class="num">15</div>
+        <div><div class="title">3D Shapes, Nets &amp; Freehand Sketching</div></div>
+      </a>
+    </div>
+  </div>
+
+  <!-- Phase 3: Bridge Project -->
+  <div class="phase phase-bridge">
+    <div class="phase-title">Phase 3 — Bridge Project (Weeks 8–10)</div>
+    <div class="card-grid">
+      <a class="card" href="T1-L16-Worksheet.html">
+        <div class="num">16</div>
+        <div><div class="title">Bridge Types &amp; Engineering Forces</div></div>
+      </a>
+      <a class="card" href="T1-L17-Worksheet.html">
+        <div class="num">17</div>
+        <div><div class="title">Bridge Design Brief &amp; Research</div></div>
+      </a>
+      <a class="card" href="T1-L18-Worksheet.html">
+        <div class="num">18</div>
+        <div><div class="title">Bridge Construction — Building Your Trusses</div></div>
+      </a>
+      <a class="card" href="T1-L19-Worksheet.html">
+        <div class="num">19</div>
+        <div><div class="title">Bridge Construction — Completion &amp; Test Prep</div></div>
+      </a>
+      <a class="card" href="T1-L20-Worksheet.html">
+        <div class="num">20</div>
+        <div><div class="title">Testing Day! Load Testing &amp; Evaluation</div></div>
+      </a>
+    </div>
+  </div>
+
+  <div class="footer">
+    Year 7 Technology Mandatory — Arthur Phillip High School — 2026
+  </div>
+
+</div>
+</body>
+</html>
