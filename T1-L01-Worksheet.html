@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T1-L01: What is Technology Mandatory? / What is Design?</title>
+<style>
+  /* ===== BLUEPRINT THEME ===== */
+  :root {
+    --steel-blue: #2B5F8A;
+    --bright-orange: #E8712B;
+    --charcoal: #333333;
+    --light-grey: #F2F2F2;
+    --teal: #1A8A6E;
+    --support-blue: #D6E8F7;
+    --extension-orange: #FDE8D0;
+    --white: #FFFFFF;
+    --dark-blue: #1A3D5C;
+    --mid-grey: #888888;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Calibri, 'Segoe UI', Arial, sans-serif;
+    font-size: 14px;
+    color: var(--charcoal);
+    background: var(--light-grey);
+    line-height: 1.5;
+  }
+
+  .worksheet {
+    max-width: 210mm;
+    margin: 20px auto;
+    background: var(--white);
+    padding: 28px 32px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: var(--steel-blue);
+    color: var(--white);
+    padding: 18px 24px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    right: -30px; top: -30px;
+    width: 120px; height: 120px;
+    background: var(--bright-orange);
+    border-radius: 50%;
+    opacity: 0.15;
+  }
+  .header h1 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 2px;
+    position: relative;
+    z-index: 1;
+  }
+  .header .subtitle {
+    font-size: 13px;
+    opacity: 0.9;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ===== STUDENT INFO BAR ===== */
+  .info-bar {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+    padding: 10px 14px;
+    background: var(--light-grey);
+    border-radius: 4px;
+    border-left: 4px solid var(--steel-blue);
+    align-items: center;
+  }
+  .info-bar label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--steel-blue);
+    white-space: nowrap;
+  }
+  .info-bar input {
+    border: none;
+    border-bottom: 1.5px solid var(--mid-grey);
+    background: transparent;
+    font-family: inherit;
+    font-size: 13px;
+    padding: 2px 4px;
+    width: 140px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .info-bar input:focus { border-bottom-color: var(--bright-orange); }
+  .info-group { display: flex; align-items: center; gap: 4px; }
+
+  /* ===== OUTCOME BADGES ===== */
+  .outcomes {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .outcomes span.label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--mid-grey);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .badge {
+    display: inline-block;
+    background: var(--dark-blue);
+    color: var(--white);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 12px;
+    letter-spacing: 0.3px;
+  }
+  .badge.folio {
+    background: var(--teal);
+  }
+
+  /* ===== SECTION HEADERS ===== */
+  .section {
+    margin-bottom: 18px;
+    page-break-inside: avoid;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .section-icon {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: var(--white);
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--dark-blue);
+  }
+
+  /* ===== LISC BOX ===== */
+  .lisc-box {
+    background: var(--light-grey);
+    border-radius: 6px;
+    padding: 14px 18px;
+    border-left: 4px solid var(--steel-blue);
+  }
+  .lisc-box .li-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--steel-blue);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+  .lisc-box .li-text {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  .lisc-box ul {
+    margin: 0;
+    padding-left: 20px;
+  }
+  .lisc-box ul li {
+    font-size: 13px;
+    margin-bottom: 3px;
+    color: var(--charcoal);
+  }
+  .lisc-box ul li::marker {
+    color: var(--bright-orange);
+  }
+
+  /* ===== DO NOW TABLE ===== */
+  .prompt-box {
+    background: var(--extension-orange);
+    border-radius: 4px;
+    padding: 10px 14px;
+    font-style: italic;
+    font-size: 14px;
+    margin-bottom: 10px;
+    border-left: 4px solid var(--bright-orange);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 6px;
+    font-size: 13px;
+  }
+  table th {
+    background: var(--steel-blue);
+    color: var(--white);
+    font-weight: 600;
+    font-size: 12px;
+    padding: 8px 10px;
+    text-align: left;
+    border: 1px solid var(--steel-blue);
+  }
+  table td {
+    padding: 4px 6px;
+    border: 1px solid #ccc;
+    vertical-align: top;
+  }
+  table td input,
+  table td textarea {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 13px;
+    padding: 4px 2px;
+    resize: vertical;
+    outline: none;
+    line-height: 1.4;
+  }
+  table td textarea { min-height: 32px; }
+
+  /* Row number column */
+  table td.row-num {
+    width: 28px;
+    text-align: center;
+    font-weight: 600;
+    color: var(--mid-grey);
+    background: var(--light-grey);
+  }
+
+  /* ===== VOCABULARY TABLE ===== */
+  .vocab-table th:first-child { width: 22%; }
+  .vocab-table .def-cell { font-size: 12px; color: var(--mid-grey); }
+  .vocab-table td.sentence-cell { background: var(--light-grey); }
+
+  /* ===== FOCUS AREAS GRID ===== */
+  .focus-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .focus-card {
+    border: 2px solid var(--steel-blue);
+    border-radius: 6px;
+    padding: 10px 12px;
+    background: var(--white);
+  }
+  .focus-card .fc-num {
+    display: inline-block;
+    background: var(--steel-blue);
+    color: var(--white);
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 22px;
+    margin-right: 6px;
+  }
+  .focus-card .fc-name {
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--dark-blue);
+  }
+  .focus-card textarea {
+    width: 100%;
+    margin-top: 6px;
+    border: 1.5px dashed var(--mid-grey);
+    border-radius: 4px;
+    padding: 6px 8px;
+    font-family: inherit;
+    font-size: 13px;
+    min-height: 36px;
+    resize: vertical;
+    outline: none;
+    background: var(--light-grey);
+  }
+  .focus-card textarea::placeholder { color: #aaa; font-style: italic; }
+  .focus-card textarea:focus { border-color: var(--bright-orange); background: var(--white); }
+
+  /* ===== WRITING AREA ===== */
+  .writing-area {
+    border: 2px solid var(--steel-blue);
+    border-radius: 6px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    background: var(--white);
+  }
+  .writing-area .wa-instructions {
+    font-size: 13px;
+    margin-bottom: 8px;
+    color: var(--charcoal);
+  }
+  .writing-area .wa-instructions ul {
+    padding-left: 18px;
+    margin-top: 4px;
+  }
+  .writing-area .wa-instructions li {
+    font-size: 13px;
+    margin-bottom: 2px;
+  }
+  .writing-area .wa-instructions li::marker { color: var(--bright-orange); }
+  .writing-area textarea {
+    width: 100%;
+    border: 1.5px dashed var(--mid-grey);
+    border-radius: 4px;
+    padding: 10px 12px;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.8;
+    min-height: 160px;
+    resize: vertical;
+    outline: none;
+    background: var(--light-grey);
+  }
+  .writing-area textarea::placeholder { color: #aaa; font-style: italic; }
+  .writing-area textarea:focus { border-color: var(--bright-orange); background: var(--white); }
+
+  /* ===== DIFFERENTIATION BLOCKS ===== */
+  .diff-block {
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+  }
+  .diff-block.support {
+    background: var(--support-blue);
+    border-left: 5px solid var(--steel-blue);
+  }
+  .diff-block.extension {
+    background: var(--extension-orange);
+    border-left: 5px solid var(--bright-orange);
+  }
+  .diff-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+  .diff-block.support .diff-label { color: var(--steel-blue); }
+  .diff-block.extension .diff-label { color: var(--bright-orange); }
+  .diff-block ol {
+    padding-left: 20px;
+    margin-bottom: 8px;
+  }
+  .diff-block li {
+    font-size: 13px;
+    margin-bottom: 3px;
+  }
+  .word-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+  }
+  .word-bank span {
+    background: var(--white);
+    border: 1px solid var(--steel-blue);
+    border-radius: 12px;
+    padding: 2px 10px;
+    font-size: 12px;
+    color: var(--dark-blue);
+  }
+  .diff-block textarea,
+  .diff-block input[type="text"] {
+    width: 100%;
+    border: 1.5px dashed rgba(0,0,0,0.2);
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-family: inherit;
+    font-size: 13px;
+    background: rgba(255,255,255,0.7);
+    outline: none;
+    resize: vertical;
+  }
+  .diff-block textarea:focus,
+  .diff-block input[type="text"]:focus {
+    border-color: var(--bright-orange);
+    background: var(--white);
+  }
+
+  /* ===== EXIT TICKET ===== */
+  .exit-question {
+    margin-bottom: 10px;
+  }
+  .exit-question .eq-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--dark-blue);
+    margin-bottom: 4px;
+  }
+  .exit-question textarea {
+    width: 100%;
+    border: 1.5px dashed var(--mid-grey);
+    border-radius: 4px;
+    padding: 8px 10px;
+    font-family: inherit;
+    font-size: 13px;
+    min-height: 40px;
+    resize: vertical;
+    outline: none;
+    background: var(--light-grey);
+  }
+  .exit-question textarea:focus { border-color: var(--bright-orange); background: var(--white); }
+
+  /* ===== SELF-ASSESSMENT ===== */
+  .self-assess table td {
+    text-align: center;
+    padding: 6px 8px;
+  }
+  .self-assess table td:first-child { text-align: left; }
+  .self-assess table td label {
+    cursor: pointer;
+    font-size: 18px;
+    opacity: 0.3;
+    transition: opacity 0.15s;
+  }
+  .self-assess table td input[type="radio"] { display: none; }
+  .self-assess table td input[type="radio"]:checked + label { opacity: 1; }
+  .self-assess table th.got { background: var(--teal); }
+  .self-assess table th.nearly { background: var(--bright-orange); }
+  .self-assess table th.need { background: var(--steel-blue); }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    text-align: center;
+    font-size: 11px;
+    color: var(--mid-grey);
+    padding-top: 12px;
+    border-top: 1px solid #ddd;
+    margin-top: 10px;
+  }
+
+  /* ===== SAVE BUTTON ===== */
+  .btn-bar {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin: 20px auto 10px;
+    max-width: 210mm;
+  }
+  .btn {
+    padding: 10px 28px;
+    border: none;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.2s;
+  }
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 3px 8px rgba(0,0,0,0.15); }
+  .btn-pdf {
+    background: var(--bright-orange);
+    color: var(--white);
+  }
+  .btn-clear {
+    background: var(--white);
+    color: var(--mid-grey);
+    border: 1.5px solid #ccc;
+  }
+  .save-indicator {
+    font-size: 11px;
+    color: var(--teal);
+    text-align: center;
+    margin-top: 4px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .save-indicator.show { opacity: 1; }
+
+  /* ===== DESIGN EVERYWHERE TABLE ===== */
+  .de-table td:first-child { width: 40%; }
+
+  /* ===== PRINT STYLES ===== */
+  @media print {
+    body { background: white; font-size: 12px; }
+    .worksheet {
+      max-width: 100%;
+      margin: 0;
+      padding: 14px 18px;
+      box-shadow: none;
+    }
+    .btn-bar, .save-indicator { display: none !important; }
+    .header { padding: 12px 16px; }
+    .header h1 { font-size: 16px; }
+    .section { page-break-inside: avoid; }
+    .writing-area textarea { min-height: 120px; }
+    textarea, input[type="text"] {
+      border: 1px solid #999 !important;
+      background: white !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .diff-block.support, .diff-block.extension,
+    .prompt-box, .lisc-box, .focus-card textarea,
+    table th, .badge, .section-icon, .info-bar {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .self-assess table td label { opacity: 0.2; }
+    .self-assess table td input[type="radio"]:checked + label { opacity: 1; }
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 600px) {
+    .worksheet { padding: 14px 12px; }
+    .info-bar { flex-direction: column; }
+    .focus-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== BUTTON BAR ===== -->
+<div class="btn-bar">
+  <button class="btn btn-pdf" onclick="handlePrint()" title="Opens print dialog — choose 'Save as PDF'">&#128438; Save as PDF</button>
+  <button class="btn btn-clear" onclick="handleClear()" title="Clear all your answers">&#128465; Clear All</button>
+</div>
+<div class="save-indicator" id="saveMsg">&#10003; Auto-saved</div>
+
+<!-- ===== WORKSHEET ===== -->
+<div class="worksheet" id="ws">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>T1-L01: What is Technology Mandatory? / What is Design?</h1>
+    <div class="subtitle">Year 7 Technology Mandatory &mdash; Engineering Technologies &amp; Systems &mdash; Bridge It</div>
+  </div>
+
+  <!-- STUDENT INFO -->
+  <div class="info-bar">
+    <div class="info-group"><label>Name:</label> <input type="text" id="f-name" placeholder="Your name" data-field="name"></div>
+    <div class="info-group"><label>Class:</label> <input type="text" id="f-class" placeholder="e.g. 7TECE" data-field="class" style="width:80px;"></div>
+    <div class="info-group"><label>Date:</label> <input type="text" id="f-date" placeholder="DD/MM/YYYY" data-field="date" style="width:100px;"></div>
+    <div class="info-group"><label>Folio:</label> <span style="font-size:13px;">pp. 4–6</span></div>
+  </div>
+
+  <!-- OUTCOMES -->
+  <div class="outcomes">
+    <span class="label">Outcomes:</span>
+    <span class="badge">TE4-PDP-01</span>
+    <span class="badge">TE4-DES-01</span>
+    <span class="badge folio">Folio pp. 4–6</span>
+  </div>
+
+  <!-- LISC -->
+  <div class="section">
+    <div class="lisc-box">
+      <div class="li-label">Learning Intention</div>
+      <div class="li-text">We are learning what Technology Mandatory is and developing our understanding of what design means.</div>
+      <div class="li-label">Success Criteria</div>
+      <ul>
+        <li>I can name the 4 focus areas of Technology Mandatory</li>
+        <li>I can explain what design means in my own words (min 5 sentences)</li>
+        <li>I can give 3 examples of designed products</li>
+        <li>I can identify design as problem-solving</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- DO NOW -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--bright-orange);">&#9998;</div>
+      <div class="section-title">Do Now</div>
+    </div>
+    <div class="prompt-box">Look around the room &mdash; name 3 things that were designed by someone.</div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:28px;">#</th>
+          <th style="width:32%;">Item</th>
+          <th style="width:32%;">Who designed it?</th>
+          <th>What problem does it solve?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="row-num">1</td>
+          <td><input type="text" data-field="dn-item1" placeholder="e.g. chair"></td>
+          <td><input type="text" data-field="dn-who1" placeholder="A furniture designer"></td>
+          <td><input type="text" data-field="dn-prob1" placeholder="Need a comfortable place to sit"></td>
+        </tr>
+        <tr>
+          <td class="row-num">2</td>
+          <td><input type="text" data-field="dn-item2" placeholder="e.g. phone"></td>
+          <td><input type="text" data-field="dn-who2" placeholder=""></td>
+          <td><input type="text" data-field="dn-prob2" placeholder=""></td>
+        </tr>
+        <tr>
+          <td class="row-num">3</td>
+          <td><input type="text" data-field="dn-item3" placeholder="e.g. bridge"></td>
+          <td><input type="text" data-field="dn-who3" placeholder=""></td>
+          <td><input type="text" data-field="dn-prob3" placeholder=""></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- KEY VOCABULARY -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--teal);">&#128218;</div>
+      <div class="section-title">Key Vocabulary</div>
+    </div>
+    <p style="font-size:12px;color:var(--mid-grey);margin-bottom:6px;">
+      <strong>Standard:</strong> Fill in the definition. &nbsp;|&nbsp;
+      <strong>Support:</strong> Definitions shown in grey &mdash; read and copy into your folio. &nbsp;|&nbsp;
+      <strong>Extension:</strong> Use each term in a sentence.
+    </p>
+    <table class="vocab-table">
+      <thead>
+        <tr>
+          <th>Term</th>
+          <th>Definition</th>
+          <th>Use in a sentence (Extension)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Technology</strong></td>
+          <td>
+            <span class="def-cell">Any tool, system, or process created to solve a problem</span><br>
+            <input type="text" data-field="vocab-def-1" placeholder="Write definition here (Standard)">
+          </td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-1" placeholder="Write a sentence using this term"></td>
+        </tr>
+        <tr>
+          <td><strong>Design</strong></td>
+          <td>
+            <span class="def-cell">The process of creating something to solve a problem or meet a need</span><br>
+            <input type="text" data-field="vocab-def-2" placeholder="Write definition here (Standard)">
+          </td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-2" placeholder="Write a sentence using this term"></td>
+        </tr>
+        <tr>
+          <td><strong>Designer</strong></td>
+          <td>
+            <span class="def-cell">A person who plans and creates solutions to problems</span><br>
+            <input type="text" data-field="vocab-def-3" placeholder="Write definition here (Standard)">
+          </td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-3" placeholder="Write a sentence using this term"></td>
+        </tr>
+        <tr>
+          <td><strong>Innovation</strong></td>
+          <td>
+            <span class="def-cell">A new idea, method, or product that improves on what existed before</span><br>
+            <input type="text" data-field="vocab-def-4" placeholder="Write definition here (Standard)">
+          </td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-4" placeholder="Write a sentence using this term"></td>
+        </tr>
+        <tr>
+          <td><strong>Solution</strong></td>
+          <td>
+            <span class="def-cell">An answer to a problem; something that fixes or improves a situation</span><br>
+            <input type="text" data-field="vocab-def-5" placeholder="Write definition here (Standard)">
+          </td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-5" placeholder="Write a sentence using this term"></td>
+        </tr>
+        <tr>
+          <td><strong>Problem-solving</strong></td>
+          <td>
+            <span class="def-cell">The process of finding answers to difficulties or challenges</span><br>
+            <input type="text" data-field="vocab-def-6" placeholder="Write definition here (Standard)">
+          </td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-6" placeholder="Write a sentence using this term"></td>
+        </tr>
+        <tr>
+          <td><strong>Focus area</strong></td>
+          <td>
+            <span class="def-cell">One of the 4 main topic areas in Technology Mandatory</span><br>
+            <input type="text" data-field="vocab-def-7" placeholder="Write definition here (Standard)">
+          </td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-7" placeholder="Write a sentence using this term"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 4 FOCUS AREAS -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--steel-blue);">&#9881;</div>
+      <div class="section-title">The 4 Focus Areas of Technology Mandatory</div>
+    </div>
+    <p style="font-size:13px;margin-bottom:8px;">Write <strong>one example</strong> of a product or project for each focus area.</p>
+    <div class="focus-grid">
+      <div class="focus-card">
+        <span class="fc-num">1</span><span class="fc-name">Digital &amp; Communication Technologies</span>
+        <textarea data-field="focus-1" placeholder="e.g. a website, an app, a game..."></textarea>
+      </div>
+      <div class="focus-card" style="border-color:var(--bright-orange);">
+        <span class="fc-num" style="background:var(--bright-orange);">2</span><span class="fc-name">Engineering Technologies &amp; Systems</span>
+        <textarea data-field="focus-2" placeholder="e.g. a bridge, a machine, a robot..."></textarea>
+      </div>
+      <div class="focus-card" style="border-color:var(--teal);">
+        <span class="fc-num" style="background:var(--teal);">3</span><span class="fc-name">Food &amp; Agricultural Practices</span>
+        <textarea data-field="focus-3" placeholder="e.g. a recipe, a farm system, food packaging..."></textarea>
+      </div>
+      <div class="focus-card" style="border-color:var(--charcoal);">
+        <span class="fc-num" style="background:var(--charcoal);">4</span><span class="fc-name">Materials &amp; Production Processes</span>
+        <textarea data-field="focus-4" placeholder="e.g. a chair, clothing, jewellery..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- CORE ACTIVITY: MY DEFINITION OF DESIGN -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--dark-blue);">&#9997;</div>
+      <div class="section-title">Activity: My Definition of Design (Folio p. 6)</div>
+    </div>
+    <div class="writing-area">
+      <div class="wa-instructions">
+        Write your <strong>own definition of &ldquo;design&rdquo;</strong> in at least <strong>5 sentences</strong>. Your definition should cover:
+        <ul>
+          <li>What design <strong>is</strong></li>
+          <li>What <strong>problem</strong> design solves</li>
+          <li>At least <strong>one real-world example</strong></li>
+          <li>Who <strong>designs</strong> things (types of designers)</li>
+          <li>Why design is <strong>important</strong></li>
+        </ul>
+      </div>
+      <textarea data-field="definition" placeholder="Design is..."></textarea>
+    </div>
+
+    <!-- SUPPORT -->
+    <div class="diff-block support">
+      <div class="diff-label">&#128309; Support &mdash; Sentence Starters</div>
+      <ol>
+        <li>&ldquo;Design is the process of&hellip;&rdquo;</li>
+        <li>&ldquo;Designers think about&hellip; when they create&hellip;&rdquo;</li>
+        <li>&ldquo;For example, a [type of designer] designs&hellip; to solve the problem of&hellip;&rdquo;</li>
+        <li>&ldquo;The design process involves&hellip;&rdquo;</li>
+        <li>&ldquo;Design is important because&hellip;&rdquo;</li>
+      </ol>
+      <div style="margin-top:6px;">
+        <div class="diff-label" style="margin-bottom:4px;">Word Bank</div>
+        <div class="word-bank">
+          <span>create</span><span>solve</span><span>problem</span><span>need</span>
+          <span>plan</span><span>sketch</span><span>improve</span><span>test</span>
+          <span>function</span><span>aesthetics</span><span>innovation</span><span>solution</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXTENSION -->
+    <div class="diff-block extension">
+      <div class="diff-label">&#128992; Extension &mdash; Famous Australian Designer</div>
+      <p style="font-size:13px;margin-bottom:8px;">Research one of these Australian designers: <strong>Jorn Utzon</strong>, <strong>Marc Newson</strong>, or <strong>Florence Broadhurst</strong>. Write a paragraph about their most impactful design and why it matters.</p>
+      <div style="display:flex;gap:10px;margin-bottom:8px;">
+        <div style="flex:1;"><label style="font-size:12px;font-weight:600;">Designer name:</label><br><input type="text" data-field="ext-designer" placeholder="e.g. Jorn Utzon"></div>
+        <div style="flex:1;"><label style="font-size:12px;font-weight:600;">Their design:</label><br><input type="text" data-field="ext-design" placeholder="e.g. Sydney Opera House"></div>
+      </div>
+      <textarea data-field="ext-para" placeholder="Write your paragraph here..." style="min-height:80px;"></textarea>
+    </div>
+  </div>
+
+  <!-- DESIGN IS EVERYWHERE -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--bright-orange);">&#127758;</div>
+      <div class="section-title">Design is Everywhere</div>
+    </div>
+    <p style="font-size:13px;margin-bottom:8px;">Think of 3 products you use every day. What problem does each one solve?</p>
+    <table class="de-table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>What problem does it solve?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><input type="text" data-field="de-prod1" placeholder="e.g. school bag"></td>
+          <td><input type="text" data-field="de-prob1" placeholder="Carrying books and supplies to school"></td>
+        </tr>
+        <tr>
+          <td><input type="text" data-field="de-prod2" placeholder=""></td>
+          <td><input type="text" data-field="de-prob2" placeholder=""></td>
+        </tr>
+        <tr>
+          <td><input type="text" data-field="de-prod3" placeholder=""></td>
+          <td><input type="text" data-field="de-prob3" placeholder=""></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- EXIT TICKET -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--teal);">&#127915;</div>
+      <div class="section-title">Exit Ticket &mdash; Reflection</div>
+    </div>
+    <div class="exit-question">
+      <div class="eq-label">1. Name one thing you learned about design today.</div>
+      <textarea data-field="exit-1" placeholder="Today I learned that..."></textarea>
+    </div>
+    <div class="exit-question">
+      <div class="eq-label">2. Give one example of a designed product and the problem it solves.</div>
+      <textarea data-field="exit-2" placeholder="For example..."></textarea>
+    </div>
+    <div class="exit-question">
+      <div class="eq-label">3. Which of the 4 focus areas are you most excited about? Why?</div>
+      <textarea data-field="exit-3" placeholder="I am most excited about..."></textarea>
+    </div>
+  </div>
+
+  <!-- SELF-ASSESSMENT -->
+  <div class="section self-assess">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--dark-blue);">&#9989;</div>
+      <div class="section-title">Self-Assessment</div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:55%;">Success Criteria</th>
+          <th class="got" style="width:15%;">Got it &#128994;</th>
+          <th class="nearly" style="width:15%;">Nearly there &#128992;</th>
+          <th class="need" style="width:15%;">Need help &#128308;</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="text-align:left;">I can name the 4 focus areas of Technology Mandatory</td>
+          <td><input type="radio" name="sa1" id="sa1a" value="got" data-field="sa1"><label for="sa1a">&#9679;</label></td>
+          <td><input type="radio" name="sa1" id="sa1b" value="nearly" data-field="sa1"><label for="sa1b">&#9679;</label></td>
+          <td><input type="radio" name="sa1" id="sa1c" value="need" data-field="sa1"><label for="sa1c">&#9679;</label></td>
+        </tr>
+        <tr>
+          <td style="text-align:left;">I can explain what design means in my own words (min 5 sentences)</td>
+          <td><input type="radio" name="sa2" id="sa2a" value="got" data-field="sa2"><label for="sa2a">&#9679;</label></td>
+          <td><input type="radio" name="sa2" id="sa2b" value="nearly" data-field="sa2"><label for="sa2b">&#9679;</label></td>
+          <td><input type="radio" name="sa2" id="sa2c" value="need" data-field="sa2"><label for="sa2c">&#9679;</label></td>
+        </tr>
+        <tr>
+          <td style="text-align:left;">I can give 3 examples of designed products</td>
+          <td><input type="radio" name="sa3" id="sa3a" value="got" data-field="sa3"><label for="sa3a">&#9679;</label></td>
+          <td><input type="radio" name="sa3" id="sa3b" value="nearly" data-field="sa3"><label for="sa3b">&#9679;</label></td>
+          <td><input type="radio" name="sa3" id="sa3c" value="need" data-field="sa3"><label for="sa3c">&#9679;</label></td>
+        </tr>
+        <tr>
+          <td style="text-align:left;">I can identify design as problem-solving</td>
+          <td><input type="radio" name="sa4" id="sa4a" value="got" data-field="sa4"><label for="sa4a">&#9679;</label></td>
+          <td><input type="radio" name="sa4" id="sa4b" value="nearly" data-field="sa4"><label for="sa4b">&#9679;</label></td>
+          <td><input type="radio" name="sa4" id="sa4c" value="need" data-field="sa4"><label for="sa4c">&#9679;</label></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    T1-L01 &mdash; Year 7 Technology Mandatory &mdash; Engineering Technologies &amp; Systems &mdash; Bridge It
+  </div>
+
+</div><!-- /worksheet -->
+
+<!-- ===== JAVASCRIPT ===== -->
+<script>
+(function() {
+  'use strict';
+
+  const STORAGE_KEY = 'T1-L01-Worksheet';
+  const saveMsg = document.getElementById('saveMsg');
+  let saveTimer = null;
+
+  // ---- Auto-save to localStorage ----
+  function saveAll() {
+    const data = {};
+    // Text inputs and textareas
+    document.querySelectorAll('[data-field]').forEach(function(el) {
+      if (el.type === 'radio') {
+        if (el.checked) data[el.name] = el.value;
+      } else {
+        data[el.getAttribute('data-field')] = el.value;
+      }
+    });
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      showSaved();
+    } catch(e) { /* localStorage full or blocked */ }
+  }
+
+  function showSaved() {
+    saveMsg.classList.add('show');
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function() { saveMsg.classList.remove('show'); }, 1500);
+  }
+
+  // ---- Load from localStorage ----
+  function loadAll() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const data = JSON.parse(raw);
+
+      // Text inputs and textareas
+      document.querySelectorAll('input[data-field]:not([type=radio]), textarea[data-field]').forEach(function(el) {
+        const key = el.getAttribute('data-field');
+        if (data[key] !== undefined) el.value = data[key];
+      });
+
+      // Radio buttons
+      ['sa1','sa2','sa3','sa4'].forEach(function(name) {
+        if (data[name]) {
+          const radio = document.querySelector('input[name="'+name+'"][value="'+data[name]+'"]');
+          if (radio) radio.checked = true;
+        }
+      });
+    } catch(e) { /* bad data, ignore */ }
+  }
+
+  // ---- Attach listeners ----
+  document.querySelectorAll('input[data-field], textarea[data-field]').forEach(function(el) {
+    el.addEventListener('input', debounce(saveAll, 500));
+    el.addEventListener('change', saveAll);
+  });
+
+  function debounce(fn, ms) {
+    let t;
+    return function() { clearTimeout(t); t = setTimeout(fn, ms); };
+  }
+
+  // ---- Print / Save as PDF ----
+  window.handlePrint = function() {
+    saveAll(); // save before printing
+    window.print();
+  };
+
+  // ---- Clear all ----
+  window.handleClear = function() {
+    if (!confirm('Clear all your answers? This cannot be undone.')) return;
+    document.querySelectorAll('input[data-field]:not([type=radio]), textarea[data-field]').forEach(function(el) {
+      el.value = '';
+    });
+    document.querySelectorAll('input[type=radio]').forEach(function(el) {
+      el.checked = false;
+    });
+    localStorage.removeItem(STORAGE_KEY);
+  };
+
+  // ---- Init ----
+  loadAll();
+})();
+</script>
+
+</body>
+</html>

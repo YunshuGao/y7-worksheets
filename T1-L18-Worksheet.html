@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T1-L18: Bridge Construction &mdash; Building Your Trusses</title>
+<style>
+
+  /* ===== BLUEPRINT THEME ===== */
+  :root {
+    --steel-blue: #2B5F8A;
+    --bright-orange: #E8712B;
+    --charcoal: #333333;
+    --light-grey: #F2F2F2;
+    --teal: #1A8A6E;
+    --support-blue: #D6E8F7;
+    --extension-orange: #FDE8D0;
+    --white: #FFFFFF;
+    --dark-blue: #1A3D5C;
+    --mid-grey: #888888;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Calibri, 'Segoe UI', Arial, sans-serif;
+    font-size: 14px;
+    color: var(--charcoal);
+    background: var(--light-grey);
+    line-height: 1.5;
+  }
+
+  .worksheet {
+    max-width: 210mm;
+    margin: 20px auto;
+    background: var(--white);
+    padding: 28px 32px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: var(--steel-blue);
+    color: var(--white);
+    padding: 18px 24px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    right: -30px; top: -30px;
+    width: 120px; height: 120px;
+    background: var(--bright-orange);
+    border-radius: 50%;
+    opacity: 0.15;
+  }
+  .header h1 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 2px;
+    position: relative;
+    z-index: 1;
+  }
+  .header .subtitle {
+    font-size: 13px;
+    opacity: 0.9;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ===== STUDENT INFO BAR ===== */
+  .info-bar {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+    padding: 10px 14px;
+    background: var(--light-grey);
+    border-radius: 4px;
+    border-left: 4px solid var(--steel-blue);
+    align-items: center;
+  }
+  .info-bar label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--steel-blue);
+    white-space: nowrap;
+  }
+  .info-bar input {
+    border: none;
+    border-bottom: 1.5px solid var(--mid-grey);
+    background: transparent;
+    font-family: inherit;
+    font-size: 13px;
+    padding: 2px 4px;
+    width: 140px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .info-bar input:focus { border-bottom-color: var(--bright-orange); }
+  .info-group { display: flex; align-items: center; gap: 4px; }
+
+  /* ===== OUTCOME BADGES ===== */
+  .outcomes {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .outcomes span.label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--mid-grey);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .badge {
+    display: inline-block;
+    background: var(--dark-blue);
+    color: var(--white);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 12px;
+    letter-spacing: 0.3px;
+  }
+  .badge.folio {
+    background: var(--teal);
+  }
+
+  /* ===== SECTION HEADERS ===== */
+  .section {
+    margin-bottom: 18px;
+    page-break-inside: avoid;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .section-icon {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: var(--white);
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--dark-blue);
+  }
+
+  /* ===== LISC BOX ===== */
+  .lisc-box {
+    background: var(--light-grey);
+    border-radius: 6px;
+    padding: 14px 18px;
+    border-left: 4px solid var(--steel-blue);
+  }
+  .lisc-box .li-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--steel-blue);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+  .lisc-box .li-text {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  .lisc-box ul {
+    margin: 0;
+    padding-left: 20px;
+  }
+  .lisc-box ul li {
+    font-size: 13px;
+    margin-bottom: 3px;
+    color: var(--charcoal);
+  }
+  .lisc-box ul li::marker {
+    color: var(--bright-orange);
+  }
+
+  /* ===== DO NOW TABLE ===== */
+  .prompt-box {
+    background: var(--extension-orange);
+    border-radius: 4px;
+    padding: 10px 14px;
+    font-style: italic;
+    font-size: 14px;
+    margin-bottom: 10px;
+    border-left: 4px solid var(--bright-orange);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 6px;
+    font-size: 13px;
+  }
+  table th {
+    background: var(--steel-blue);
+    color: var(--white);
+    font-weight: 600;
+    font-size: 12px;
+    padding: 8px 10px;
+    text-align: left;
+    border: 1px solid var(--steel-blue);
+  }
+  table td {
+    padding: 4px 6px;
+    border: 1px solid #ccc;
+    vertical-align: top;
+  }
+  table td input,
+  table td textarea {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 13px;
+    padding: 4px 2px;
+    resize: vertical;
+    outline: none;
+    line-height: 1.4;
+  }
+  table td textarea { min-height: 32px; }
+
+  /* Row number column */
+  table td.row-num {
+    width: 28px;
+    text-align: center;
+    font-weight: 600;
+    color: var(--mid-grey);
+    background: var(--light-grey);
+  }
+
+  /* ===== VOCABULARY TABLE ===== */
+  .vocab-table th:first-child { width: 22%; }
+  .vocab-table .def-cell { font-size: 12px; color: var(--mid-grey); }
+  .vocab-table td.sentence-cell { background: var(--light-grey); }
+
+  /* ===== FOCUS AREAS GRID ===== */
+  .focus-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .focus-card {
+    border: 2px solid var(--steel-blue);
+    border-radius: 6px;
+    padding: 10px 12px;
+    background: var(--white);
+  }
+  .focus-card .fc-num {
+    display: inline-block;
+    background: var(--steel-blue);
+    color: var(--white);
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 22px;
+    margin-right: 6px;
+  }
+  .focus-card .fc-name {
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--dark-blue);
+  }
+  .focus-card textarea {
+    width: 100%;
+    margin-top: 6px;
+    border: 1.5px dashed var(--mid-grey);
+    border-radius: 4px;
+    padding: 6px 8px;
+    font-family: inherit;
+    font-size: 13px;
+    min-height: 36px;
+    resize: vertical;
+    outline: none;
+    background: var(--light-grey);
+  }
+  .focus-card textarea::placeholder { color: #aaa; font-style: italic; }
+  .focus-card textarea:focus { border-color: var(--bright-orange); background: var(--white); }
+
+  /* ===== WRITING AREA ===== */
+  .writing-area {
+    border: 2px solid var(--steel-blue);
+    border-radius: 6px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    background: var(--white);
+  }
+  .writing-area .wa-instructions {
+    font-size: 13px;
+    margin-bottom: 8px;
+    color: var(--charcoal);
+  }
+  .writing-area .wa-instructions ul {
+    padding-left: 18px;
+    margin-top: 4px;
+  }
+  .writing-area .wa-instructions li {
+    font-size: 13px;
+    margin-bottom: 2px;
+  }
+  .writing-area .wa-instructions li::marker { color: var(--bright-orange); }
+  .writing-area textarea {
+    width: 100%;
+    border: 1.5px dashed var(--mid-grey);
+    border-radius: 4px;
+    padding: 10px 12px;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.8;
+    min-height: 160px;
+    resize: vertical;
+    outline: none;
+    background: var(--light-grey);
+  }
+  .writing-area textarea::placeholder { color: #aaa; font-style: italic; }
+  .writing-area textarea:focus { border-color: var(--bright-orange); background: var(--white); }
+
+  /* ===== DIFFERENTIATION BLOCKS ===== */
+  .diff-block {
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+  }
+  .diff-block.support {
+    background: var(--support-blue);
+    border-left: 5px solid var(--steel-blue);
+  }
+  .diff-block.extension {
+    background: var(--extension-orange);
+    border-left: 5px solid var(--bright-orange);
+  }
+  .diff-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+  .diff-block.support .diff-label { color: var(--steel-blue); }
+  .diff-block.extension .diff-label { color: var(--bright-orange); }
+  .diff-block ol {
+    padding-left: 20px;
+    margin-bottom: 8px;
+  }
+  .diff-block li {
+    font-size: 13px;
+    margin-bottom: 3px;
+  }
+  .word-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+  }
+  .word-bank span {
+    background: var(--white);
+    border: 1px solid var(--steel-blue);
+    border-radius: 12px;
+    padding: 2px 10px;
+    font-size: 12px;
+    color: var(--dark-blue);
+  }
+  .diff-block textarea,
+  .diff-block input[type="text"] {
+    width: 100%;
+    border: 1.5px dashed rgba(0,0,0,0.2);
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-family: inherit;
+    font-size: 13px;
+    background: rgba(255,255,255,0.7);
+    outline: none;
+    resize: vertical;
+  }
+  .diff-block textarea:focus,
+  .diff-block input[type="text"]:focus {
+    border-color: var(--bright-orange);
+    background: var(--white);
+  }
+
+  /* ===== EXIT TICKET ===== */
+  .exit-question {
+    margin-bottom: 10px;
+  }
+  .exit-question .eq-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--dark-blue);
+    margin-bottom: 4px;
+  }
+  .exit-question textarea {
+    width: 100%;
+    border: 1.5px dashed var(--mid-grey);
+    border-radius: 4px;
+    padding: 8px 10px;
+    font-family: inherit;
+    font-size: 13px;
+    min-height: 40px;
+    resize: vertical;
+    outline: none;
+    background: var(--light-grey);
+  }
+  .exit-question textarea:focus { border-color: var(--bright-orange); background: var(--white); }
+
+  /* ===== SELF-ASSESSMENT ===== */
+  .self-assess table td {
+    text-align: center;
+    padding: 6px 8px;
+  }
+  .self-assess table td:first-child { text-align: left; }
+  .self-assess table td label {
+    cursor: pointer;
+    font-size: 18px;
+    opacity: 0.3;
+    transition: opacity 0.15s;
+  }
+  .self-assess table td input[type="radio"] { display: none; }
+  .self-assess table td input[type="radio"]:checked + label { opacity: 1; }
+  .self-assess table th.got { background: var(--teal); }
+  .self-assess table th.nearly { background: var(--bright-orange); }
+  .self-assess table th.need { background: var(--steel-blue); }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    text-align: center;
+    font-size: 11px;
+    color: var(--mid-grey);
+    padding-top: 12px;
+    border-top: 1px solid #ddd;
+    margin-top: 10px;
+  }
+
+  /* ===== SAVE BUTTON ===== */
+  .btn-bar {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin: 20px auto 10px;
+    max-width: 210mm;
+  }
+  .btn {
+    padding: 10px 28px;
+    border: none;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.2s;
+  }
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 3px 8px rgba(0,0,0,0.15); }
+  .btn-pdf {
+    background: var(--bright-orange);
+    color: var(--white);
+  }
+  .btn-clear {
+    background: var(--white);
+    color: var(--mid-grey);
+    border: 1.5px solid #ccc;
+  }
+  .save-indicator {
+    font-size: 11px;
+    color: var(--teal);
+    text-align: center;
+    margin-top: 4px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .save-indicator.show { opacity: 1; }
+
+  /* ===== DESIGN EVERYWHERE TABLE ===== */
+  .de-table td:first-child { width: 40%; }
+
+  /* ===== PRINT STYLES ===== */
+  @media print {
+    body { background: white; font-size: 12px; }
+    .worksheet {
+      max-width: 100%;
+      margin: 0;
+      padding: 14px 18px;
+      box-shadow: none;
+    }
+    .btn-bar, .save-indicator { display: none !important; }
+    .header { padding: 12px 16px; }
+    .header h1 { font-size: 16px; }
+    .section { page-break-inside: avoid; }
+    .writing-area textarea { min-height: 120px; }
+    textarea, input[type="text"] {
+      border: 1px solid #999 !important;
+      background: white !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .diff-block.support, .diff-block.extension,
+    .prompt-box, .lisc-box, .focus-card textarea,
+    table th, .badge, .section-icon, .info-bar {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .self-assess table td label { opacity: 0.2; }
+    .self-assess table td input[type="radio"]:checked + label { opacity: 1; }
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 600px) {
+    .worksheet { padding: 14px 12px; }
+    .info-bar { flex-direction: column; }
+    .focus-grid { grid-template-columns: 1fr; }
+  }
+
+</style>
+</head>
+<body>
+<div class="btn-bar">
+  <button class="btn btn-pdf" onclick="handlePrint()" title="Opens print dialog — choose 'Save as PDF'">&#128438; Save as PDF</button>
+  <button class="btn btn-clear" onclick="handleClear()" title="Clear all your answers">&#128465; Clear All</button>
+</div>
+<div class="save-indicator" id="saveMsg">&#10003; Auto-saved</div>
+
+<div class="worksheet" id="ws">
+  <div class="header">
+    <h1>T1-L18: Bridge Construction &mdash; Building Your Trusses</h1>
+    <div class="subtitle">Year 7 Technology Mandatory &mdash; Engineering Technologies &amp; Systems &mdash; Bridge It</div>
+  </div>
+
+  <div class="info-bar">
+    <div class="info-group"><label>Name:</label> <input type="text" id="f-name" placeholder="Your name" data-field="name"></div>
+    <div class="info-group"><label>Class:</label> <input type="text" id="f-class" placeholder="e.g. 7TECE" data-field="class" style="width:80px;"></div>
+    <div class="info-group"><label>Date:</label> <input type="text" id="f-date" placeholder="DD/MM/YYYY" data-field="date" style="width:100px;"></div>
+    <div class="info-group"><label>Folio:</label> <span style="font-size:13px;">pp. 76–78</span></div>
+  </div>
+
+  <div class="outcomes">
+    <span class="label">Outcomes:</span>
+    <span class="badge">TE4-SAF-01</span>
+    <span class="badge">TE4-PPM-01</span>
+    <span class="badge">TE4-MSC-01</span>
+    <span class="badge folio">Folio pp. 76–78</span>
+  </div>
+
+  <div class="section">
+    <div class="lisc-box">
+      <div class="li-label">Learning Intention</div>
+      <div class="li-text">We are learning to construct our bridge using safe techniques and the design process.</div>
+      <div class="li-label">Success Criteria</div>
+      <ul>
+        <li>I can safely use craft sticks and PVA glue</li>
+        <li>I can build two identical side trusses</li>
+        <li>I can use triangulation in my bridge structure</li>
+        <li>I can document my construction progress</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--bright-orange);">&#9998;</div>
+      <div class="section-title">Do Now</div>
+    </div>
+    <div class="prompt-box">WHS Safety Briefing &mdash; Read the 5 safety rules below and explain why each is important.</div>
+    <table>
+      <thead><tr><th style="width:28px;">Rule #</th><th style="width:45%;">Safety Rule</th><th>Why is this important?</th></tr></thead>
+      <tbody>
+        <tr><td class="row-num">1</td><td>PVA glue on skin &mdash; wash immediately</td><td><input type="text" data-field="l18-dn-rule1" placeholder="Because..."></td></tr>
+        <tr><td class="row-num">2</td><td>Craft knives only with teacher permission</td><td><input type="text" data-field="l18-dn-rule2" placeholder="Because..."></td></tr>
+        <tr><td class="row-num">3</td><td>Workspace clean and organised</td><td><input type="text" data-field="l18-dn-rule3" placeholder="Because..."></td></tr>
+        <tr><td class="row-num">4</td><td>No eating or drinking near materials</td><td><input type="text" data-field="l18-dn-rule4" placeholder="Because..."></td></tr>
+        <tr><td class="row-num">5</td><td>Report all accidents to teacher</td><td><input type="text" data-field="l18-dn-rule5" placeholder="Because..."></td></tr>
+      </tbody></table>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--teal);">&#128218;</div>
+      <div class="section-title">Key Vocabulary</div>
+    </div>
+    <p style="font-size:12px;color:var(--mid-grey);margin-bottom:6px;">
+      <strong>Standard:</strong> Fill in the definition. &nbsp;|&nbsp;
+      <strong>Support:</strong> Definitions shown in grey &mdash; read and copy into your folio. &nbsp;|&nbsp;
+      <strong>Extension:</strong> Use each term in a sentence.
+    </p>
+    <table class="vocab-table">
+      <thead><tr><th>Term</th><th>Definition</th><th>Use in a sentence (Extension)</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Truss</strong></td>
+          <td><span class="def-cell">A rigid framework of members using triangles to distribute load</span><br>
+            <input type="text" data-field="vocab-def-1" placeholder="Write definition here (Standard)"></td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-1" placeholder="Write a sentence using this term"></td>
+        </tr>
+        <tr>
+          <td><strong>Member</strong></td>
+          <td><span class="def-cell">A single structural element &mdash; one craft stick</span><br>
+            <input type="text" data-field="vocab-def-2" placeholder="Write definition here (Standard)"></td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-2" placeholder="Write a sentence using this term"></td>
+        </tr>
+        <tr>
+          <td><strong>Joint</strong></td>
+          <td><span class="def-cell">A point where two or more members connect &mdash; a glued overlap</span><br>
+            <input type="text" data-field="vocab-def-3" placeholder="Write definition here (Standard)"></td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-3" placeholder="Write a sentence using this term"></td>
+        </tr>
+        <tr>
+          <td><strong>Cross-brace</strong></td>
+          <td><span class="def-cell">A short member connecting two parallel trusses to prevent twisting</span><br>
+            <input type="text" data-field="vocab-def-4" placeholder="Write definition here (Standard)"></td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-4" placeholder="Write a sentence using this term"></td>
+        </tr>
+        <tr>
+          <td><strong>Deck</strong></td>
+          <td><span class="def-cell">The flat surface on top where load sits &mdash; the road surface</span><br>
+            <input type="text" data-field="vocab-def-5" placeholder="Write definition here (Standard)"></td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-5" placeholder="Write a sentence using this term"></td>
+        </tr>
+        <tr>
+          <td><strong>Alignment</strong></td>
+          <td><span class="def-cell">Making sure both side trusses are identical in shape and size</span><br>
+            <input type="text" data-field="vocab-def-6" placeholder="Write definition here (Standard)"></td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-6" placeholder="Write a sentence using this term"></td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--steel-blue);">&#9989;</div>
+      <div class="section-title">Activity 1: Safety Acknowledgement (Folio p. 76)</div>
+    </div>
+    <p style="font-size:13px;margin-bottom:8px;">Read each safety rule carefully. Tick to confirm you understand and will follow it.</p>
+    <table>
+      <thead><tr><th style="width:5%;">&#10004;</th><th style="width:50%;">Safety Rule</th><th>I understand and will follow this rule</th></tr></thead>
+      <tbody>
+        <tr><td style="text-align:center;"><input type="checkbox" data-field="l18-safe1"></td><td>PVA glue on skin &mdash; wash immediately with water</td><td style="font-size:12px;color:var(--mid-grey);">Tick to confirm</td></tr>
+        <tr><td style="text-align:center;"><input type="checkbox" data-field="l18-safe2"></td><td>Craft knives only with teacher permission and supervision</td><td style="font-size:12px;color:var(--mid-grey);">Tick to confirm</td></tr>
+        <tr><td style="text-align:center;"><input type="checkbox" data-field="l18-safe3"></td><td>Keep workspace clean and organised at all times</td><td style="font-size:12px;color:var(--mid-grey);">Tick to confirm</td></tr>
+        <tr><td style="text-align:center;"><input type="checkbox" data-field="l18-safe4"></td><td>No eating or drinking near materials</td><td style="font-size:12px;color:var(--mid-grey);">Tick to confirm</td></tr>
+        <tr><td style="text-align:center;"><input type="checkbox" data-field="l18-safe5"></td><td>Report all accidents to teacher immediately</td><td style="font-size:12px;color:var(--mid-grey);">Tick to confirm</td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:8px;">
+      <label style="font-size:12px;font-weight:600;">Student signature (type your name):</label>
+      <input type="text" data-field="l18-safe-sign" placeholder="Type your full name to confirm" style="width:60%;">
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--teal);">&#128221;</div>
+      <div class="section-title">Activity 2: Build Sequence Overview (Folio p. 76)</div>
+    </div>
+    <p style="font-size:13px;margin-bottom:8px;">Your bridge will be built over multiple lessons. Here are the 5 key steps:</p>
+    <table>
+      <thead><tr><th style="width:28px;">Step</th><th style="width:50%;">Build Stage</th><th>Does this apply today?</th></tr></thead>
+      <tbody>
+        <tr><td class="row-num">1</td><td>Build 2 side trusses (flat on desk)</td><td><input type="text" data-field="l18-seq1" placeholder="Yes / No / Partially" style="width:100%;"></td></tr>
+        <tr><td class="row-num">2</td><td>Let trusses dry completely</td><td><input type="text" data-field="l18-seq2" placeholder="Yes / No / Partially" style="width:100%;"></td></tr>
+        <tr><td class="row-num">3</td><td>Stand up trusses and add cross-bracing</td><td><input type="text" data-field="l18-seq3" placeholder="Yes / No / Partially" style="width:100%;"></td></tr>
+        <tr><td class="row-num">4</td><td>Add deck on top</td><td><input type="text" data-field="l18-seq4" placeholder="Yes / No / Partially" style="width:100%;"></td></tr>
+        <tr><td class="row-num">5</td><td>Let dry and prepare for testing</td><td><input type="text" data-field="l18-seq5" placeholder="Yes / No / Partially" style="width:100%;"></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--bright-orange);">&#128167;</div>
+      <div class="section-title">Activity 3: PVA Glue Technique (Folio p. 77)</div>
+    </div>
+    <div style="border:1px solid var(--light-grey);border-radius:6px;padding:10px;margin-bottom:10px;background:#f9f9f9;">
+      <p style="font-size:13px;font-weight:700;margin-bottom:4px;">PVA Gluing Tips:</p>
+      <ul style="font-size:13px;margin-left:16px;">
+        <li>Apply a <strong>thin, even layer</strong> on BOTH surfaces</li>
+        <li>Press firmly for <strong>10 seconds</strong></li>
+        <li>Clamp with <strong>rubber bands</strong> while drying</li>
+        <li><strong>Common mistake:</strong> More glue &#8800; stronger! Excess glue weakens joints.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--steel-blue);">&#9650;</div>
+      <div class="section-title">Activity 4: Build First Triangle &mdash; Guided Practice (Folio p. 77)</div>
+    </div>
+    <p style="font-size:13px;margin-bottom:8px;">Follow these steps to build your first triangle. This is the building block of your truss.</p>
+    <table>
+      <thead><tr><th style="width:28px;">Step</th><th style="width:55%;">Instruction</th><th>Done? Notes</th></tr></thead>
+      <tbody>
+        <tr><td class="row-num">1</td><td>Lay 3 sticks in a triangle shape on a flat surface</td><td><input type="text" data-field="l18-tri1" placeholder="" style="width:100%;"></td></tr>
+        <tr><td class="row-num">2</td><td>Overlap sticks by 1 cm at each vertex (corner)</td><td><input type="text" data-field="l18-tri2" placeholder="" style="width:100%;"></td></tr>
+        <tr><td class="row-num">3</td><td>Apply thin PVA glue to BOTH overlapping surfaces</td><td><input type="text" data-field="l18-tri3" placeholder="" style="width:100%;"></td></tr>
+        <tr><td class="row-num">4</td><td>Press and hold for 10 seconds at each joint</td><td><input type="text" data-field="l18-tri4" placeholder="" style="width:100%;"></td></tr>
+        <tr><td class="row-num">5</td><td>Clamp joints with rubber bands</td><td><input type="text" data-field="l18-tri5" placeholder="" style="width:100%;"></td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:13px;margin-top:8px;"><strong>Sketch your completed first triangle:</strong></p>
+    <textarea data-field="l18-tri-sketch" placeholder="Draw your first triangle here (or describe its shape and dimensions)" style="min-height:60px;width:100%;"></textarea>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--teal);">&#128296;</div>
+      <div class="section-title">Activity 5: Build Side Truss 1 (Folio p. 77)</div>
+    </div>
+    <p style="font-size:13px;margin-bottom:8px;">Using your design sketch from last lesson, build your first side truss flat on the desk.</p>
+    <div style="border:1px solid var(--bright-orange);border-radius:6px;padding:10px;margin-bottom:10px;background:#fff8f0;">
+      <p style="font-size:12px;font-weight:700;color:var(--bright-orange);">&#9888; Construction Checklist &mdash; Truss 1</p>
+      <table>
+        <tbody>
+          <tr><td style="width:30px;text-align:center;"><input type="checkbox" data-field="l18-ck1a"></td><td style="font-size:12px;">Building flat on desk</td></tr>
+          <tr><td style="text-align:center;"><input type="checkbox" data-field="l18-ck1b"></td><td style="font-size:12px;">Using lap joints (1&ndash;2 cm overlap)</td></tr>
+          <tr><td style="text-align:center;"><input type="checkbox" data-field="l18-ck1c"></td><td style="font-size:12px;">Thin, even glue layer</td></tr>
+          <tr><td style="text-align:center;"><input type="checkbox" data-field="l18-ck1d"></td><td style="font-size:12px;">Clamping every joint</td></tr>
+          <tr><td style="text-align:center;"><input type="checkbox" data-field="l18-ck1e"></td><td style="font-size:12px;">Multiple triangles in the truss</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--bright-orange);">&#128296;</div>
+      <div class="section-title">Activity 6: Build Side Truss 2 (Folio p. 78)</div>
+    </div>
+    <p style="font-size:13px;margin-bottom:8px;">Build a second truss that is <strong>identical</strong> to Truss 1.</p>
+    <div style="border:1px solid var(--teal);border-radius:6px;padding:10px;margin-bottom:10px;background:#f0faf8;">
+      <p style="font-size:12px;font-weight:700;color:var(--teal);">&#128161; Tips for Matching Trusses</p>
+      <ul style="font-size:12px;margin-left:16px;">
+        <li>Place Truss 1 beside your work as a reference</li>
+        <li>Count the same number of members and triangles</li>
+        <li>Measure key dimensions to match</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--dark-blue);">&#128221;</div>
+      <div class="section-title">Activity 7: Production Log (Folio p. 78)</div>
+    </div>
+    <table>
+      <thead><tr><th style="width:25%;">Detail</th><th>Your response</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Date:</strong></td><td><input type="text" data-field="l18-log-date" placeholder="DD/MM/YYYY" style="width:50%;"></td></tr>
+        <tr><td><strong>Sketch of completed truss:</strong></td><td><textarea data-field="l18-log-sketch" placeholder="Draw your truss. Label: members, joints, triangles, dimensions" style="min-height:80px;width:100%;"></textarea></td></tr>
+        <tr><td><strong>What went well?</strong></td><td><textarea data-field="l18-log-well" placeholder="Today I successfully..." style="min-height:40px;width:100%;"></textarea></td></tr>
+        <tr><td><strong>What was challenging?</strong></td><td><textarea data-field="l18-log-challenge" placeholder="I found it difficult to..." style="min-height:40px;width:100%;"></textarea></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--steel-blue);">&#128207;</div>
+      <div class="section-title">Activity 8: Alignment Check (Folio p. 78)</div>
+    </div>
+    <p style="font-size:13px;margin-bottom:8px;">Place both trusses side by side and check they match.</p>
+    <table>
+      <thead><tr><th style="width:50%;">Check</th><th style="width:15%;">Yes / No</th><th>Fix needed?</th></tr></thead>
+      <tbody>
+        <tr><td>Same length?</td><td><input type="text" data-field="l18-align1" placeholder="" style="width:100%;text-align:center;"></td><td><input type="text" data-field="l18-align1-fix" placeholder="" style="width:100%;"></td></tr>
+        <tr><td>Same height?</td><td><input type="text" data-field="l18-align2" placeholder="" style="width:100%;text-align:center;"></td><td><input type="text" data-field="l18-align2-fix" placeholder="" style="width:100%;"></td></tr>
+        <tr><td>Same number of triangles?</td><td><input type="text" data-field="l18-align3" placeholder="" style="width:100%;text-align:center;"></td><td><input type="text" data-field="l18-align3-fix" placeholder="" style="width:100%;"></td></tr>
+        <tr><td>Joints line up?</td><td><input type="text" data-field="l18-align4" placeholder="" style="width:100%;text-align:center;"></td><td><input type="text" data-field="l18-align4-fix" placeholder="" style="width:100%;"></td></tr>
+        <tr><td>Both lie flat on the desk?</td><td><input type="text" data-field="l18-align5" placeholder="" style="width:100%;text-align:center;"></td><td><input type="text" data-field="l18-align5-fix" placeholder="" style="width:100%;"></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="diff-block support">
+    <div class="diff-label">&#128309; Support &mdash; Construction Assistance</div>
+    <p style="font-size:13px;margin-bottom:6px;">Use these supports if you need extra help:</p>
+    <ul style="font-size:13px;">
+      <li><strong>Template truss design:</strong> Lay sticks on top of the printed template</li>
+      <li><strong>Pre-cut sticks:</strong> Ask teacher for pre-measured pieces</li>
+      <li><strong>Teacher assist:</strong> Get help with your first 2&ndash;3 joints</li>
+      <li><strong>Simplified truss:</strong> Build with 3&ndash;4 triangles instead of more</li>
+      <li><strong>Visual step-by-step card:</strong> Follow the picture guide at your desk</li>
+    </ul>
+    <div style="margin-top:6px;"><div class="diff-label" style="margin-bottom:4px;">Word Bank</div>
+      <div class="word-bank">
+        <span>truss</span><span>member</span><span>joint</span><span>triangle</span>
+        <span>lap joint</span><span>PVA</span><span>alignment</span><span>clamp</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="diff-block extension">
+    <div class="diff-label">&#128992; Extension &mdash; Advanced Construction</div>
+    <p style="font-size:13px;margin-bottom:8px;"><strong>Advanced truss design:</strong> Are you building a Howe, Pratt, or Warren truss? Explain the difference and why you chose yours.</p>
+    <textarea data-field="l18-ext-trusstype" placeholder="I am building a ___ truss because..." style="min-height:50px;width:100%;margin-bottom:8px;"></textarea>
+    <p style="font-size:13px;margin-bottom:8px;"><strong>Calculate:</strong> How many members (sticks) and joints does your truss have?</p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:8px;">
+      <div style="flex:1;min-width:150px;"><label style="font-size:12px;font-weight:600;">Number of members:</label>
+        <input type="text" data-field="l18-ext-members" placeholder="e.g. 15" style="width:100%;"></div>
+      <div style="flex:1;min-width:150px;"><label style="font-size:12px;font-weight:600;">Number of joints:</label>
+        <input type="text" data-field="l18-ext-joints" placeholder="e.g. 9" style="width:100%;"></div>
+      <div style="flex:1;min-width:150px;"><label style="font-size:12px;font-weight:600;">Number of triangles:</label>
+        <input type="text" data-field="l18-ext-triangles" placeholder="e.g. 6" style="width:100%;"></div>
+    </div>
+    <p style="font-size:13px;margin-bottom:8px;"><strong>Peer mentor:</strong> Help a classmate with their construction. What advice did you give?</p>
+    <textarea data-field="l18-ext-mentor" placeholder="I helped ___ by showing them how to..." style="min-height:40px;width:100%;margin-bottom:8px;"></textarea>
+    <p style="font-size:13px;margin-bottom:8px;"><strong>Early finisher:</strong> If your trusses are dry, begin cross-bracing.</p>
+    <textarea data-field="l18-ext-crossbrace" placeholder="I started cross-bracing by..." style="min-height:40px;width:100%;"></textarea>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--teal);">&#127915;</div>
+      <div class="section-title">Exit Ticket &mdash; Reflection</div>
+    </div>
+    <div class="exit-question">
+      <div class="eq-label">1. What was the most challenging part of building today?</div>
+      <textarea data-field="exit-1" placeholder=""></textarea>
+    </div>
+    <div class="exit-question">
+      <div class="eq-label">2. What would you do differently if you started again?</div>
+      <textarea data-field="exit-2" placeholder=""></textarea>
+    </div>
+    <div class="exit-question">
+      <div class="eq-label">3. On a scale of 1&ndash;5, how confident are you that your trusses are identical? Explain.</div>
+      <textarea data-field="exit-3" placeholder=""></textarea>
+    </div>
+
+  </div>
+
+  <div class="section self-assess">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--dark-blue);">&#9989;</div>
+      <div class="section-title">Self-Assessment</div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:55%;">Success Criteria</th>
+          <th class="got" style="width:15%;">Got it &#128994;</th>
+          <th class="nearly" style="width:15%;">Nearly there &#128992;</th>
+          <th class="need" style="width:15%;">Need help &#128308;</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="text-align:left;">I can safely use craft sticks and PVA glue</td>
+          <td><input type="radio" name="sa1" id="sa1a" value="got" data-field="sa1"><label for="sa1a">&#9679;</label></td>
+          <td><input type="radio" name="sa1" id="sa1b" value="nearly" data-field="sa1"><label for="sa1b">&#9679;</label></td>
+          <td><input type="radio" name="sa1" id="sa1c" value="need" data-field="sa1"><label for="sa1c">&#9679;</label></td>
+        </tr>
+        <tr>
+          <td style="text-align:left;">I can build two identical side trusses</td>
+          <td><input type="radio" name="sa2" id="sa2a" value="got" data-field="sa2"><label for="sa2a">&#9679;</label></td>
+          <td><input type="radio" name="sa2" id="sa2b" value="nearly" data-field="sa2"><label for="sa2b">&#9679;</label></td>
+          <td><input type="radio" name="sa2" id="sa2c" value="need" data-field="sa2"><label for="sa2c">&#9679;</label></td>
+        </tr>
+        <tr>
+          <td style="text-align:left;">I can use triangulation in my bridge structure</td>
+          <td><input type="radio" name="sa3" id="sa3a" value="got" data-field="sa3"><label for="sa3a">&#9679;</label></td>
+          <td><input type="radio" name="sa3" id="sa3b" value="nearly" data-field="sa3"><label for="sa3b">&#9679;</label></td>
+          <td><input type="radio" name="sa3" id="sa3c" value="need" data-field="sa3"><label for="sa3c">&#9679;</label></td>
+        </tr>
+        <tr>
+          <td style="text-align:left;">I can document my construction progress</td>
+          <td><input type="radio" name="sa4" id="sa4a" value="got" data-field="sa4"><label for="sa4a">&#9679;</label></td>
+          <td><input type="radio" name="sa4" id="sa4b" value="nearly" data-field="sa4"><label for="sa4b">&#9679;</label></td>
+          <td><input type="radio" name="sa4" id="sa4c" value="need" data-field="sa4"><label for="sa4c">&#9679;</label></td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer">T1-L18 &mdash; Year 7 Technology Mandatory &mdash; Engineering Technologies &amp; Systems &mdash; Bridge It</div>
+</div>
+
+<script>
+
+(function() {
+  'use strict';
+
+  const STORAGE_KEY = 'T1-L18-Worksheet';
+  const saveMsg = document.getElementById('saveMsg');
+  let saveTimer = null;
+
+  // ---- Auto-save to localStorage ----
+  function saveAll() {
+    const data = {};
+    // Text inputs and textareas
+    document.querySelectorAll('[data-field]').forEach(function(el) {
+      if (el.type === 'radio') {
+        if (el.checked) data[el.name] = el.value;
+      } else {
+        data[el.getAttribute('data-field')] = el.value;
+      }
+    });
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      showSaved();
+    } catch(e) { /* localStorage full or blocked */ }
+  }
+
+  function showSaved() {
+    saveMsg.classList.add('show');
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function() { saveMsg.classList.remove('show'); }, 1500);
+  }
+
+  // ---- Load from localStorage ----
+  function loadAll() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const data = JSON.parse(raw);
+
+      // Text inputs and textareas
+      document.querySelectorAll('input[data-field]:not([type=radio]), textarea[data-field]').forEach(function(el) {
+        const key = el.getAttribute('data-field');
+        if (data[key] !== undefined) el.value = data[key];
+      });
+
+      // Radio buttons
+      ['sa1', 'sa2', 'sa3', 'sa4'].forEach(function(name) {
+        if (data[name]) {
+          const radio = document.querySelector('input[name="'+name+'"][value="'+data[name]+'"]');
+          if (radio) radio.checked = true;
+        }
+      });
+    } catch(e) { /* bad data, ignore */ }
+  }
+
+  // ---- Attach listeners ----
+  document.querySelectorAll('input[data-field], textarea[data-field]').forEach(function(el) {
+    el.addEventListener('input', debounce(saveAll, 500));
+    el.addEventListener('change', saveAll);
+  });
+
+  function debounce(fn, ms) {
+    let t;
+    return function() { clearTimeout(t); t = setTimeout(fn, ms); };
+  }
+
+  // ---- Print / Save as PDF ----
+  window.handlePrint = function() {
+    saveAll(); // save before printing
+    window.print();
+  };
+
+  // ---- Clear all ----
+  window.handleClear = function() {
+    if (!confirm('Clear all your answers? This cannot be undone.')) return;
+    document.querySelectorAll('input[data-field]:not([type=radio]), textarea[data-field]').forEach(function(el) {
+      el.value = '';
+    });
+    document.querySelectorAll('input[type=radio]').forEach(function(el) {
+      el.checked = false;
+    });
+    localStorage.removeItem(STORAGE_KEY);
+  };
+
+  // ---- Init ----
+  loadAll();
+})();
+
+</script>
+</body>
+</html>

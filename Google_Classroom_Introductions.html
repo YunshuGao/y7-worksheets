@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Google Classroom Introductions &mdash; Term 1: Bridge It (L01&ndash;L20)</title>
+<style>
+  :root {
+    --steel: #2B5F8A;
+    --orange: #E8712B;
+    --teal: #1A8A6E;
+    --char: #333;
+    --lgrey: #F2F2F2;
+    --sblue: #D6E8F7;
+    --dblue: #1A3D5C;
+    --mgrey: #888;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Calibri, Arial, sans-serif;
+    background: #e9ecef;
+    color: var(--char);
+    padding: 24px;
+    line-height: 1.6;
+  }
+  h1 {
+    text-align: center;
+    color: var(--dblue);
+    font-size: 22px;
+    margin-bottom: 6px;
+  }
+  .subtitle {
+    text-align: center;
+    color: var(--mgrey);
+    font-size: 13px;
+    margin-bottom: 32px;
+  }
+  .card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 28px;
+    overflow: hidden;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+  }
+  .card-header {
+    background: var(--steel);
+    color: #fff;
+    padding: 14px 20px;
+    font-size: 16px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .card-header .week {
+    background: rgba(255,255,255,0.2);
+    border-radius: 4px;
+    padding: 2px 10px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .card-body {
+    padding: 20px 24px 16px;
+  }
+  .card-body p {
+    margin-bottom: 12px;
+    font-size: 14px;
+  }
+  .card-body p:last-child { margin-bottom: 0; }
+  .recap {
+    color: var(--mgrey);
+    font-style: italic;
+    border-left: 3px solid var(--sblue);
+    padding-left: 12px;
+  }
+  .today {
+    color: var(--char);
+  }
+  .worksheet-box {
+    background: var(--lgrey);
+    border-left: 4px solid var(--teal);
+    border-radius: 0 6px 6px 0;
+    padding: 12px 16px;
+    margin-top: 14px;
+    font-size: 13px;
+    color: #555;
+  }
+  .worksheet-box strong { color: var(--teal); }
+  .copy-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: var(--orange);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    z-index: 2;
+    transition: background 0.15s;
+  }
+  .copy-btn:hover { background: #d4631f; }
+  .copy-btn.copied {
+    background: var(--teal);
+  }
+  .num {
+    display: inline-block;
+    background: var(--orange);
+    color: #fff;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 28px;
+    font-size: 13px;
+    font-weight: 700;
+    margin-right: 8px;
+    flex-shrink: 0;
+  }
+  @media print {
+    body { background: #fff; padding: 0; }
+    .card { box-shadow: none; border: 1px solid #ccc; page-break-inside: avoid; }
+    .copy-btn { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Google Classroom Assignment Introductions</h1>
+<p class="subtitle">Term 1: Bridge It &mdash; Engineering Technologies &amp; Systems (L01&ndash;L20)<br>
+Click <strong>Copy</strong> on any card, then paste into the Google Classroom &ldquo;Instructions&rdquo; field.</p>
+
+<!-- L01 -->
+<div class="card" id="L01">
+  <div class="card-header"><span><span class="num">1</span>T1-L01: Introduction to Technology Mandatory</span><span class="week">Week 1</span></div>
+  <button class="copy-btn" onclick="copyCard(this)">Copy</button>
+  <div class="card-body">
+    <p class="today">Welcome to Year 7 Technology Mandatory! This is our very first lesson for the term.</p>
+    <p class="today">Today we will explore what Technology Mandatory is all about, the four focus areas you will study this year, and what to expect in our Term 1 unit &mdash; &ldquo;Bridge It: Engineering Technologies and Systems.&rdquo; You will also set up your design folio and learn how we work in this subject.</p>
+    <div class="worksheet-box">
+      <strong>WORKSHEET:</strong> This lesson includes an interactive HTML worksheet. To use it:<br>
+      1. Download the HTML file to your computer.<br>
+      2. Open it in a web browser (Chrome, Edge or Safari &mdash; just double-click the file).<br>
+      3. Type your answers directly into the boxes &mdash; your work saves automatically.<br>
+      4. When you are finished, click the &ldquo;Save as PDF&rdquo; button at the top, then upload the PDF to this assignment.
+    </div>
+  </div>
+</div>
+
+<!-- L02 -->
+<div class="card" id="L02">
+  <div class="card-header"><span><span class="num">2</span>T1-L02: Design Careers &amp; Elements of Design</span><span class="week">Week 1</span></div>
+  <button class="copy-btn" onclick="copyCard(this)">Copy</button>
+  <div class="card-body">
+    <p class="recap">Last lesson we introduced Technology Mandatory and explored the four focus areas for the year.</p>
+    <p class="today">Today we are looking at the world of design &mdash; who are designers, what careers involve design, and what are the basic building blocks (elements) of design? You will learn about points, lines, shapes, forms, colours, tones and textures, and complete a matching activity in your folio.</p>
+    <div class="worksheet-box">
+      <strong>WORKSHEET:</strong> Download the HTML file and open it in your web browser (double-click the file). Type your answers directly &mdash; they save automatically. When finished, click &ldquo;Save as PDF&rdquo; at the top and upload the PDF here.
+    </div>
+  </div>
+</div>
+
+<!-- L03 -->
+<div class="card" id="L03">
+  <div class="card-header"><span><span class="num">3</span>T1-L03: Principles of Design &amp; Characteristics</span><span class="week">Week 2</span></div>
+  <button class="copy-btn" onclick="copyCard(this)">Copy</button>
+  <div class="card-body">
+    <p class="recap">Last lesson we explored design careers and the elements of design (points, lines, shapes, colours, textures).</p>
+    <p class="today">Today we move from elements to principles &mdash; the rules that guide how elements are arranged. You will learn about balance, unity, proportion, contrast, emphasis, movement and rhythm. We will also discuss the characteristics of design: aesthetics, function and purpose.</p>
+    <div class="worksheet-box">
+      <strong>WORKSHEET:</strong> Download the HTML file and open it in your web browser (double-click the file). Type your answers directly &mdash; they save automatically. When finished, click &ldquo;Save as PDF&rdquo; at the top and upload the PDF here.
+    </div>
+  </div>
+</div>
+
+<!-- L04 -->
+<div class="card" id="L04">
+  <div class="card-header"><span><span class="num">4</span>T1-L04: Design Challenges</span><span class="week">Week 2</span></div>
+  <button class="copy-btn" onclick="copyCard(this)">Copy</button>
+  <div class="card-body">
+    <p class="recap">Last lesson we learned the principles of design (balance, unity, proportion, contrast) and the difference between aesthetics, function and purpose.</p>
+    <p class="today">Today is a hands-on lesson! You will tackle a series of short design challenges that put your creativity and problem-solving skills to the test. These include the circle challenge, texture challenge, paper tower and more. The goal is to think like a designer and learn by doing.</p>
+    <div class="worksheet-box">
+      <strong>WORKSHEET:</strong> Download the HTML file and open it in your web browser (double-click the file). Type your answers directly &mdash; they save automatically. When finished, click &ldquo;Save as PDF&rdquo; at the top and upload the PDF here.
+    </div>
+  </div>
+</div>
+
+<!-- L05 -->
+<div class="card" id="L05">
+  <div class="card-header"><span><span class="num">5</span>T1-L05: Engineering Structures</span><span class="week">Week 3</span></div>
+  <button class="copy-btn" onclick="copyCard(this)">Copy</button>
+  <div class="card-body">
+    <p class="recap">Last lesson we completed a series of hands-on design challenges to practise creative thinking.</p>
+    <p class="today">Today we begin our engineering focus. You will learn what makes structures strong, explore beams, columns, trusses and arches, and discover how engineers use these elements in real buildings and bridges. This is the start of our bridge project journey!</p>
+    <div class="worksheet-box">
+      <strong>WORKSHEET:</strong> Download the HTML file and open it in your web browser (double-click the file). Type your answers directly &mdash; they save automatically. When finished, click &ldquo;Save as PDF&rdquo; at the top and upload the PDF here.
+    </div>
+  </div>
+</div>
+
+<!-- L06 -->
+<div class="card" id="L06">
+  <div class="card-header"><span><span class="num">6</span>T1-L06: Marble Run &amp; Marble Maze</span><span class="week">Week 3</span></div>
+  <button class="copy-btn" onclick="copyCard(this)">Copy</button>
+  <div class="card-body">
+    <p class="recap">Last lesson we explored engineering structures &mdash; beams, columns, trusses and arches.</p>
+    <p class="today">Today you will apply your engineering knowledge to two practical challenges: a marble run and a marble maze. You will need to think about gravity, angles, friction and structural stability as you design and build. These challenges develop the same problem-solving skills you will use when building your bridge later in the term.</p>
+    <div class="worksheet-box">
+      <strong>WORKSHEET:</strong> Download the HTML file and open it in your web browser (double-click the file). Type your answers directly &mdash; they save automatically. When finished, click &ldquo;Save as PDF&rdquo; at the top and upload the PDF here.
+    </div>
+  </div>
+</div>
+
+<!-- L07 -->
+<div class="card" id="L07">
+  <div class="card-header"><span><span class="num">7</span>T1-L07: The Design Process</span><span class="week">Week 4</span></div>
+  <button class="copy-btn" onclick="copyCard(this)">Copy</button>
+  <div class="card-body">
+    <p class="recap">Last lesson we built marble runs and mazes, applying engineering thinking to practical challenges.</p>
+    <p class="today">Today we formalise what you have been doing naturally &mdash; the design process. You will learn the four stages: Identify and Define, Research and Plan, Produce and Implement, Test and Evaluate. We will also watch the IDEO design thinking video and discuss how professional designers use this process every day.</p>
+    <div class="worksheet-box">
+      <strong>WORKSHEET:</strong> Download the HTML file and open it in your web browser (double-click the file). Type your answers directly &mdash; they save automatically. When finished, click &ldquo;Save as PDF&rdquo; at the top and upload the PDF here.
+    </div>
+  </div>
+</div>
+
+<!-- L08 -->
+<div class="card" id="L08">
+  <div class="card-header"><span><span class="num">8</span>T1-L08: Paper Boat No. 2 &mdash; Applying the Design Process</span><span class="week">Week 4</span></div>
+  <button class="copy-btn" onclick="copyCard(this)">Copy</button>
+  <div class="card-body">
+    <p class="recap">Last lesson we learned the four stages of the design process and watched how IDEO uses design thinking.</p>
+    <p class="today">Today you will put the design process into practice. Remember your first paper boat attempt? This time, you will follow the full design process &mdash; write a design brief, research, sketch ideas, build your boat, and evaluate the results. Let us see how much better your boat performs when you plan properly!</p>
+    <div class="worksheet-box">
+      <strong>WORKSHEET:</strong> Download the HTML file and open it in your web browser (double-click the file). Type your answers directly &mdash; they save automatically. When finished, click &ldquo;Save as PDF&rdquo; at the top and upload the PDF here.
+    </div>
+  </div>
+</div>
+
+<!-- L09 -->
+<div class="card" id="L09">
+  <div class="card-header"><span><span class="num">9</span>T1-L09: Measurement &amp; Estimation</span><span class="week">Week 5</span></div>
+  <button class="copy-btn" onclick="copyCard(this)">Copy</button>
+  <div class="card-body">
+    <p class="recap">Last lesson we applied the full design process to Paper Boat No. 2 and compared our results to the first attempt.</p>
+    <p class="today">Today we focus on a critical engineering skill &mdash; measurement. You will learn to read a ruler to the nearest millimetre, practise estimating lengths using body references (fingernail width, hand span, forearm length), and measure classroom objects accurately. Precise measurement is essential when we start building our bridges.</p>
+    <div class="worksheet-box">
+      <strong>WORKSHEET:</strong> Download the HTML file and open it in your web browser (double-click the file). Type your answers directly &mdash; they save automatically. When finished, click &ldquo;Save as PDF&rdquo; at the top and upload the PDF here.
+    </div>
+  </div>
+</div>
+
+<!-- L10 -->
+<div class="card" id="L10">
+  <div class="card-header"><span><span class="num">10</span>T1-L10: Perimeter, Area, Volume &amp; Capacity</span><span class="week">Week 5</span></div>
+  <button class="copy-btn" onclick="copyCard(this)">Copy</button>
+  <div class="card-body">
+    <p class="recap">Last lesson we practised measuring accurately in millimetres and estimating lengths using body references.</p>
+    <p class="today">Today we build on those measurement skills by learning to calculate perimeter, area, volume and capacity. You will measure your desk to find its perimeter and area, calculate the volume of a box, and convert between millilitres and litres. These calculations are used constantly in engineering and construction.</p>
+    <div class="worksheet-box">
+      <strong>WORKSHEET:</strong> Download the HTML file and open it in your web browser (double-click the file). Type your answers directly &mdash; they save automatically. When finished, click &ldquo;Save as PDF&rdquo; at the top and upload the PDF here.
+    </div>
+  </div>
+</div>
+
+<!-- L11 -->
+<div class="card" id="L11">
+  <div class="card-header"><span><span class="num">11</span>T1-L11: Technical Lettering &amp; Scale</span><span class="week">Week 6</span></div>
+  <button class="copy-btn" onclick="copyCard(this)">Copy</button>
+  <div class="card-body">
+    <p class="recap">Last lesson we calculated perimeter, area, volume and capacity using real objects.</p>
+    <p class="today">Today we learn two important skills for engineering drawings. First, technical lettering &mdash; the neat, uppercase, evenly spaced writing used on professional drawings. Second, scale &mdash; how to represent large objects on small paper using ratios like 1:10 and 1:20. You will practise both skills in your folio.</p>
+    <div class="worksheet-box">
+      <strong>WORKSHEET:</strong> Download the HTML file and open it in your web browser (double-click the file). Type your answers directly &mdash; they save automatically. When finished, click &ldquo;Save as PDF&rdquo; at the top and upload the PDF here.
+    </div>
+  </div>
+</div>
+
+<!-- L12 -->
+<div class="card" id="L12">
+  <div class="card-header"><span><span class="num">12</span>T1-L12: Isometric Drawing</span><span class="week">Week 6</span></div>
+  <button class="copy-btn" onclick="copyCard(this)">Copy</button>
+  <div class="card-body">
+    <p class="recap">Last lesson we practised technical lettering and learned how to calculate scale.</p>
+    <p class="today">Today we learn isometric drawing &mdash; a way to represent 3D objects on flat paper. You will use the 30/120 rule, the Y method and the box method to draw cubes, prisms and L-shaped objects on isometric grid paper. These drawing skills will help you sketch your bridge design later.</p>
+    <div class="worksheet-box">
+      <strong>WORKSHEET:</strong> Download the HTML file and open it in your web browser (double-click the file). Type your answers directly &mdash; they save automatically. When finished, click &ldquo;Save as PDF&rdquo; at the top and upload the PDF here.
+    </div>
+  </div>
+</div>
+
+<!-- L13 -->
+<div class="card" id="L13">
+  <div class="card-header"><span><span class="num">13</span>T1-L13: Orthogonal (Multi-View) Drawing</span><span class="week">Week 7</span></div>
+  <button class="copy-btn" onclick="copyCard(this)">Copy</button>
+  <div class="card-body">
+    <p class="recap">Last lesson we learned isometric drawing &mdash; showing 3D objects from an angled viewpoint.</p>
+    <p class="today">Today we learn orthogonal drawing, also called multi-view or third-angle projection. Instead of one 3D view, you draw three separate 2D views: front, side and top. Engineers use orthogonal drawings because they show exact dimensions. You will practise converting between isometric and orthogonal views.</p>
+    <div class="worksheet-box">
+      <strong>WORKSHEET:</strong> Download the HTML file and open it in your web browser (double-click the file). Type your answers directly &mdash; they save automatically. When finished, click &ldquo;Save as PDF&rdquo; at the top and upload the PDF here.
+    </div>
+  </div>
+</div>
+
+<!-- L14 -->
+<div class="card" id="L14">
+  <div class="card-header"><span><span class="num">14</span>T1-L14: Colour in Design &amp; Digital File Types</span><span class="week">Week 7</span></div>
+  <button class="copy-btn" onclick="copyCard(this)">Copy</button>
+  <div class="card-body">
+    <p class="recap">Last lesson we learned orthogonal (multi-view) drawing with front, side and top views.</p>
+    <p class="today">Today has two parts. First, we explore colour theory &mdash; warm and cool colours, and how colour affects design decisions. Second, we look at digital file types you will use in Technology: image files (JPG, PNG, GIF), document files (DOC, PDF, PPT), and the difference between raster and vector graphics.</p>
+    <div class="worksheet-box">
+      <strong>WORKSHEET:</strong> Download the HTML file and open it in your web browser (double-click the file). Type your answers directly &mdash; they save automatically. When finished, click &ldquo;Save as PDF&rdquo; at the top and upload the PDF here.
+    </div>
+  </div>
+</div>
+
+<!-- L15 -->
+<div class="card" id="L15">
+  <div class="card-header"><span><span class="num">15</span>T1-L15: 3D Shapes, Nets &amp; Freehand Sketching</span><span class="week">Week 8</span></div>
+  <button class="copy-btn" onclick="copyCard(this)">Copy</button>
+  <div class="card-body">
+    <p class="recap">Last lesson we explored colour theory and digital file types.</p>
+    <p class="today">Today we work with 3D shapes &mdash; naming them, understanding their properties, and drawing their nets (the flat patterns that fold into 3D shapes). You will also practise freehand sketching with shading and shadow techniques. Being able to quickly sketch ideas by hand is an essential design skill.</p>
+    <div class="worksheet-box">
+      <strong>WORKSHEET:</strong> Download the HTML file and open it in your web browser (double-click the file). Type your answers directly &mdash; they save automatically. When finished, click &ldquo;Save as PDF&rdquo; at the top and upload the PDF here.
+    </div>
+  </div>
+</div>
+
+<!-- L16 -->
+<div class="card" id="L16">
+  <div class="card-header"><span><span class="num">16</span>T1-L16: Bridge Types &amp; Engineering Forces</span><span class="week">Week 8</span></div>
+  <button class="copy-btn" onclick="copyCard(this)">Copy</button>
+  <div class="card-body">
+    <p class="recap">Last lesson we worked with 3D shapes, nets and freehand sketching.</p>
+    <p class="today">Today we focus directly on bridges. You will learn the six main bridge types (beam, truss, arch, suspension, cable-stayed and cantilever) and the four engineering forces that act on structures: compression, tension, torsion and shear. We will also explore triangulation &mdash; the key principle that makes truss bridges strong. This lesson sets you up for designing your own bridge.</p>
+    <div class="worksheet-box">
+      <strong>WORKSHEET:</strong> Download the HTML file and open it in your web browser (double-click the file). Type your answers directly &mdash; they save automatically. When finished, click &ldquo;Save as PDF&rdquo; at the top and upload the PDF here.
+    </div>
+  </div>
+</div>
+
+<!-- L17 -->
+<div class="card" id="L17">
+  <div class="card-header"><span><span class="num">17</span>T1-L17: Bridge Design Brief &amp; Research</span><span class="week">Week 9</span></div>
+  <button class="copy-btn" onclick="copyCard(this)">Copy</button>
+  <div class="card-body">
+    <p class="recap">Last lesson we learned about the six bridge types and four engineering forces.</p>
+    <p class="today">Today we begin the bridge project! You will write a design brief with specifications and constraints, research three real truss bridges for inspiration, and create three thumbnail sketches of different bridge designs. By the end of this lesson you will have chosen your best design and planned your construction sequence. Remember &mdash; no building yet! Great engineers plan before they build.</p>
+    <div class="worksheet-box">
+      <strong>WORKSHEET:</strong> Download the HTML file and open it in your web browser (double-click the file). Type your answers directly &mdash; they save automatically. When finished, click &ldquo;Save as PDF&rdquo; at the top and upload the PDF here.
+    </div>
+  </div>
+</div>
+
+<!-- L18 -->
+<div class="card" id="L18">
+  <div class="card-header"><span><span class="num">18</span>T1-L18: Bridge Construction &mdash; Building Your Trusses</span><span class="week">Week 9</span></div>
+  <button class="copy-btn" onclick="copyCard(this)">Copy</button>
+  <div class="card-body">
+    <p class="recap">Last lesson we wrote our design briefs, researched real bridges, and created three design sketches.</p>
+    <p class="today">Today we BUILD! This is a practical construction lesson. You will use craft sticks and PVA glue to build your two side trusses. Important reminders: build FLAT on the desk (never in the air), use LAP JOINTS with at least 1 cm overlap, apply thin and even glue to BOTH surfaces, and clamp every joint. Your two trusses must be identical. Bring your design sketch &mdash; you will need it!</p>
+    <div class="worksheet-box">
+      <strong>WORKSHEET:</strong> Download the HTML file and open it in your web browser (double-click the file). Type your answers directly &mdash; they save automatically. When finished, click &ldquo;Save as PDF&rdquo; at the top and upload the PDF here.
+    </div>
+  </div>
+</div>
+
+<!-- L19 -->
+<div class="card" id="L19">
+  <div class="card-header"><span><span class="num">19</span>T1-L19: Bridge Construction &mdash; Completion &amp; Test Preparation</span><span class="week">Week 10</span></div>
+  <button class="copy-btn" onclick="copyCard(this)">Copy</button>
+  <div class="card-body">
+    <p class="recap">Last lesson we built our two side trusses using craft sticks and PVA glue.</p>
+    <p class="today">Today is our final construction lesson. You need to finish your bridge completely &mdash; add cross-bracing between the trusses, install the deck on top, and reinforce any weak joints. You will also write a prediction: how much weight do you think your bridge will hold, and why? Your bridge must be 100% complete by the end of today because next lesson is TESTING DAY &mdash; there will be no construction time.</p>
+    <div class="worksheet-box">
+      <strong>WORKSHEET:</strong> Download the HTML file and open it in your web browser (double-click the file). Type your answers directly &mdash; they save automatically. When finished, click &ldquo;Save as PDF&rdquo; at the top and upload the PDF here.
+    </div>
+  </div>
+</div>
+
+<!-- L20 -->
+<div class="card" id="L20">
+  <div class="card-header"><span><span class="num">20</span>T1-L20: Testing Day! Load Testing &amp; Evaluation</span><span class="week">Week 10</span></div>
+  <button class="copy-btn" onclick="copyCard(this)">Copy</button>
+  <div class="card-body">
+    <p class="recap">Last lesson we completed our bridges &mdash; cross-bracing, deck, reinforcement and predictions are all done.</p>
+    <p class="today">Today is the moment we have been building towards &mdash; TESTING DAY! Each bridge will be load tested by placing masses on it incrementally until it fails. You will record your results, calculate your efficiency ratio (max load divided by bridge weight), and complete a gallery walk to study everyone&rsquo;s bridges. Then you will write your evaluation and reflection &mdash; did your bridge meet the design brief? What did you learn about engineering? Submit your completed folio and bridge model today. Well done, engineers!</p>
+    <div class="worksheet-box">
+      <strong>WORKSHEET:</strong> Download the HTML file and open it in your web browser (double-click the file). Type your answers directly &mdash; they save automatically. When finished, click &ldquo;Save as PDF&rdquo; at the top and upload the PDF here.
+    </div>
+  </div>
+</div>
+
+<script>
+function copyCard(btn) {
+  const body = btn.nextElementSibling;
+  const parts = [];
+  for (const el of body.children) {
+    if (el.classList.contains('worksheet-box')) {
+      parts.push(el.textContent.trim().replace(/\s+/g, ' '));
+    } else {
+      parts.push(el.textContent.trim());
+    }
+  }
+  const text = parts.join('\n\n');
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1500);
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T1-L20: Testing Day! Load Testing &amp; Evaluation</title>
+<style>
+
+  /* ===== BLUEPRINT THEME ===== */
+  :root {
+    --steel-blue: #2B5F8A;
+    --bright-orange: #E8712B;
+    --charcoal: #333333;
+    --light-grey: #F2F2F2;
+    --teal: #1A8A6E;
+    --support-blue: #D6E8F7;
+    --extension-orange: #FDE8D0;
+    --white: #FFFFFF;
+    --dark-blue: #1A3D5C;
+    --mid-grey: #888888;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Calibri, 'Segoe UI', Arial, sans-serif;
+    font-size: 14px;
+    color: var(--charcoal);
+    background: var(--light-grey);
+    line-height: 1.5;
+  }
+
+  .worksheet {
+    max-width: 210mm;
+    margin: 20px auto;
+    background: var(--white);
+    padding: 28px 32px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: var(--steel-blue);
+    color: var(--white);
+    padding: 18px 24px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    right: -30px; top: -30px;
+    width: 120px; height: 120px;
+    background: var(--bright-orange);
+    border-radius: 50%;
+    opacity: 0.15;
+  }
+  .header h1 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 2px;
+    position: relative;
+    z-index: 1;
+  }
+  .header .subtitle {
+    font-size: 13px;
+    opacity: 0.9;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ===== STUDENT INFO BAR ===== */
+  .info-bar {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+    padding: 10px 14px;
+    background: var(--light-grey);
+    border-radius: 4px;
+    border-left: 4px solid var(--steel-blue);
+    align-items: center;
+  }
+  .info-bar label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--steel-blue);
+    white-space: nowrap;
+  }
+  .info-bar input {
+    border: none;
+    border-bottom: 1.5px solid var(--mid-grey);
+    background: transparent;
+    font-family: inherit;
+    font-size: 13px;
+    padding: 2px 4px;
+    width: 140px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .info-bar input:focus { border-bottom-color: var(--bright-orange); }
+  .info-group { display: flex; align-items: center; gap: 4px; }
+
+  /* ===== OUTCOME BADGES ===== */
+  .outcomes {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .outcomes span.label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--mid-grey);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .badge {
+    display: inline-block;
+    background: var(--dark-blue);
+    color: var(--white);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 12px;
+    letter-spacing: 0.3px;
+  }
+  .badge.folio {
+    background: var(--teal);
+  }
+
+  /* ===== SECTION HEADERS ===== */
+  .section {
+    margin-bottom: 18px;
+    page-break-inside: avoid;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .section-icon {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: var(--white);
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--dark-blue);
+  }
+
+  /* ===== LISC BOX ===== */
+  .lisc-box {
+    background: var(--light-grey);
+    border-radius: 6px;
+    padding: 14px 18px;
+    border-left: 4px solid var(--steel-blue);
+  }
+  .lisc-box .li-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--steel-blue);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+  .lisc-box .li-text {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  .lisc-box ul {
+    margin: 0;
+    padding-left: 20px;
+  }
+  .lisc-box ul li {
+    font-size: 13px;
+    margin-bottom: 3px;
+    color: var(--charcoal);
+  }
+  .lisc-box ul li::marker {
+    color: var(--bright-orange);
+  }
+
+  /* ===== DO NOW TABLE ===== */
+  .prompt-box {
+    background: var(--extension-orange);
+    border-radius: 4px;
+    padding: 10px 14px;
+    font-style: italic;
+    font-size: 14px;
+    margin-bottom: 10px;
+    border-left: 4px solid var(--bright-orange);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 6px;
+    font-size: 13px;
+  }
+  table th {
+    background: var(--steel-blue);
+    color: var(--white);
+    font-weight: 600;
+    font-size: 12px;
+    padding: 8px 10px;
+    text-align: left;
+    border: 1px solid var(--steel-blue);
+  }
+  table td {
+    padding: 4px 6px;
+    border: 1px solid #ccc;
+    vertical-align: top;
+  }
+  table td input,
+  table td textarea {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 13px;
+    padding: 4px 2px;
+    resize: vertical;
+    outline: none;
+    line-height: 1.4;
+  }
+  table td textarea { min-height: 32px; }
+
+  /* Row number column */
+  table td.row-num {
+    width: 28px;
+    text-align: center;
+    font-weight: 600;
+    color: var(--mid-grey);
+    background: var(--light-grey);
+  }
+
+  /* ===== VOCABULARY TABLE ===== */
+  .vocab-table th:first-child { width: 22%; }
+  .vocab-table .def-cell { font-size: 12px; color: var(--mid-grey); }
+  .vocab-table td.sentence-cell { background: var(--light-grey); }
+
+  /* ===== FOCUS AREAS GRID ===== */
+  .focus-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .focus-card {
+    border: 2px solid var(--steel-blue);
+    border-radius: 6px;
+    padding: 10px 12px;
+    background: var(--white);
+  }
+  .focus-card .fc-num {
+    display: inline-block;
+    background: var(--steel-blue);
+    color: var(--white);
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 22px;
+    margin-right: 6px;
+  }
+  .focus-card .fc-name {
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--dark-blue);
+  }
+  .focus-card textarea {
+    width: 100%;
+    margin-top: 6px;
+    border: 1.5px dashed var(--mid-grey);
+    border-radius: 4px;
+    padding: 6px 8px;
+    font-family: inherit;
+    font-size: 13px;
+    min-height: 36px;
+    resize: vertical;
+    outline: none;
+    background: var(--light-grey);
+  }
+  .focus-card textarea::placeholder { color: #aaa; font-style: italic; }
+  .focus-card textarea:focus { border-color: var(--bright-orange); background: var(--white); }
+
+  /* ===== WRITING AREA ===== */
+  .writing-area {
+    border: 2px solid var(--steel-blue);
+    border-radius: 6px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    background: var(--white);
+  }
+  .writing-area .wa-instructions {
+    font-size: 13px;
+    margin-bottom: 8px;
+    color: var(--charcoal);
+  }
+  .writing-area .wa-instructions ul {
+    padding-left: 18px;
+    margin-top: 4px;
+  }
+  .writing-area .wa-instructions li {
+    font-size: 13px;
+    margin-bottom: 2px;
+  }
+  .writing-area .wa-instructions li::marker { color: var(--bright-orange); }
+  .writing-area textarea {
+    width: 100%;
+    border: 1.5px dashed var(--mid-grey);
+    border-radius: 4px;
+    padding: 10px 12px;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.8;
+    min-height: 160px;
+    resize: vertical;
+    outline: none;
+    background: var(--light-grey);
+  }
+  .writing-area textarea::placeholder { color: #aaa; font-style: italic; }
+  .writing-area textarea:focus { border-color: var(--bright-orange); background: var(--white); }
+
+  /* ===== DIFFERENTIATION BLOCKS ===== */
+  .diff-block {
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+  }
+  .diff-block.support {
+    background: var(--support-blue);
+    border-left: 5px solid var(--steel-blue);
+  }
+  .diff-block.extension {
+    background: var(--extension-orange);
+    border-left: 5px solid var(--bright-orange);
+  }
+  .diff-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+  .diff-block.support .diff-label { color: var(--steel-blue); }
+  .diff-block.extension .diff-label { color: var(--bright-orange); }
+  .diff-block ol {
+    padding-left: 20px;
+    margin-bottom: 8px;
+  }
+  .diff-block li {
+    font-size: 13px;
+    margin-bottom: 3px;
+  }
+  .word-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+  }
+  .word-bank span {
+    background: var(--white);
+    border: 1px solid var(--steel-blue);
+    border-radius: 12px;
+    padding: 2px 10px;
+    font-size: 12px;
+    color: var(--dark-blue);
+  }
+  .diff-block textarea,
+  .diff-block input[type="text"] {
+    width: 100%;
+    border: 1.5px dashed rgba(0,0,0,0.2);
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-family: inherit;
+    font-size: 13px;
+    background: rgba(255,255,255,0.7);
+    outline: none;
+    resize: vertical;
+  }
+  .diff-block textarea:focus,
+  .diff-block input[type="text"]:focus {
+    border-color: var(--bright-orange);
+    background: var(--white);
+  }
+
+  /* ===== EXIT TICKET ===== */
+  .exit-question {
+    margin-bottom: 10px;
+  }
+  .exit-question .eq-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--dark-blue);
+    margin-bottom: 4px;
+  }
+  .exit-question textarea {
+    width: 100%;
+    border: 1.5px dashed var(--mid-grey);
+    border-radius: 4px;
+    padding: 8px 10px;
+    font-family: inherit;
+    font-size: 13px;
+    min-height: 40px;
+    resize: vertical;
+    outline: none;
+    background: var(--light-grey);
+  }
+  .exit-question textarea:focus { border-color: var(--bright-orange); background: var(--white); }
+
+  /* ===== SELF-ASSESSMENT ===== */
+  .self-assess table td {
+    text-align: center;
+    padding: 6px 8px;
+  }
+  .self-assess table td:first-child { text-align: left; }
+  .self-assess table td label {
+    cursor: pointer;
+    font-size: 18px;
+    opacity: 0.3;
+    transition: opacity 0.15s;
+  }
+  .self-assess table td input[type="radio"] { display: none; }
+  .self-assess table td input[type="radio"]:checked + label { opacity: 1; }
+  .self-assess table th.got { background: var(--teal); }
+  .self-assess table th.nearly { background: var(--bright-orange); }
+  .self-assess table th.need { background: var(--steel-blue); }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    text-align: center;
+    font-size: 11px;
+    color: var(--mid-grey);
+    padding-top: 12px;
+    border-top: 1px solid #ddd;
+    margin-top: 10px;
+  }
+
+  /* ===== SAVE BUTTON ===== */
+  .btn-bar {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin: 20px auto 10px;
+    max-width: 210mm;
+  }
+  .btn {
+    padding: 10px 28px;
+    border: none;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.2s;
+  }
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 3px 8px rgba(0,0,0,0.15); }
+  .btn-pdf {
+    background: var(--bright-orange);
+    color: var(--white);
+  }
+  .btn-clear {
+    background: var(--white);
+    color: var(--mid-grey);
+    border: 1.5px solid #ccc;
+  }
+  .save-indicator {
+    font-size: 11px;
+    color: var(--teal);
+    text-align: center;
+    margin-top: 4px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .save-indicator.show { opacity: 1; }
+
+  /* ===== DESIGN EVERYWHERE TABLE ===== */
+  .de-table td:first-child { width: 40%; }
+
+  /* ===== PRINT STYLES ===== */
+  @media print {
+    body { background: white; font-size: 12px; }
+    .worksheet {
+      max-width: 100%;
+      margin: 0;
+      padding: 14px 18px;
+      box-shadow: none;
+    }
+    .btn-bar, .save-indicator { display: none !important; }
+    .header { padding: 12px 16px; }
+    .header h1 { font-size: 16px; }
+    .section { page-break-inside: avoid; }
+    .writing-area textarea { min-height: 120px; }
+    textarea, input[type="text"] {
+      border: 1px solid #999 !important;
+      background: white !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .diff-block.support, .diff-block.extension,
+    .prompt-box, .lisc-box, .focus-card textarea,
+    table th, .badge, .section-icon, .info-bar {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .self-assess table td label { opacity: 0.2; }
+    .self-assess table td input[type="radio"]:checked + label { opacity: 1; }
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 600px) {
+    .worksheet { padding: 14px 12px; }
+    .info-bar { flex-direction: column; }
+    .focus-grid { grid-template-columns: 1fr; }
+  }
+
+</style>
+</head>
+<body>
+<div class="btn-bar">
+  <button class="btn btn-pdf" onclick="handlePrint()" title="Opens print dialog — choose 'Save as PDF'">&#128438; Save as PDF</button>
+  <button class="btn btn-clear" onclick="handleClear()" title="Clear all your answers">&#128465; Clear All</button>
+</div>
+<div class="save-indicator" id="saveMsg">&#10003; Auto-saved</div>
+
+<div class="worksheet" id="ws">
+  <div class="header">
+    <h1>T1-L20: Testing Day! Load Testing &amp; Evaluation</h1>
+    <div class="subtitle">Year 7 Technology Mandatory &mdash; Engineering Technologies &amp; Systems &mdash; Bridge It</div>
+  </div>
+
+  <div class="info-bar">
+    <div class="info-group"><label>Name:</label> <input type="text" id="f-name" placeholder="Your name" data-field="name"></div>
+    <div class="info-group"><label>Class:</label> <input type="text" id="f-class" placeholder="e.g. 7TECE" data-field="class" style="width:80px;"></div>
+    <div class="info-group"><label>Date:</label> <input type="text" id="f-date" placeholder="DD/MM/YYYY" data-field="date" style="width:100px;"></div>
+    <div class="info-group"><label>Folio:</label> <span style="font-size:13px;">pp. 82–85</span></div>
+  </div>
+
+  <div class="outcomes">
+    <span class="label">Outcomes:</span>
+    <span class="badge">TE4-DES-01</span>
+    <span class="badge">TE4-PPM-01</span>
+    <span class="badge">TE4-MSC-01</span>
+    <span class="badge">TE4-SDP-01</span>
+    <span class="badge folio">Folio pp. 82–85</span>
+  </div>
+
+  <div class="section">
+    <div class="lisc-box">
+      <div class="li-label">Learning Intention</div>
+      <div class="li-text">We are learning to test, evaluate and reflect on our engineering design project.</div>
+      <div class="li-label">Success Criteria</div>
+      <ul>
+        <li>I can conduct a load test incrementally</li>
+        <li>I can record and analyse test results</li>
+        <li>I can evaluate my bridge against the design brief</li>
+        <li>I can reflect on what I learned about engineering</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--bright-orange);">&#9998;</div>
+      <div class="section-title">Do Now</div>
+    </div>
+    <div class="prompt-box">Final Prediction &mdash; Write your maximum load estimate, your reasoning, and where you predict failure.</div>
+    <table>
+      <thead><tr><th style="width:25%;">Prediction (kg)</th><th style="width:40%;">Reasoning</th><th>Predicted failure point</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><input type="text" data-field="l20-dn-predict" placeholder="e.g. 3.5 kg" style="text-align:center;"></td>
+          <td><input type="text" data-field="l20-dn-reason" placeholder="Because my truss has strong triangulation and..."></td>
+          <td><input type="text" data-field="l20-dn-failure" placeholder="e.g. the middle joint on the bottom chord"></td>
+        </tr>
+      </tbody></table>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--teal);">&#128218;</div>
+      <div class="section-title">Key Vocabulary</div>
+    </div>
+    <p style="font-size:12px;color:var(--mid-grey);margin-bottom:6px;">
+      <strong>Standard:</strong> Fill in the definition. &nbsp;|&nbsp;
+      <strong>Support:</strong> Definitions shown in grey &mdash; read and copy into your folio. &nbsp;|&nbsp;
+      <strong>Extension:</strong> Use each term in a sentence.
+    </p>
+    <table class="vocab-table">
+      <thead><tr><th>Term</th><th>Definition</th><th>Use in a sentence (Extension)</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Load testing</strong></td>
+          <td><span class="def-cell">Applying increasing force to determine maximum capacity</span><br>
+            <input type="text" data-field="vocab-def-1" placeholder="Write definition here (Standard)"></td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-1" placeholder="Write a sentence using this term"></td>
+        </tr>
+        <tr>
+          <td><strong>Structural failure</strong></td>
+          <td><span class="def-cell">When a structure breaks, buckles, or collapses</span><br>
+            <input type="text" data-field="vocab-def-2" placeholder="Write definition here (Standard)"></td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-2" placeholder="Write a sentence using this term"></td>
+        </tr>
+        <tr>
+          <td><strong>Compression failure</strong></td>
+          <td><span class="def-cell">A member is crushed or buckled under pushing forces</span><br>
+            <input type="text" data-field="vocab-def-3" placeholder="Write definition here (Standard)"></td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-3" placeholder="Write a sentence using this term"></td>
+        </tr>
+        <tr>
+          <td><strong>Tension failure</strong></td>
+          <td><span class="def-cell">A member is pulled apart under stretching forces</span><br>
+            <input type="text" data-field="vocab-def-4" placeholder="Write definition here (Standard)"></td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-4" placeholder="Write a sentence using this term"></td>
+        </tr>
+        <tr>
+          <td><strong>Evaluation</strong></td>
+          <td><span class="def-cell">Judging how well a design meets the original brief</span><br>
+            <input type="text" data-field="vocab-def-5" placeholder="Write definition here (Standard)"></td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-5" placeholder="Write a sentence using this term"></td>
+        </tr>
+        <tr>
+          <td><strong>Reflection</strong></td>
+          <td><span class="def-cell">Thinking back on what you learned and what you would change</span><br>
+            <input type="text" data-field="vocab-def-6" placeholder="Write definition here (Standard)"></td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-6" placeholder="Write a sentence using this term"></td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--steel-blue);">&#128203;</div>
+      <div class="section-title">Activity 1: Testing Procedure (Folio p. 82)</div>
+    </div>
+    <p style="font-size:13px;margin-bottom:8px;">Read the testing procedure carefully. You will follow these steps exactly.</p>
+    <table>
+      <thead><tr><th style="width:28px;">Step</th><th>Procedure</th></tr></thead>
+      <tbody>
+        <tr><td class="row-num">1</td><td>Place bridge across a 30 cm gap between two supports</td></tr>
+        <tr><td class="row-num">2</td><td>Place a small cardboard platform on the bridge deck</td></tr>
+        <tr><td class="row-num">3</td><td>Add masses incrementally: 50 g, 100 g, 200 g, 500 g, 1 kg, 2 kg&hellip;</td></tr>
+        <tr><td class="row-num">4</td><td>Wait 5 seconds at each increment &mdash; observe for deflection</td></tr>
+        <tr><td class="row-num">5</td><td>Record the last successful load before failure</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:13px;margin-top:8px;"><strong>In your own words, describe what you need to do during testing:</strong></p>
+    <textarea data-field="l20-proc-understand" placeholder="During the load test I will..." style="min-height:50px;width:100%;"></textarea>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--bright-orange);">&#9888;</div>
+      <div class="section-title">Activity 2: Types of Structural Failure (Folio p. 82)</div>
+    </div>
+    <p style="font-size:13px;margin-bottom:8px;">Match each failure type to its description.</p>
+    <table>
+      <thead><tr><th style="width:25%;">Failure Type</th><th style="width:40%;">Description</th><th>Match (write the letter)</th></tr></thead>
+      <tbody>
+        <tr><td><strong>1. Joint failure</strong></td><td>A. Entire structure suddenly collapses</td><td><input type="text" data-field="l20-fail-match1" placeholder="e.g. C" style="width:50px;text-align:center;"></td></tr>
+        <tr><td><strong>2. Member failure</strong></td><td>B. A single stick snaps or breaks</td><td><input type="text" data-field="l20-fail-match2" placeholder="" style="width:50px;text-align:center;"></td></tr>
+        <tr><td><strong>3. Buckling</strong></td><td>C. Glue gives way where sticks connect</td><td><input type="text" data-field="l20-fail-match3" placeholder="" style="width:50px;text-align:center;"></td></tr>
+        <tr><td><strong>4. Deck failure</strong></td><td>D. A member bends sideways under compression</td><td><input type="text" data-field="l20-fail-match4" placeholder="" style="width:50px;text-align:center;"></td></tr>
+        <tr><td><strong>5. Catastrophic collapse</strong></td><td>E. The top surface caves in under the load</td><td><input type="text" data-field="l20-fail-match5" placeholder="" style="width:50px;text-align:center;"></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--teal);">&#128200;</div>
+      <div class="section-title">Activity 3: My Bridge Test Results (Folio p. 83)</div>
+    </div>
+    <p style="font-size:13px;margin-bottom:8px;">Record your bridge&rsquo;s test results.</p>
+    <table>
+      <thead><tr><th style="width:35%;">Measurement</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Bridge weight (g)</strong></td><td><input type="text" data-field="l20-result-weight" placeholder="e.g. 42 g" style="width:120px;"></td></tr>
+        <tr><td><strong>Maximum load held (g)</strong></td><td><input type="text" data-field="l20-result-load" placeholder="e.g. 3,200 g" style="width:120px;"></td></tr>
+        <tr><td><strong>Failure type</strong></td><td><input type="text" data-field="l20-result-failtype" placeholder="e.g. joint failure at middle section" style="width:100%;"></td></tr>
+        <tr><td><strong>Where failure occurred</strong></td><td><input type="text" data-field="l20-result-failwhere" placeholder="e.g. bottom chord, third joint from left" style="width:100%;"></td></tr>
+        <tr><td><strong>Predicted load (from Do Now)</strong></td><td><input type="text" data-field="l20-result-predicted" placeholder="e.g. 3,500 g" style="width:120px;"></td></tr>
+        <tr><td><strong>Predicted vs Actual</strong></td><td><input type="text" data-field="l20-result-compare" placeholder="e.g. 300 g less than predicted" style="width:100%;"></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--steel-blue);">&#127942;</div>
+      <div class="section-title">Activity 4: Class Results Board (Folio p. 83)</div>
+    </div>
+    <p style="font-size:13px;margin-bottom:8px;">Record the top 5 results from the class.</p>
+    <table>
+      <thead><tr><th style="width:5%;">#</th><th style="width:22%;">Bridge / Builder</th><th style="width:18%;">Bridge Weight (g)</th><th style="width:18%;">Max Load (g)</th><th style="width:18%;">Failure Type</th><th>Efficiency Ratio</th></tr></thead>
+      <tbody>
+        <tr><td class="row-num">1</td><td><input type="text" data-field="l20-class1-name" placeholder="" style="width:100%;"></td><td><input type="text" data-field="l20-class1-weight" placeholder="" style="width:100%;text-align:center;"></td><td><input type="text" data-field="l20-class1-load" placeholder="" style="width:100%;text-align:center;"></td><td><input type="text" data-field="l20-class1-fail" placeholder="" style="width:100%;"></td><td><input type="text" data-field="l20-class1-eff" placeholder="" style="width:100%;text-align:center;"></td></tr>
+        <tr><td class="row-num">2</td><td><input type="text" data-field="l20-class2-name" placeholder="" style="width:100%;"></td><td><input type="text" data-field="l20-class2-weight" placeholder="" style="width:100%;text-align:center;"></td><td><input type="text" data-field="l20-class2-load" placeholder="" style="width:100%;text-align:center;"></td><td><input type="text" data-field="l20-class2-fail" placeholder="" style="width:100%;"></td><td><input type="text" data-field="l20-class2-eff" placeholder="" style="width:100%;text-align:center;"></td></tr>
+        <tr><td class="row-num">3</td><td><input type="text" data-field="l20-class3-name" placeholder="" style="width:100%;"></td><td><input type="text" data-field="l20-class3-weight" placeholder="" style="width:100%;text-align:center;"></td><td><input type="text" data-field="l20-class3-load" placeholder="" style="width:100%;text-align:center;"></td><td><input type="text" data-field="l20-class3-fail" placeholder="" style="width:100%;"></td><td><input type="text" data-field="l20-class3-eff" placeholder="" style="width:100%;text-align:center;"></td></tr>
+        <tr><td class="row-num">4</td><td><input type="text" data-field="l20-class4-name" placeholder="" style="width:100%;"></td><td><input type="text" data-field="l20-class4-weight" placeholder="" style="width:100%;text-align:center;"></td><td><input type="text" data-field="l20-class4-load" placeholder="" style="width:100%;text-align:center;"></td><td><input type="text" data-field="l20-class4-fail" placeholder="" style="width:100%;"></td><td><input type="text" data-field="l20-class4-eff" placeholder="" style="width:100%;text-align:center;"></td></tr>
+        <tr><td class="row-num">5</td><td><input type="text" data-field="l20-class5-name" placeholder="" style="width:100%;"></td><td><input type="text" data-field="l20-class5-weight" placeholder="" style="width:100%;text-align:center;"></td><td><input type="text" data-field="l20-class5-load" placeholder="" style="width:100%;text-align:center;"></td><td><input type="text" data-field="l20-class5-fail" placeholder="" style="width:100%;"></td><td><input type="text" data-field="l20-class5-eff" placeholder="" style="width:100%;text-align:center;"></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--bright-orange);">&#128290;</div>
+      <div class="section-title">Activity 5: Calculate Efficiency Ratio (Folio p. 84)</div>
+    </div>
+    <div style="border:2px solid var(--bright-orange);border-radius:6px;padding:10px;margin-bottom:10px;">
+      <p style="font-size:14px;font-weight:700;color:var(--bright-orange);margin-bottom:4px;">Efficiency = Max Load &divide; Bridge Weight</p>
+      <p style="font-size:12px;color:var(--mid-grey);">Example: 3,000 g &divide; 40 g = 75:1</p>
+    </div>
+    <table>
+      <thead><tr><th style="width:30%;">Your calculation</th><th style="width:25%;">Your ratio</th><th>Benchmark</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><input type="text" data-field="l20-eff-calc" placeholder="e.g. 3200 &divide; 42 = 76.2" style="width:100%;"></td>
+          <td><input type="text" data-field="l20-eff-ratio" placeholder="e.g. 76:1" style="width:100%;text-align:center;"></td>
+          <td style="font-size:12px;">
+            <strong>&lt;25:1</strong> Keep practising<br>
+            <strong>25&ndash;49:1</strong> Good<br>
+            <strong>50&ndash;99:1</strong> Great<br>
+            <strong>100+:1</strong> Exceptional
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--teal);">&#128065;</div>
+      <div class="section-title">Activity 6: Gallery Walk Notes (Folio p. 84)</div>
+    </div>
+    <p style="font-size:13px;margin-bottom:8px;">Walk around and observe other bridges. Take notes.</p>
+    <table>
+      <thead><tr><th style="width:5%;">#</th><th style="width:40%;">Question</th><th>Your observations</th></tr></thead>
+      <tbody>
+        <tr><td class="row-num">1</td><td>Which bridge had the strongest features? Why?</td><td><textarea data-field="l20-gw-strong" placeholder="" style="min-height:40px;"></textarea></td></tr>
+        <tr><td class="row-num">2</td><td>Which bridge was the most creative? What made it creative?</td><td><textarea data-field="l20-gw-creative" placeholder="" style="min-height:40px;"></textarea></td></tr>
+        <tr><td class="row-num">3</td><td>What ONE feature would you borrow for a redesign of your bridge?</td><td><textarea data-field="l20-gw-borrow" placeholder="" style="min-height:40px;"></textarea></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--dark-blue);">&#128221;</div>
+      <div class="section-title">Activity 7: Evaluation (Folio pp. 84&ndash;85)</div>
+    </div>
+    <p style="font-size:13px;margin-bottom:8px;">Answer all evaluation questions in <strong>full sentences</strong>.</p>
+    <table>
+      <thead><tr><th style="width:5%;">#</th><th style="width:40%;">Question</th><th>Your answer</th></tr></thead>
+      <tbody>
+        <tr><td class="row-num">1</td><td>Did your bridge meet the design brief? Explain.</td><td><textarea data-field="l20-eval1" placeholder="" style="min-height:50px;"></textarea></td></tr>
+        <tr><td class="row-num">2</td><td>How did your maximum load compare to your prediction?</td><td><textarea data-field="l20-eval2" placeholder="" style="min-height:50px;"></textarea></td></tr>
+        <tr><td class="row-num">3</td><td>Where and how did your bridge fail?</td><td><textarea data-field="l20-eval3" placeholder="" style="min-height:50px;"></textarea></td></tr>
+        <tr><td class="row-num">4</td><td>What would you change if you built this bridge again?</td><td><textarea data-field="l20-eval4" placeholder="" style="min-height:50px;"></textarea></td></tr>
+        <tr><td class="row-num">5</td><td>How did the design process help you throughout this project?</td><td><textarea data-field="l20-eval5" placeholder="" style="min-height:50px;"></textarea></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--steel-blue);">&#128161;</div>
+      <div class="section-title">Activity 8: Reflection (Folio p. 85)</div>
+    </div>
+    <p style="font-size:13px;margin-bottom:8px;">Write 3&ndash;5 sentences for each reflection question.</p>
+    <table>
+      <thead><tr><th style="width:5%;">#</th><th style="width:40%;">Question</th><th>Your reflection</th></tr></thead>
+      <tbody>
+        <tr><td class="row-num">1</td><td>What is the most important thing you learned about engineering from this project?</td><td><textarea data-field="l20-refl1" placeholder="" style="min-height:60px;"></textarea></td></tr>
+        <tr><td class="row-num">2</td><td>How does this project connect to real-world bridges and structures?</td><td><textarea data-field="l20-refl2" placeholder="" style="min-height:60px;"></textarea></td></tr>
+        <tr><td class="row-num">3</td><td>What skills have you developed during this unit?</td><td><textarea data-field="l20-refl3" placeholder="" style="min-height:60px;"></textarea></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="diff-block support">
+    <div class="diff-label">&#128309; Support &mdash; Evaluation Sentence Starters</div>
+    <p style="font-size:13px;margin-bottom:6px;">Use these sentence starters to help with your evaluation:</p>
+    <ul style="font-size:13px;">
+      <li>&ldquo;My bridge <strong>did / did not</strong> meet the design brief because&hellip;&rdquo;</li>
+      <li>&ldquo;I predicted my bridge would hold <strong>___</strong> kg, but it actually held <strong>___</strong> kg.&rdquo;</li>
+      <li>&ldquo;My bridge failed at the <strong>___</strong> because&hellip;&rdquo;</li>
+      <li>&ldquo;If I built it again, I would change&hellip;&rdquo;</li>
+      <li>&ldquo;The design process helped me by&hellip;&rdquo;</li>
+      <li>&ldquo;The most important thing I learned was&hellip;&rdquo;</li>
+    </ul>
+    <div style="margin-top:6px;"><div class="diff-label" style="margin-bottom:4px;">Word Bank</div>
+      <div class="word-bank">
+        <span>load testing</span><span>failure</span><span>compression</span><span>tension</span>
+        <span>evaluation</span><span>reflection</span><span>design brief</span><span>specification</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="diff-block extension">
+    <div class="diff-label">&#128992; Extension &mdash; Engineering Report &amp; Analysis</div>
+    <p style="font-size:13px;margin-bottom:8px;"><strong>Formal engineering report:</strong> Write a mini-report using the structure below.</p>
+    <div style="margin-bottom:8px;">
+      <label style="font-size:12px;font-weight:600;">Introduction (purpose of the project):</label>
+      <textarea data-field="l20-ext-intro" placeholder="The purpose of this project was to..." style="min-height:40px;width:100%;"></textarea>
+    </div>
+    <div style="margin-bottom:8px;">
+      <label style="font-size:12px;font-weight:600;">Method (how you designed and built the bridge):</label>
+      <textarea data-field="l20-ext-method" placeholder="First, I wrote a design brief... Then I researched... I constructed..." style="min-height:50px;width:100%;"></textarea>
+    </div>
+    <div style="margin-bottom:8px;">
+      <label style="font-size:12px;font-weight:600;">Results (test data and efficiency):</label>
+      <textarea data-field="l20-ext-results" placeholder="My bridge weighed ___ g and held ___ g. The efficiency ratio was ___:1..." style="min-height:40px;width:100%;"></textarea>
+    </div>
+    <div style="margin-bottom:8px;">
+      <label style="font-size:12px;font-weight:600;">Discussion (why results occurred, comparison):</label>
+      <textarea data-field="l20-ext-discussion" placeholder="My bridge performed well/poorly because... Compared to the class average..." style="min-height:50px;width:100%;"></textarea>
+    </div>
+    <div style="margin-bottom:8px;">
+      <label style="font-size:12px;font-weight:600;">Conclusion (what you learned and recommendations):</label>
+      <textarea data-field="l20-ext-conclusion" placeholder="In conclusion, I learned that... I recommend..." style="min-height:40px;width:100%;"></textarea>
+    </div>
+    <p style="font-size:13px;margin-top:8px;margin-bottom:8px;"><strong>Graph challenge:</strong> If you recorded incremental loads, graph Load (x-axis) vs Deflection (y-axis). Describe the pattern.</p>
+    <textarea data-field="l20-ext-graph" placeholder="The graph shows that as load increased, deflection... The pattern is..." style="min-height:40px;width:100%;margin-bottom:8px;"></textarea>
+    <p style="font-size:13px;margin-bottom:8px;"><strong>Research:</strong> Find a real bridge failure case study (e.g. Tacoma Narrows, Silver Bridge). What caused it?</p>
+    <textarea data-field="l20-ext-casestudy" placeholder="The ___ bridge collapsed in ___ because..." style="min-height:50px;width:100%;"></textarea>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--teal);">&#127915;</div>
+      <div class="section-title">Exit Ticket &mdash; Reflection</div>
+    </div>
+    <div class="exit-question">
+      <div class="eq-label">1. What is the single most important thing you learned about engineering from this project?</div>
+      <textarea data-field="exit-1" placeholder=""></textarea>
+    </div>
+    <div class="exit-question">
+      <div class="eq-label">2. How has this project changed the way you look at structures in the real world?</div>
+      <textarea data-field="exit-2" placeholder=""></textarea>
+    </div>
+
+  </div>
+
+  <div class="section self-assess">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--dark-blue);">&#9989;</div>
+      <div class="section-title">Self-Assessment</div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:55%;">Success Criteria</th>
+          <th class="got" style="width:15%;">Got it &#128994;</th>
+          <th class="nearly" style="width:15%;">Nearly there &#128992;</th>
+          <th class="need" style="width:15%;">Need help &#128308;</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="text-align:left;">I can conduct a load test incrementally</td>
+          <td><input type="radio" name="sa1" id="sa1a" value="got" data-field="sa1"><label for="sa1a">&#9679;</label></td>
+          <td><input type="radio" name="sa1" id="sa1b" value="nearly" data-field="sa1"><label for="sa1b">&#9679;</label></td>
+          <td><input type="radio" name="sa1" id="sa1c" value="need" data-field="sa1"><label for="sa1c">&#9679;</label></td>
+        </tr>
+        <tr>
+          <td style="text-align:left;">I can record and analyse test results</td>
+          <td><input type="radio" name="sa2" id="sa2a" value="got" data-field="sa2"><label for="sa2a">&#9679;</label></td>
+          <td><input type="radio" name="sa2" id="sa2b" value="nearly" data-field="sa2"><label for="sa2b">&#9679;</label></td>
+          <td><input type="radio" name="sa2" id="sa2c" value="need" data-field="sa2"><label for="sa2c">&#9679;</label></td>
+        </tr>
+        <tr>
+          <td style="text-align:left;">I can evaluate my bridge against the design brief</td>
+          <td><input type="radio" name="sa3" id="sa3a" value="got" data-field="sa3"><label for="sa3a">&#9679;</label></td>
+          <td><input type="radio" name="sa3" id="sa3b" value="nearly" data-field="sa3"><label for="sa3b">&#9679;</label></td>
+          <td><input type="radio" name="sa3" id="sa3c" value="need" data-field="sa3"><label for="sa3c">&#9679;</label></td>
+        </tr>
+        <tr>
+          <td style="text-align:left;">I can reflect on what I learned about engineering</td>
+          <td><input type="radio" name="sa4" id="sa4a" value="got" data-field="sa4"><label for="sa4a">&#9679;</label></td>
+          <td><input type="radio" name="sa4" id="sa4b" value="nearly" data-field="sa4"><label for="sa4b">&#9679;</label></td>
+          <td><input type="radio" name="sa4" id="sa4c" value="need" data-field="sa4"><label for="sa4c">&#9679;</label></td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer">T1-L20 &mdash; Year 7 Technology Mandatory &mdash; Engineering Technologies &amp; Systems &mdash; Bridge It</div>
+</div>
+
+<script>
+
+(function() {
+  'use strict';
+
+  const STORAGE_KEY = 'T1-L20-Worksheet';
+  const saveMsg = document.getElementById('saveMsg');
+  let saveTimer = null;
+
+  // ---- Auto-save to localStorage ----
+  function saveAll() {
+    const data = {};
+    // Text inputs and textareas
+    document.querySelectorAll('[data-field]').forEach(function(el) {
+      if (el.type === 'radio') {
+        if (el.checked) data[el.name] = el.value;
+      } else {
+        data[el.getAttribute('data-field')] = el.value;
+      }
+    });
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      showSaved();
+    } catch(e) { /* localStorage full or blocked */ }
+  }
+
+  function showSaved() {
+    saveMsg.classList.add('show');
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function() { saveMsg.classList.remove('show'); }, 1500);
+  }
+
+  // ---- Load from localStorage ----
+  function loadAll() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const data = JSON.parse(raw);
+
+      // Text inputs and textareas
+      document.querySelectorAll('input[data-field]:not([type=radio]), textarea[data-field]').forEach(function(el) {
+        const key = el.getAttribute('data-field');
+        if (data[key] !== undefined) el.value = data[key];
+      });
+
+      // Radio buttons
+      ['sa1', 'sa2', 'sa3', 'sa4'].forEach(function(name) {
+        if (data[name]) {
+          const radio = document.querySelector('input[name="'+name+'"][value="'+data[name]+'"]');
+          if (radio) radio.checked = true;
+        }
+      });
+    } catch(e) { /* bad data, ignore */ }
+  }
+
+  // ---- Attach listeners ----
+  document.querySelectorAll('input[data-field], textarea[data-field]').forEach(function(el) {
+    el.addEventListener('input', debounce(saveAll, 500));
+    el.addEventListener('change', saveAll);
+  });
+
+  function debounce(fn, ms) {
+    let t;
+    return function() { clearTimeout(t); t = setTimeout(fn, ms); };
+  }
+
+  // ---- Print / Save as PDF ----
+  window.handlePrint = function() {
+    saveAll(); // save before printing
+    window.print();
+  };
+
+  // ---- Clear all ----
+  window.handleClear = function() {
+    if (!confirm('Clear all your answers? This cannot be undone.')) return;
+    document.querySelectorAll('input[data-field]:not([type=radio]), textarea[data-field]').forEach(function(el) {
+      el.value = '';
+    });
+    document.querySelectorAll('input[type=radio]').forEach(function(el) {
+      el.checked = false;
+    });
+    localStorage.removeItem(STORAGE_KEY);
+  };
+
+  // ---- Init ----
+  loadAll();
+})();
+
+</script>
+</body>
+</html>

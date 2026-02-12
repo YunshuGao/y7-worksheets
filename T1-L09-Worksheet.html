@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T1-L09: Measurement &amp; Estimation</title>
+<style>
+
+  /* ===== BLUEPRINT THEME ===== */
+  :root {
+    --steel-blue: #2B5F8A;
+    --bright-orange: #E8712B;
+    --charcoal: #333333;
+    --light-grey: #F2F2F2;
+    --teal: #1A8A6E;
+    --support-blue: #D6E8F7;
+    --extension-orange: #FDE8D0;
+    --white: #FFFFFF;
+    --dark-blue: #1A3D5C;
+    --mid-grey: #888888;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Calibri, 'Segoe UI', Arial, sans-serif;
+    font-size: 14px;
+    color: var(--charcoal);
+    background: var(--light-grey);
+    line-height: 1.5;
+  }
+
+  .worksheet {
+    max-width: 210mm;
+    margin: 20px auto;
+    background: var(--white);
+    padding: 28px 32px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: var(--steel-blue);
+    color: var(--white);
+    padding: 18px 24px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    right: -30px; top: -30px;
+    width: 120px; height: 120px;
+    background: var(--bright-orange);
+    border-radius: 50%;
+    opacity: 0.15;
+  }
+  .header h1 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 2px;
+    position: relative;
+    z-index: 1;
+  }
+  .header .subtitle {
+    font-size: 13px;
+    opacity: 0.9;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ===== STUDENT INFO BAR ===== */
+  .info-bar {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+    padding: 10px 14px;
+    background: var(--light-grey);
+    border-radius: 4px;
+    border-left: 4px solid var(--steel-blue);
+    align-items: center;
+  }
+  .info-bar label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--steel-blue);
+    white-space: nowrap;
+  }
+  .info-bar input {
+    border: none;
+    border-bottom: 1.5px solid var(--mid-grey);
+    background: transparent;
+    font-family: inherit;
+    font-size: 13px;
+    padding: 2px 4px;
+    width: 140px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .info-bar input:focus { border-bottom-color: var(--bright-orange); }
+  .info-group { display: flex; align-items: center; gap: 4px; }
+
+  /* ===== OUTCOME BADGES ===== */
+  .outcomes {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .outcomes span.label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--mid-grey);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .badge {
+    display: inline-block;
+    background: var(--dark-blue);
+    color: var(--white);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 12px;
+    letter-spacing: 0.3px;
+  }
+  .badge.folio {
+    background: var(--teal);
+  }
+
+  /* ===== SECTION HEADERS ===== */
+  .section {
+    margin-bottom: 18px;
+    page-break-inside: avoid;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .section-icon {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: var(--white);
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--dark-blue);
+  }
+
+  /* ===== LISC BOX ===== */
+  .lisc-box {
+    background: var(--light-grey);
+    border-radius: 6px;
+    padding: 14px 18px;
+    border-left: 4px solid var(--steel-blue);
+  }
+  .lisc-box .li-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--steel-blue);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+  .lisc-box .li-text {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  .lisc-box ul {
+    margin: 0;
+    padding-left: 20px;
+  }
+  .lisc-box ul li {
+    font-size: 13px;
+    margin-bottom: 3px;
+    color: var(--charcoal);
+  }
+  .lisc-box ul li::marker {
+    color: var(--bright-orange);
+  }
+
+  /* ===== DO NOW TABLE ===== */
+  .prompt-box {
+    background: var(--extension-orange);
+    border-radius: 4px;
+    padding: 10px 14px;
+    font-style: italic;
+    font-size: 14px;
+    margin-bottom: 10px;
+    border-left: 4px solid var(--bright-orange);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 6px;
+    font-size: 13px;
+  }
+  table th {
+    background: var(--steel-blue);
+    color: var(--white);
+    font-weight: 600;
+    font-size: 12px;
+    padding: 8px 10px;
+    text-align: left;
+    border: 1px solid var(--steel-blue);
+  }
+  table td {
+    padding: 4px 6px;
+    border: 1px solid #ccc;
+    vertical-align: top;
+  }
+  table td input,
+  table td textarea {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 13px;
+    padding: 4px 2px;
+    resize: vertical;
+    outline: none;
+    line-height: 1.4;
+  }
+  table td textarea { min-height: 32px; }
+
+  /* Row number column */
+  table td.row-num {
+    width: 28px;
+    text-align: center;
+    font-weight: 600;
+    color: var(--mid-grey);
+    background: var(--light-grey);
+  }
+
+  /* ===== VOCABULARY TABLE ===== */
+  .vocab-table th:first-child { width: 22%; }
+  .vocab-table .def-cell { font-size: 12px; color: var(--mid-grey); }
+  .vocab-table td.sentence-cell { background: var(--light-grey); }
+
+  /* ===== FOCUS AREAS GRID ===== */
+  .focus-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .focus-card {
+    border: 2px solid var(--steel-blue);
+    border-radius: 6px;
+    padding: 10px 12px;
+    background: var(--white);
+  }
+  .focus-card .fc-num {
+    display: inline-block;
+    background: var(--steel-blue);
+    color: var(--white);
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 22px;
+    margin-right: 6px;
+  }
+  .focus-card .fc-name {
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--dark-blue);
+  }
+  .focus-card textarea {
+    width: 100%;
+    margin-top: 6px;
+    border: 1.5px dashed var(--mid-grey);
+    border-radius: 4px;
+    padding: 6px 8px;
+    font-family: inherit;
+    font-size: 13px;
+    min-height: 36px;
+    resize: vertical;
+    outline: none;
+    background: var(--light-grey);
+  }
+  .focus-card textarea::placeholder { color: #aaa; font-style: italic; }
+  .focus-card textarea:focus { border-color: var(--bright-orange); background: var(--white); }
+
+  /* ===== WRITING AREA ===== */
+  .writing-area {
+    border: 2px solid var(--steel-blue);
+    border-radius: 6px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    background: var(--white);
+  }
+  .writing-area .wa-instructions {
+    font-size: 13px;
+    margin-bottom: 8px;
+    color: var(--charcoal);
+  }
+  .writing-area .wa-instructions ul {
+    padding-left: 18px;
+    margin-top: 4px;
+  }
+  .writing-area .wa-instructions li {
+    font-size: 13px;
+    margin-bottom: 2px;
+  }
+  .writing-area .wa-instructions li::marker { color: var(--bright-orange); }
+  .writing-area textarea {
+    width: 100%;
+    border: 1.5px dashed var(--mid-grey);
+    border-radius: 4px;
+    padding: 10px 12px;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.8;
+    min-height: 160px;
+    resize: vertical;
+    outline: none;
+    background: var(--light-grey);
+  }
+  .writing-area textarea::placeholder { color: #aaa; font-style: italic; }
+  .writing-area textarea:focus { border-color: var(--bright-orange); background: var(--white); }
+
+  /* ===== DIFFERENTIATION BLOCKS ===== */
+  .diff-block {
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+  }
+  .diff-block.support {
+    background: var(--support-blue);
+    border-left: 5px solid var(--steel-blue);
+  }
+  .diff-block.extension {
+    background: var(--extension-orange);
+    border-left: 5px solid var(--bright-orange);
+  }
+  .diff-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+  .diff-block.support .diff-label { color: var(--steel-blue); }
+  .diff-block.extension .diff-label { color: var(--bright-orange); }
+  .diff-block ol {
+    padding-left: 20px;
+    margin-bottom: 8px;
+  }
+  .diff-block li {
+    font-size: 13px;
+    margin-bottom: 3px;
+  }
+  .word-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+  }
+  .word-bank span {
+    background: var(--white);
+    border: 1px solid var(--steel-blue);
+    border-radius: 12px;
+    padding: 2px 10px;
+    font-size: 12px;
+    color: var(--dark-blue);
+  }
+  .diff-block textarea,
+  .diff-block input[type="text"] {
+    width: 100%;
+    border: 1.5px dashed rgba(0,0,0,0.2);
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-family: inherit;
+    font-size: 13px;
+    background: rgba(255,255,255,0.7);
+    outline: none;
+    resize: vertical;
+  }
+  .diff-block textarea:focus,
+  .diff-block input[type="text"]:focus {
+    border-color: var(--bright-orange);
+    background: var(--white);
+  }
+
+  /* ===== EXIT TICKET ===== */
+  .exit-question {
+    margin-bottom: 10px;
+  }
+  .exit-question .eq-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--dark-blue);
+    margin-bottom: 4px;
+  }
+  .exit-question textarea {
+    width: 100%;
+    border: 1.5px dashed var(--mid-grey);
+    border-radius: 4px;
+    padding: 8px 10px;
+    font-family: inherit;
+    font-size: 13px;
+    min-height: 40px;
+    resize: vertical;
+    outline: none;
+    background: var(--light-grey);
+  }
+  .exit-question textarea:focus { border-color: var(--bright-orange); background: var(--white); }
+
+  /* ===== SELF-ASSESSMENT ===== */
+  .self-assess table td {
+    text-align: center;
+    padding: 6px 8px;
+  }
+  .self-assess table td:first-child { text-align: left; }
+  .self-assess table td label {
+    cursor: pointer;
+    font-size: 18px;
+    opacity: 0.3;
+    transition: opacity 0.15s;
+  }
+  .self-assess table td input[type="radio"] { display: none; }
+  .self-assess table td input[type="radio"]:checked + label { opacity: 1; }
+  .self-assess table th.got { background: var(--teal); }
+  .self-assess table th.nearly { background: var(--bright-orange); }
+  .self-assess table th.need { background: var(--steel-blue); }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    text-align: center;
+    font-size: 11px;
+    color: var(--mid-grey);
+    padding-top: 12px;
+    border-top: 1px solid #ddd;
+    margin-top: 10px;
+  }
+
+  /* ===== SAVE BUTTON ===== */
+  .btn-bar {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin: 20px auto 10px;
+    max-width: 210mm;
+  }
+  .btn {
+    padding: 10px 28px;
+    border: none;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.2s;
+  }
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 3px 8px rgba(0,0,0,0.15); }
+  .btn-pdf {
+    background: var(--bright-orange);
+    color: var(--white);
+  }
+  .btn-clear {
+    background: var(--white);
+    color: var(--mid-grey);
+    border: 1.5px solid #ccc;
+  }
+  .save-indicator {
+    font-size: 11px;
+    color: var(--teal);
+    text-align: center;
+    margin-top: 4px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .save-indicator.show { opacity: 1; }
+
+  /* ===== DESIGN EVERYWHERE TABLE ===== */
+  .de-table td:first-child { width: 40%; }
+
+  /* ===== PRINT STYLES ===== */
+  @media print {
+    body { background: white; font-size: 12px; }
+    .worksheet {
+      max-width: 100%;
+      margin: 0;
+      padding: 14px 18px;
+      box-shadow: none;
+    }
+    .btn-bar, .save-indicator { display: none !important; }
+    .header { padding: 12px 16px; }
+    .header h1 { font-size: 16px; }
+    .section { page-break-inside: avoid; }
+    .writing-area textarea { min-height: 120px; }
+    textarea, input[type="text"] {
+      border: 1px solid #999 !important;
+      background: white !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .diff-block.support, .diff-block.extension,
+    .prompt-box, .lisc-box, .focus-card textarea,
+    table th, .badge, .section-icon, .info-bar {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .self-assess table td label { opacity: 0.2; }
+    .self-assess table td input[type="radio"]:checked + label { opacity: 1; }
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 600px) {
+    .worksheet { padding: 14px 12px; }
+    .info-bar { flex-direction: column; }
+    .focus-grid { grid-template-columns: 1fr; }
+  }
+
+</style>
+</head>
+<body>
+<div class="btn-bar">
+  <button class="btn btn-pdf" onclick="handlePrint()" title="Opens print dialog — choose 'Save as PDF'">&#128438; Save as PDF</button>
+  <button class="btn btn-clear" onclick="handleClear()" title="Clear all your answers">&#128465; Clear All</button>
+</div>
+<div class="save-indicator" id="saveMsg">&#10003; Auto-saved</div>
+
+<div class="worksheet" id="ws">
+  <div class="header">
+    <h1>T1-L09: Measurement &amp; Estimation</h1>
+    <div class="subtitle">Year 7 Technology Mandatory &mdash; Engineering Technologies &amp; Systems &mdash; Bridge It</div>
+  </div>
+
+  <div class="info-bar">
+    <div class="info-group"><label>Name:</label> <input type="text" id="f-name" placeholder="Your name" data-field="name"></div>
+    <div class="info-group"><label>Class:</label> <input type="text" id="f-class" placeholder="e.g. 7TECE" data-field="class" style="width:80px;"></div>
+    <div class="info-group"><label>Date:</label> <input type="text" id="f-date" placeholder="DD/MM/YYYY" data-field="date" style="width:100px;"></div>
+    <div class="info-group"><label>Folio:</label> <span style="font-size:13px;">pp. 32–39</span></div>
+  </div>
+
+  <div class="outcomes">
+    <span class="label">Outcomes:</span>
+    <span class="badge">TE4-PPM-01</span>
+    <span class="badge">TE4-MSC-01</span>
+    <span class="badge folio">Folio pp. 32–39</span>
+  </div>
+
+  <div class="section">
+    <div class="lisc-box">
+      <div class="li-label">Learning Intention</div>
+      <div class="li-text">We are learning to measure accurately using millimetres and to estimate lengths before measuring.</div>
+      <div class="li-label">Success Criteria</div>
+      <ul>
+        <li>I can read a ruler to the nearest millimetre</li>
+        <li>I can measure objects accurately</li>
+        <li>I can estimate lengths before measuring</li>
+        <li>I can explain why measurement is important in engineering</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--bright-orange);">&#9998;</div>
+      <div class="section-title">Do Now</div>
+    </div>
+    <div class="prompt-box">Estimate the length of your pencil in millimetres. Write it down &mdash; no rulers yet!</div>
+    <table>
+      <thead><tr><th style="width:35%;">Your estimate (mm)</th><th style="width:35%;">Actual measurement (mm)</th><th>Difference</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><input type="text" data-field="dn-est" placeholder="e.g. 170 mm" style="text-align:center;"></td>
+          <td><input type="text" data-field="dn-actual" placeholder="Measure later!" style="text-align:center;"></td>
+          <td><input type="text" data-field="dn-diff" placeholder="" style="text-align:center;"></td>
+        </tr>
+      </tbody></table>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--teal);">&#128218;</div>
+      <div class="section-title">Key Vocabulary</div>
+    </div>
+    <p style="font-size:12px;color:var(--mid-grey);margin-bottom:6px;">
+      <strong>Standard:</strong> Fill in the definition. &nbsp;|&nbsp;
+      <strong>Support:</strong> Definitions shown in grey &mdash; read and copy into your folio. &nbsp;|&nbsp;
+      <strong>Extension:</strong> Use each term in a sentence.
+    </p>
+    <table class="vocab-table">
+      <thead><tr><th>Term</th><th>Definition</th><th>Use in a sentence (Extension)</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Millimetre (mm)</strong></td>
+          <td><span class="def-cell">One thousandth of a metre; the smallest unit on a standard ruler</span><br>
+            <input type="text" data-field="vocab-def-1" placeholder="Write definition here (Standard)"></td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-1" placeholder="Write a sentence using this term"></td>
+        </tr>
+        <tr>
+          <td><strong>Centimetre (cm)</strong></td>
+          <td><span class="def-cell">One hundredth of a metre; equals 10 mm</span><br>
+            <input type="text" data-field="vocab-def-2" placeholder="Write definition here (Standard)"></td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-2" placeholder="Write a sentence using this term"></td>
+        </tr>
+        <tr>
+          <td><strong>Metre (m)</strong></td>
+          <td><span class="def-cell">The base unit of length in the metric system; equals 100 cm</span><br>
+            <input type="text" data-field="vocab-def-3" placeholder="Write definition here (Standard)"></td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-3" placeholder="Write a sentence using this term"></td>
+        </tr>
+        <tr>
+          <td><strong>Estimation</strong></td>
+          <td><span class="def-cell">An educated guess of a measurement before using a tool</span><br>
+            <input type="text" data-field="vocab-def-4" placeholder="Write definition here (Standard)"></td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-4" placeholder="Write a sentence using this term"></td>
+        </tr>
+        <tr>
+          <td><strong>Accuracy</strong></td>
+          <td><span class="def-cell">How close a measurement is to the true (actual) value</span><br>
+            <input type="text" data-field="vocab-def-5" placeholder="Write definition here (Standard)"></td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-5" placeholder="Write a sentence using this term"></td>
+        </tr>
+        <tr>
+          <td><strong>Precision</strong></td>
+          <td><span class="def-cell">How consistent repeated measurements are (close to each other)</span><br>
+            <input type="text" data-field="vocab-def-6" placeholder="Write definition here (Standard)"></td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-6" placeholder="Write a sentence using this term"></td>
+        </tr>
+        <tr>
+          <td><strong>Ruler</strong></td>
+          <td><span class="def-cell">A measuring tool with marked units (mm and cm) used to find length</span><br>
+            <input type="text" data-field="vocab-def-7" placeholder="Write definition here (Standard)"></td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-7" placeholder="Write a sentence using this term"></td>
+        </tr>
+        <tr>
+          <td><strong>Measurement</strong></td>
+          <td><span class="def-cell">The process of finding the size, length or amount of something using a tool</span><br>
+            <input type="text" data-field="vocab-def-8" placeholder="Write definition here (Standard)"></td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-8" placeholder="Write a sentence using this term"></td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--steel-blue);">&#128207;</div>
+      <div class="section-title">How to Read a Ruler &mdash; 4 Steps</div>
+    </div>
+    <table>
+      <thead><tr><th style="width:8%;">Step</th><th style="width:30%;">Rule</th><th>Why it matters</th></tr></thead>
+      <tbody>
+        <tr><td class="row-num">1</td><td><strong>Start at 0</strong>, not the edge</td><td><input type="text" data-field="ruler-why1" placeholder="Because the edge and 0 are not the same..."></td></tr>
+        <tr><td class="row-num">2</td><td><strong>Read at eye level</strong> (look straight down)</td><td><input type="text" data-field="ruler-why2" placeholder="Parallax error means..."></td></tr>
+        <tr><td class="row-num">3</td><td>Count <strong>spaces</strong> between marks, not lines</td><td><input type="text" data-field="ruler-why3" placeholder="Each space between lines = 1 mm..."></td></tr>
+        <tr><td class="row-num">4</td><td>Record to the <strong>nearest mm</strong></td><td><input type="text" data-field="ruler-why4" placeholder="Engineers need precise measurements..."></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--teal);">&#9995;</div>
+      <div class="section-title">Body Measurement References</div>
+    </div>
+    <p style="font-size:13px;margin-bottom:8px;">Measure each body part and record YOUR personal references. These help you estimate!</p>
+    <table>
+      <thead><tr><th style="width:35%;">Body part</th><th style="width:25%;">Standard reference</th><th>Your measurement (mm)</th></tr></thead>
+      <tbody>
+        <tr><td>Fingernail width</td><td>&asymp; 10 mm (1 cm)</td><td><input type="text" data-field="body-1" placeholder="" style="width:80px;text-align:center;"> mm</td></tr>
+        <tr><td>Hand span (thumb to pinky, spread)</td><td>&asymp; 200 mm (20 cm)</td><td><input type="text" data-field="body-2" placeholder="" style="width:80px;text-align:center;"> mm</td></tr>
+        <tr><td>Forearm (elbow to fingertip)</td><td>&asymp; 500 mm (50 cm)</td><td><input type="text" data-field="body-3" placeholder="" style="width:80px;text-align:center;"> mm</td></tr>
+        <tr><td>One big stride (step length)</td><td>&asymp; 1,000 mm (1 m)</td><td><input type="text" data-field="body-4" placeholder="" style="width:80px;text-align:center;"> mm</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--bright-orange);">&#128208;</div>
+      <div class="section-title">Estimate &amp; Measure Classroom Objects (Folio pp. 38&ndash;39)</div>
+    </div>
+    <p style="font-size:13px;margin-bottom:8px;">Estimate FIRST (no rulers!), then measure. Use your body references to help estimate.</p>
+    <table>
+      <thead><tr><th style="width:25%;">Object</th><th style="width:22%;">Estimate (mm)</th><th style="width:22%;">Actual (mm)</th><th>Difference (mm)</th></tr></thead>
+      <tbody>
+        <tr><td><input type="text" data-field="obj-name1" placeholder="e.g. pencil case"></td><td><input type="text" data-field="obj-est1" placeholder="" style="text-align:center;"></td><td><input type="text" data-field="obj-act1" placeholder="" style="text-align:center;"></td><td><input type="text" data-field="obj-dif1" placeholder="" style="text-align:center;"></td></tr>
+        <tr><td><input type="text" data-field="obj-name2" placeholder="e.g. whiteboard marker"></td><td><input type="text" data-field="obj-est2" placeholder="" style="text-align:center;"></td><td><input type="text" data-field="obj-act2" placeholder="" style="text-align:center;"></td><td><input type="text" data-field="obj-dif2" placeholder="" style="text-align:center;"></td></tr>
+        <tr><td><input type="text" data-field="obj-name3" placeholder="e.g. eraser"></td><td><input type="text" data-field="obj-est3" placeholder="" style="text-align:center;"></td><td><input type="text" data-field="obj-act3" placeholder="" style="text-align:center;"></td><td><input type="text" data-field="obj-dif3" placeholder="" style="text-align:center;"></td></tr>
+        <tr><td><input type="text" data-field="obj-name4" placeholder="e.g. textbook"></td><td><input type="text" data-field="obj-est4" placeholder="" style="text-align:center;"></td><td><input type="text" data-field="obj-act4" placeholder="" style="text-align:center;"></td><td><input type="text" data-field="obj-dif4" placeholder="" style="text-align:center;"></td></tr>
+        <tr><td><input type="text" data-field="obj-name5" placeholder="e.g. student ID card"></td><td><input type="text" data-field="obj-est5" placeholder="" style="text-align:center;"></td><td><input type="text" data-field="obj-act5" placeholder="" style="text-align:center;"></td><td><input type="text" data-field="obj-dif5" placeholder="" style="text-align:center;"></td></tr>
+      </tbody>
+    </table>
+    <div class="exit-question" style="margin-top:8px;">
+      <div class="eq-label">Which object was your closest estimate? Which was furthest? Why?</div>
+      <textarea data-field="obj-reflect" placeholder="My closest estimate was... My furthest was... because..."></textarea>
+    </div>
+  </div>
+
+  <div class="diff-block support">
+    <div class="diff-label">&#128309; Support &mdash; Measurement Checklist</div>
+    <p style="font-size:13px;margin-bottom:6px;">Before EVERY measurement, check these steps:</p>
+    <ol style="font-size:13px;">
+      <li>Find the <strong>0 mark</strong> on your ruler (not the edge!)</li>
+      <li>Place the <strong>0 at one end</strong> of the object</li>
+      <li>Look <strong>straight down</strong> (no angle!)</li>
+      <li>Count the <strong>spaces</strong> (not lines) past the last cm mark</li>
+      <li>Write your answer in <strong>mm</strong></li>
+    </ol>
+    <div style="margin-top:6px;"><div class="diff-label" style="margin-bottom:4px;">Conversion Reminder</div>
+      <div class="word-bank">
+        <span>1 cm = 10 mm</span><span>1 m = 100 cm</span><span>1 m = 1,000 mm</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="diff-block extension">
+    <div class="diff-label">&#128992; Extension &mdash; Measurement Mastery</div>
+    <p style="font-size:13px;margin-bottom:8px;">Convert ALL your measurements between mm, cm, and m.</p>
+    <table>
+      <thead><tr><th>Object</th><th>mm</th><th>cm</th><th>m</th></tr></thead>
+      <tbody>
+        <tr><td><input type="text" data-field="ext-obj1" placeholder="" style="width:100%;"></td><td><input type="text" data-field="ext-mm1" style="width:60px;text-align:center;"></td><td><input type="text" data-field="ext-cm1" style="width:60px;text-align:center;"></td><td><input type="text" data-field="ext-m1" style="width:60px;text-align:center;"></td></tr>
+        <tr><td><input type="text" data-field="ext-obj2" placeholder="" style="width:100%;"></td><td><input type="text" data-field="ext-mm2" style="width:60px;text-align:center;"></td><td><input type="text" data-field="ext-cm2" style="width:60px;text-align:center;"></td><td><input type="text" data-field="ext-m2" style="width:60px;text-align:center;"></td></tr>
+        <tr><td><input type="text" data-field="ext-obj3" placeholder="" style="width:100%;"></td><td><input type="text" data-field="ext-mm3" style="width:60px;text-align:center;"></td><td><input type="text" data-field="ext-cm3" style="width:60px;text-align:center;"></td><td><input type="text" data-field="ext-m3" style="width:60px;text-align:center;"></td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:13px;margin-top:8px;"><strong>Challenge:</strong> Calculate the percentage error of each estimate:</p>
+    <p style="font-size:12px;color:var(--mid-grey);">% Error = (|Estimate &minus; Actual| &divide; Actual) &times; 100</p>
+    <textarea data-field="ext-pct-error" placeholder="Object 1: % error = ... Object 2: ..." style="min-height:40px;width:100%;margin-top:6px;"></textarea>
+    <p style="font-size:13px;margin-top:8px;"><strong>Research:</strong> What tools do engineers use for measurements smaller than 1 mm?</p>
+    <textarea data-field="ext-tools" placeholder="Engineers use tools like..." style="min-height:40px;width:100%;margin-top:6px;"></textarea>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--teal);">&#127915;</div>
+      <div class="section-title">Exit Ticket &mdash; Reflection</div>
+    </div>
+    <div class="exit-question">
+      <div class="eq-label">1. Which classroom object was HARDEST to estimate accurately? Why?</div>
+      <textarea data-field="exit-1" placeholder=""></textarea>
+    </div>
+    <div class="exit-question">
+      <div class="eq-label">2. What is one thing you will do differently next time you measure?</div>
+      <textarea data-field="exit-2" placeholder=""></textarea>
+    </div>
+
+  </div>
+
+  <div class="section self-assess">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--dark-blue);">&#9989;</div>
+      <div class="section-title">Self-Assessment</div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:55%;">Success Criteria</th>
+          <th class="got" style="width:15%;">Got it &#128994;</th>
+          <th class="nearly" style="width:15%;">Nearly there &#128992;</th>
+          <th class="need" style="width:15%;">Need help &#128308;</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="text-align:left;">I can read a ruler to the nearest millimetre</td>
+          <td><input type="radio" name="sa1" id="sa1a" value="got" data-field="sa1"><label for="sa1a">&#9679;</label></td>
+          <td><input type="radio" name="sa1" id="sa1b" value="nearly" data-field="sa1"><label for="sa1b">&#9679;</label></td>
+          <td><input type="radio" name="sa1" id="sa1c" value="need" data-field="sa1"><label for="sa1c">&#9679;</label></td>
+        </tr>
+        <tr>
+          <td style="text-align:left;">I can measure objects accurately</td>
+          <td><input type="radio" name="sa2" id="sa2a" value="got" data-field="sa2"><label for="sa2a">&#9679;</label></td>
+          <td><input type="radio" name="sa2" id="sa2b" value="nearly" data-field="sa2"><label for="sa2b">&#9679;</label></td>
+          <td><input type="radio" name="sa2" id="sa2c" value="need" data-field="sa2"><label for="sa2c">&#9679;</label></td>
+        </tr>
+        <tr>
+          <td style="text-align:left;">I can estimate lengths before measuring</td>
+          <td><input type="radio" name="sa3" id="sa3a" value="got" data-field="sa3"><label for="sa3a">&#9679;</label></td>
+          <td><input type="radio" name="sa3" id="sa3b" value="nearly" data-field="sa3"><label for="sa3b">&#9679;</label></td>
+          <td><input type="radio" name="sa3" id="sa3c" value="need" data-field="sa3"><label for="sa3c">&#9679;</label></td>
+        </tr>
+        <tr>
+          <td style="text-align:left;">I can explain why measurement is important in engineering</td>
+          <td><input type="radio" name="sa4" id="sa4a" value="got" data-field="sa4"><label for="sa4a">&#9679;</label></td>
+          <td><input type="radio" name="sa4" id="sa4b" value="nearly" data-field="sa4"><label for="sa4b">&#9679;</label></td>
+          <td><input type="radio" name="sa4" id="sa4c" value="need" data-field="sa4"><label for="sa4c">&#9679;</label></td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer">T1-L09 &mdash; Year 7 Technology Mandatory &mdash; Engineering Technologies &amp; Systems &mdash; Bridge It</div>
+</div>
+
+<script>
+
+(function() {
+  'use strict';
+
+  const STORAGE_KEY = 'T1-L09-Worksheet';
+  const saveMsg = document.getElementById('saveMsg');
+  let saveTimer = null;
+
+  // ---- Auto-save to localStorage ----
+  function saveAll() {
+    const data = {};
+    // Text inputs and textareas
+    document.querySelectorAll('[data-field]').forEach(function(el) {
+      if (el.type === 'radio') {
+        if (el.checked) data[el.name] = el.value;
+      } else {
+        data[el.getAttribute('data-field')] = el.value;
+      }
+    });
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      showSaved();
+    } catch(e) { /* localStorage full or blocked */ }
+  }
+
+  function showSaved() {
+    saveMsg.classList.add('show');
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function() { saveMsg.classList.remove('show'); }, 1500);
+  }
+
+  // ---- Load from localStorage ----
+  function loadAll() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const data = JSON.parse(raw);
+
+      // Text inputs and textareas
+      document.querySelectorAll('input[data-field]:not([type=radio]), textarea[data-field]').forEach(function(el) {
+        const key = el.getAttribute('data-field');
+        if (data[key] !== undefined) el.value = data[key];
+      });
+
+      // Radio buttons
+      ['sa1', 'sa2', 'sa3', 'sa4'].forEach(function(name) {
+        if (data[name]) {
+          const radio = document.querySelector('input[name="'+name+'"][value="'+data[name]+'"]');
+          if (radio) radio.checked = true;
+        }
+      });
+    } catch(e) { /* bad data, ignore */ }
+  }
+
+  // ---- Attach listeners ----
+  document.querySelectorAll('input[data-field], textarea[data-field]').forEach(function(el) {
+    el.addEventListener('input', debounce(saveAll, 500));
+    el.addEventListener('change', saveAll);
+  });
+
+  function debounce(fn, ms) {
+    let t;
+    return function() { clearTimeout(t); t = setTimeout(fn, ms); };
+  }
+
+  // ---- Print / Save as PDF ----
+  window.handlePrint = function() {
+    saveAll(); // save before printing
+    window.print();
+  };
+
+  // ---- Clear all ----
+  window.handleClear = function() {
+    if (!confirm('Clear all your answers? This cannot be undone.')) return;
+    document.querySelectorAll('input[data-field]:not([type=radio]), textarea[data-field]').forEach(function(el) {
+      el.value = '';
+    });
+    document.querySelectorAll('input[type=radio]').forEach(function(el) {
+      el.checked = false;
+    });
+    localStorage.removeItem(STORAGE_KEY);
+  };
+
+  // ---- Init ----
+  loadAll();
+})();
+
+</script>
+</body>
+</html>

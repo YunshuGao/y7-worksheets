@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T1-L17: Bridge Design Brief &amp; Research</title>
+<style>
+
+  /* ===== BLUEPRINT THEME ===== */
+  :root {
+    --steel-blue: #2B5F8A;
+    --bright-orange: #E8712B;
+    --charcoal: #333333;
+    --light-grey: #F2F2F2;
+    --teal: #1A8A6E;
+    --support-blue: #D6E8F7;
+    --extension-orange: #FDE8D0;
+    --white: #FFFFFF;
+    --dark-blue: #1A3D5C;
+    --mid-grey: #888888;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Calibri, 'Segoe UI', Arial, sans-serif;
+    font-size: 14px;
+    color: var(--charcoal);
+    background: var(--light-grey);
+    line-height: 1.5;
+  }
+
+  .worksheet {
+    max-width: 210mm;
+    margin: 20px auto;
+    background: var(--white);
+    padding: 28px 32px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: var(--steel-blue);
+    color: var(--white);
+    padding: 18px 24px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    right: -30px; top: -30px;
+    width: 120px; height: 120px;
+    background: var(--bright-orange);
+    border-radius: 50%;
+    opacity: 0.15;
+  }
+  .header h1 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 2px;
+    position: relative;
+    z-index: 1;
+  }
+  .header .subtitle {
+    font-size: 13px;
+    opacity: 0.9;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ===== STUDENT INFO BAR ===== */
+  .info-bar {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+    padding: 10px 14px;
+    background: var(--light-grey);
+    border-radius: 4px;
+    border-left: 4px solid var(--steel-blue);
+    align-items: center;
+  }
+  .info-bar label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--steel-blue);
+    white-space: nowrap;
+  }
+  .info-bar input {
+    border: none;
+    border-bottom: 1.5px solid var(--mid-grey);
+    background: transparent;
+    font-family: inherit;
+    font-size: 13px;
+    padding: 2px 4px;
+    width: 140px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .info-bar input:focus { border-bottom-color: var(--bright-orange); }
+  .info-group { display: flex; align-items: center; gap: 4px; }
+
+  /* ===== OUTCOME BADGES ===== */
+  .outcomes {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .outcomes span.label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--mid-grey);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .badge {
+    display: inline-block;
+    background: var(--dark-blue);
+    color: var(--white);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 12px;
+    letter-spacing: 0.3px;
+  }
+  .badge.folio {
+    background: var(--teal);
+  }
+
+  /* ===== SECTION HEADERS ===== */
+  .section {
+    margin-bottom: 18px;
+    page-break-inside: avoid;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .section-icon {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: var(--white);
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--dark-blue);
+  }
+
+  /* ===== LISC BOX ===== */
+  .lisc-box {
+    background: var(--light-grey);
+    border-radius: 6px;
+    padding: 14px 18px;
+    border-left: 4px solid var(--steel-blue);
+  }
+  .lisc-box .li-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--steel-blue);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+  .lisc-box .li-text {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  .lisc-box ul {
+    margin: 0;
+    padding-left: 20px;
+  }
+  .lisc-box ul li {
+    font-size: 13px;
+    margin-bottom: 3px;
+    color: var(--charcoal);
+  }
+  .lisc-box ul li::marker {
+    color: var(--bright-orange);
+  }
+
+  /* ===== DO NOW TABLE ===== */
+  .prompt-box {
+    background: var(--extension-orange);
+    border-radius: 4px;
+    padding: 10px 14px;
+    font-style: italic;
+    font-size: 14px;
+    margin-bottom: 10px;
+    border-left: 4px solid var(--bright-orange);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 6px;
+    font-size: 13px;
+  }
+  table th {
+    background: var(--steel-blue);
+    color: var(--white);
+    font-weight: 600;
+    font-size: 12px;
+    padding: 8px 10px;
+    text-align: left;
+    border: 1px solid var(--steel-blue);
+  }
+  table td {
+    padding: 4px 6px;
+    border: 1px solid #ccc;
+    vertical-align: top;
+  }
+  table td input,
+  table td textarea {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 13px;
+    padding: 4px 2px;
+    resize: vertical;
+    outline: none;
+    line-height: 1.4;
+  }
+  table td textarea { min-height: 32px; }
+
+  /* Row number column */
+  table td.row-num {
+    width: 28px;
+    text-align: center;
+    font-weight: 600;
+    color: var(--mid-grey);
+    background: var(--light-grey);
+  }
+
+  /* ===== VOCABULARY TABLE ===== */
+  .vocab-table th:first-child { width: 22%; }
+  .vocab-table .def-cell { font-size: 12px; color: var(--mid-grey); }
+  .vocab-table td.sentence-cell { background: var(--light-grey); }
+
+  /* ===== FOCUS AREAS GRID ===== */
+  .focus-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .focus-card {
+    border: 2px solid var(--steel-blue);
+    border-radius: 6px;
+    padding: 10px 12px;
+    background: var(--white);
+  }
+  .focus-card .fc-num {
+    display: inline-block;
+    background: var(--steel-blue);
+    color: var(--white);
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 22px;
+    margin-right: 6px;
+  }
+  .focus-card .fc-name {
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--dark-blue);
+  }
+  .focus-card textarea {
+    width: 100%;
+    margin-top: 6px;
+    border: 1.5px dashed var(--mid-grey);
+    border-radius: 4px;
+    padding: 6px 8px;
+    font-family: inherit;
+    font-size: 13px;
+    min-height: 36px;
+    resize: vertical;
+    outline: none;
+    background: var(--light-grey);
+  }
+  .focus-card textarea::placeholder { color: #aaa; font-style: italic; }
+  .focus-card textarea:focus { border-color: var(--bright-orange); background: var(--white); }
+
+  /* ===== WRITING AREA ===== */
+  .writing-area {
+    border: 2px solid var(--steel-blue);
+    border-radius: 6px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    background: var(--white);
+  }
+  .writing-area .wa-instructions {
+    font-size: 13px;
+    margin-bottom: 8px;
+    color: var(--charcoal);
+  }
+  .writing-area .wa-instructions ul {
+    padding-left: 18px;
+    margin-top: 4px;
+  }
+  .writing-area .wa-instructions li {
+    font-size: 13px;
+    margin-bottom: 2px;
+  }
+  .writing-area .wa-instructions li::marker { color: var(--bright-orange); }
+  .writing-area textarea {
+    width: 100%;
+    border: 1.5px dashed var(--mid-grey);
+    border-radius: 4px;
+    padding: 10px 12px;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.8;
+    min-height: 160px;
+    resize: vertical;
+    outline: none;
+    background: var(--light-grey);
+  }
+  .writing-area textarea::placeholder { color: #aaa; font-style: italic; }
+  .writing-area textarea:focus { border-color: var(--bright-orange); background: var(--white); }
+
+  /* ===== DIFFERENTIATION BLOCKS ===== */
+  .diff-block {
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+  }
+  .diff-block.support {
+    background: var(--support-blue);
+    border-left: 5px solid var(--steel-blue);
+  }
+  .diff-block.extension {
+    background: var(--extension-orange);
+    border-left: 5px solid var(--bright-orange);
+  }
+  .diff-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+  .diff-block.support .diff-label { color: var(--steel-blue); }
+  .diff-block.extension .diff-label { color: var(--bright-orange); }
+  .diff-block ol {
+    padding-left: 20px;
+    margin-bottom: 8px;
+  }
+  .diff-block li {
+    font-size: 13px;
+    margin-bottom: 3px;
+  }
+  .word-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+  }
+  .word-bank span {
+    background: var(--white);
+    border: 1px solid var(--steel-blue);
+    border-radius: 12px;
+    padding: 2px 10px;
+    font-size: 12px;
+    color: var(--dark-blue);
+  }
+  .diff-block textarea,
+  .diff-block input[type="text"] {
+    width: 100%;
+    border: 1.5px dashed rgba(0,0,0,0.2);
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-family: inherit;
+    font-size: 13px;
+    background: rgba(255,255,255,0.7);
+    outline: none;
+    resize: vertical;
+  }
+  .diff-block textarea:focus,
+  .diff-block input[type="text"]:focus {
+    border-color: var(--bright-orange);
+    background: var(--white);
+  }
+
+  /* ===== EXIT TICKET ===== */
+  .exit-question {
+    margin-bottom: 10px;
+  }
+  .exit-question .eq-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--dark-blue);
+    margin-bottom: 4px;
+  }
+  .exit-question textarea {
+    width: 100%;
+    border: 1.5px dashed var(--mid-grey);
+    border-radius: 4px;
+    padding: 8px 10px;
+    font-family: inherit;
+    font-size: 13px;
+    min-height: 40px;
+    resize: vertical;
+    outline: none;
+    background: var(--light-grey);
+  }
+  .exit-question textarea:focus { border-color: var(--bright-orange); background: var(--white); }
+
+  /* ===== SELF-ASSESSMENT ===== */
+  .self-assess table td {
+    text-align: center;
+    padding: 6px 8px;
+  }
+  .self-assess table td:first-child { text-align: left; }
+  .self-assess table td label {
+    cursor: pointer;
+    font-size: 18px;
+    opacity: 0.3;
+    transition: opacity 0.15s;
+  }
+  .self-assess table td input[type="radio"] { display: none; }
+  .self-assess table td input[type="radio"]:checked + label { opacity: 1; }
+  .self-assess table th.got { background: var(--teal); }
+  .self-assess table th.nearly { background: var(--bright-orange); }
+  .self-assess table th.need { background: var(--steel-blue); }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    text-align: center;
+    font-size: 11px;
+    color: var(--mid-grey);
+    padding-top: 12px;
+    border-top: 1px solid #ddd;
+    margin-top: 10px;
+  }
+
+  /* ===== SAVE BUTTON ===== */
+  .btn-bar {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin: 20px auto 10px;
+    max-width: 210mm;
+  }
+  .btn {
+    padding: 10px 28px;
+    border: none;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.2s;
+  }
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 3px 8px rgba(0,0,0,0.15); }
+  .btn-pdf {
+    background: var(--bright-orange);
+    color: var(--white);
+  }
+  .btn-clear {
+    background: var(--white);
+    color: var(--mid-grey);
+    border: 1.5px solid #ccc;
+  }
+  .save-indicator {
+    font-size: 11px;
+    color: var(--teal);
+    text-align: center;
+    margin-top: 4px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .save-indicator.show { opacity: 1; }
+
+  /* ===== DESIGN EVERYWHERE TABLE ===== */
+  .de-table td:first-child { width: 40%; }
+
+  /* ===== PRINT STYLES ===== */
+  @media print {
+    body { background: white; font-size: 12px; }
+    .worksheet {
+      max-width: 100%;
+      margin: 0;
+      padding: 14px 18px;
+      box-shadow: none;
+    }
+    .btn-bar, .save-indicator { display: none !important; }
+    .header { padding: 12px 16px; }
+    .header h1 { font-size: 16px; }
+    .section { page-break-inside: avoid; }
+    .writing-area textarea { min-height: 120px; }
+    textarea, input[type="text"] {
+      border: 1px solid #999 !important;
+      background: white !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .diff-block.support, .diff-block.extension,
+    .prompt-box, .lisc-box, .focus-card textarea,
+    table th, .badge, .section-icon, .info-bar {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .self-assess table td label { opacity: 0.2; }
+    .self-assess table td input[type="radio"]:checked + label { opacity: 1; }
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 600px) {
+    .worksheet { padding: 14px 12px; }
+    .info-bar { flex-direction: column; }
+    .focus-grid { grid-template-columns: 1fr; }
+  }
+
+</style>
+</head>
+<body>
+<div class="btn-bar">
+  <button class="btn btn-pdf" onclick="handlePrint()" title="Opens print dialog — choose 'Save as PDF'">&#128438; Save as PDF</button>
+  <button class="btn btn-clear" onclick="handleClear()" title="Clear all your answers">&#128465; Clear All</button>
+</div>
+<div class="save-indicator" id="saveMsg">&#10003; Auto-saved</div>
+
+<div class="worksheet" id="ws">
+  <div class="header">
+    <h1>T1-L17: Bridge Design Brief &amp; Research</h1>
+    <div class="subtitle">Year 7 Technology Mandatory &mdash; Engineering Technologies &amp; Systems &mdash; Bridge It</div>
+  </div>
+
+  <div class="info-bar">
+    <div class="info-group"><label>Name:</label> <input type="text" id="f-name" placeholder="Your name" data-field="name"></div>
+    <div class="info-group"><label>Class:</label> <input type="text" id="f-class" placeholder="e.g. 7TECE" data-field="class" style="width:80px;"></div>
+    <div class="info-group"><label>Date:</label> <input type="text" id="f-date" placeholder="DD/MM/YYYY" data-field="date" style="width:100px;"></div>
+    <div class="info-group"><label>Folio:</label> <span style="font-size:13px;">pp. 70–75</span></div>
+  </div>
+
+  <div class="outcomes">
+    <span class="label">Outcomes:</span>
+    <span class="badge">TE4-PPM-01</span>
+    <span class="badge">TE4-DES-01</span>
+    <span class="badge">TE4-MSC-01</span>
+    <span class="badge folio">Folio pp. 70–75</span>
+  </div>
+
+  <div class="section">
+    <div class="lisc-box">
+      <div class="li-label">Learning Intention</div>
+      <div class="li-text">We are learning to write a design brief and research before building a bridge.</div>
+      <div class="li-label">Success Criteria</div>
+      <ul>
+        <li>I can write a clear design brief with specifications</li>
+        <li>I can research 3 real bridges for inspiration</li>
+        <li>I can create at least 3 thumbnail sketches with annotations</li>
+        <li>I can plan my construction approach</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--bright-orange);">&#9998;</div>
+      <div class="section-title">Do Now</div>
+    </div>
+    <div class="prompt-box">What makes a bridge strong? List 3 things.</div>
+    <table>
+      <thead><tr><th style="width:28px;">#</th><th style="width:40%;">What makes it strong?</th><th>Why does this help?</th></tr></thead>
+      <tbody>
+        <tr><td class="row-num">1</td><td><input type="text" data-field="dn-strong1" placeholder="e.g. triangles in the structure"></td><td><input type="text" data-field="dn-why1" placeholder="e.g. triangles distribute force evenly"></td></tr>
+        <tr><td class="row-num">2</td><td><input type="text" data-field="dn-strong2" placeholder=""></td><td><input type="text" data-field="dn-why2" placeholder=""></td></tr>
+        <tr><td class="row-num">3</td><td><input type="text" data-field="dn-strong3" placeholder=""></td><td><input type="text" data-field="dn-why3" placeholder=""></td></tr>
+      </tbody></table>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--teal);">&#128218;</div>
+      <div class="section-title">Key Vocabulary</div>
+    </div>
+    <p style="font-size:12px;color:var(--mid-grey);margin-bottom:6px;">
+      <strong>Standard:</strong> Fill in the definition. &nbsp;|&nbsp;
+      <strong>Support:</strong> Definitions shown in grey &mdash; read and copy into your folio. &nbsp;|&nbsp;
+      <strong>Extension:</strong> Use each term in a sentence.
+    </p>
+    <table class="vocab-table">
+      <thead><tr><th>Term</th><th>Definition</th><th>Use in a sentence (Extension)</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Design brief</strong></td>
+          <td><span class="def-cell">A document outlining the problem, specifications and constraints</span><br>
+            <input type="text" data-field="vocab-def-1" placeholder="Write definition here (Standard)"></td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-1" placeholder="Write a sentence using this term"></td>
+        </tr>
+        <tr>
+          <td><strong>Specification</strong></td>
+          <td><span class="def-cell">A detailed requirement the solution MUST meet</span><br>
+            <input type="text" data-field="vocab-def-2" placeholder="Write definition here (Standard)"></td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-2" placeholder="Write a sentence using this term"></td>
+        </tr>
+        <tr>
+          <td><strong>Constraint</strong></td>
+          <td><span class="def-cell">A limitation or restriction on design, e.g. materials, time, cost</span><br>
+            <input type="text" data-field="vocab-def-3" placeholder="Write definition here (Standard)"></td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-3" placeholder="Write a sentence using this term"></td>
+        </tr>
+        <tr>
+          <td><strong>Truss</strong></td>
+          <td><span class="def-cell">A framework of beams or sticks forming triangles for strength</span><br>
+            <input type="text" data-field="vocab-def-4" placeholder="Write definition here (Standard)"></td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-4" placeholder="Write a sentence using this term"></td>
+        </tr>
+        <tr>
+          <td><strong>Triangulation</strong></td>
+          <td><span class="def-cell">Using triangles in a structure to make it rigid and strong</span><br>
+            <input type="text" data-field="vocab-def-5" placeholder="Write definition here (Standard)"></td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-5" placeholder="Write a sentence using this term"></td>
+        </tr>
+        <tr>
+          <td><strong>Span</strong></td>
+          <td><span class="def-cell">The distance a bridge covers between its two supports</span><br>
+            <input type="text" data-field="vocab-def-6" placeholder="Write definition here (Standard)"></td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-6" placeholder="Write a sentence using this term"></td>
+        </tr>
+        <tr>
+          <td><strong>Load capacity</strong></td>
+          <td><span class="def-cell">The maximum weight a structure can support before failure</span><br>
+            <input type="text" data-field="vocab-def-7" placeholder="Write definition here (Standard)"></td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-7" placeholder="Write a sentence using this term"></td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--steel-blue);">&#128736;</div>
+      <div class="section-title">Activity 1: Bridge Project Overview (Folio p. 70)</div>
+    </div>
+    <div style="border:2px solid var(--bright-orange);border-radius:8px;padding:12px;margin-bottom:12px;background:#fff8f0;">
+      <p style="font-weight:700;color:var(--bright-orange);font-size:14px;margin-bottom:6px;">&#9888; YOUR CHALLENGE</p>
+      <p style="font-size:13px;">Design and construct a <strong>truss bridge</strong> from craft sticks and PVA glue that can span 30&ndash;40 cm and support the <strong>maximum load</strong> possible.</p>
+    </div>
+    <table>
+      <thead><tr><th style="width:30%;">Specification</th><th>Requirement</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Materials</strong></td><td>Craft sticks + PVA glue only</td></tr>
+        <tr><td><strong>Span</strong></td><td>30&ndash;40 cm between supports</td></tr>
+        <tr><td><strong>Structure</strong></td><td>Must include triangulation</td></tr>
+        <tr><td><strong>Freestanding</strong></td><td>No tape or attachment to supports</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:13px;margin-top:10px;"><strong>In your own words, describe what you need to do:</strong></p>
+    <textarea data-field="l17-overview" placeholder="I need to design and build a bridge that..." style="min-height:60px;width:100%;"></textarea>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--teal);">&#128208;</div>
+      <div class="section-title">Activity 2: Know Your Material (Folio p. 71)</div>
+    </div>
+    <p style="font-size:13px;margin-bottom:8px;">Craft sticks are made from birch wood. Understanding the material helps you design a stronger bridge.</p>
+    <div style="border:1px solid var(--light-grey);border-radius:6px;padding:10px;margin-bottom:10px;background:#f9f9f9;">
+      <p style="font-size:13px;"><strong>Standard craft stick:</strong> 11.4 cm &times; 1 cm &times; 2 mm (birch)</p>
+      <p style="font-size:13px;"><strong>Grain direction:</strong> Strong along the length, weak across the width</p>
+      <p style="font-size:13px;"><strong>PVA tips:</strong> Thin, even layer on BOTH surfaces. Let dry fully for strongest bond.</p>
+    </div>
+    <table>
+      <thead><tr><th style="width:35%;">Property</th><th>Your observation / notes</th></tr></thead>
+      <tbody>
+        <tr><td>Stick dimensions (L &times; W &times; H)</td><td><input type="text" data-field="l17-mat-dim" placeholder="e.g. 11.4 cm x 1 cm x 2 mm" style="width:100%;"></td></tr>
+        <tr><td>Material type</td><td><input type="text" data-field="l17-mat-type" placeholder="e.g. birch wood" style="width:100%;"></td></tr>
+        <tr><td>Strongest direction</td><td><input type="text" data-field="l17-mat-strong" placeholder="e.g. along the grain / lengthwise" style="width:100%;"></td></tr>
+        <tr><td>Weakest direction</td><td><input type="text" data-field="l17-mat-weak" placeholder="e.g. across the grain / widthwise" style="width:100%;"></td></tr>
+        <tr><td>Glue type and best practice</td><td><input type="text" data-field="l17-mat-glue" placeholder="e.g. PVA, thin layer on both surfaces" style="width:100%;"></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--bright-orange);">&#128295;</div>
+      <div class="section-title">Activity 3: Joint Types (Folio p. 71)</div>
+    </div>
+    <p style="font-size:13px;margin-bottom:8px;">There are two main ways to join craft sticks. Study both and compare.</p>
+    <table>
+      <thead><tr><th style="width:20%;">Joint Type</th><th style="width:35%;">Description</th><th>Draw the joint</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Butt joint</strong></td>
+          <td style="font-size:12px;">Ends of two sticks pushed together and glued. Quick but weaker.</td>
+          <td><textarea data-field="l17-joint-butt" placeholder="Draw the butt joint here (or describe it)" style="min-height:50px;"></textarea></td>
+        </tr>
+        <tr>
+          <td><strong>Lap joint</strong></td>
+          <td style="font-size:12px;">Sticks overlap by 1&ndash;2 cm and are glued flat. Stronger bond, more surface area.</td>
+          <td><textarea data-field="l17-joint-lap" placeholder="Draw the lap joint here (or describe it)" style="min-height:50px;"></textarea></td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:13px;margin-top:8px;"><strong>Which joint is stronger and why?</strong></p>
+    <textarea data-field="l17-joint-compare" placeholder="The lap joint is stronger because..." style="min-height:40px;width:100%;"></textarea>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--dark-blue);">&#128221;</div>
+      <div class="section-title">Activity 4: Write Your Design Brief (Folio pp. 72&ndash;73)</div>
+    </div>
+    <p style="font-size:13px;margin-bottom:8px;">Write a full design brief for your bridge project. Include all four sections.</p>
+    <div style="margin-bottom:10px;">
+      <label style="font-size:12px;font-weight:600;color:var(--steel-blue);">Problem Statement:</label>
+      <textarea data-field="l17-brief-problem" placeholder="The problem is... I need to design and build..." style="min-height:60px;width:100%;"></textarea>
+    </div>
+    <div style="margin-bottom:10px;">
+      <label style="font-size:12px;font-weight:600;color:var(--bright-orange);">Specifications (list at least 4):</label>
+      <textarea data-field="l17-brief-specs" placeholder="1. The bridge must span 30-40 cm&#10;2. Only craft sticks and PVA glue&#10;3. Must include triangulation&#10;4. ..." style="min-height:70px;width:100%;"></textarea>
+    </div>
+    <div style="margin-bottom:10px;">
+      <label style="font-size:12px;font-weight:600;color:var(--teal);">Constraints (list at least 3):</label>
+      <textarea data-field="l17-brief-constraints" placeholder="1. Limited to craft sticks and PVA only&#10;2. Must be freestanding&#10;3. ..." style="min-height:60px;width:100%;"></textarea>
+    </div>
+    <div>
+      <label style="font-size:12px;font-weight:600;color:var(--dark-blue);">Target audience:</label>
+      <input type="text" data-field="l17-brief-audience" placeholder="e.g. Year 7 engineering class, teacher assessing structural strength" style="width:100%;">
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--steel-blue);">&#128270;</div>
+      <div class="section-title">Activity 5: Research Real Truss Bridges (Folio p. 73)</div>
+    </div>
+    <p style="font-size:13px;margin-bottom:8px;">Find 3 different real truss bridges. Record the details in the table below.</p>
+    <table>
+      <thead><tr><th style="width:20%;">Bridge name &amp; location</th><th style="width:20%;">Truss type (Warren / Pratt / Howe / other)</th><th style="width:30%;">What makes it strong?</th><th>One thing to adapt for my design</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><input type="text" data-field="l17-bridge1-name" placeholder="e.g. Sydney Harbour Bridge" style="width:100%;"></td>
+          <td><input type="text" data-field="l17-bridge1-type" placeholder="e.g. Warren" style="width:100%;"></td>
+          <td><input type="text" data-field="l17-bridge1-strong" placeholder="" style="width:100%;"></td>
+          <td><input type="text" data-field="l17-bridge1-adapt" placeholder="" style="width:100%;"></td>
+        </tr>
+        <tr>
+          <td><input type="text" data-field="l17-bridge2-name" placeholder="" style="width:100%;"></td>
+          <td><input type="text" data-field="l17-bridge2-type" placeholder="" style="width:100%;"></td>
+          <td><input type="text" data-field="l17-bridge2-strong" placeholder="" style="width:100%;"></td>
+          <td><input type="text" data-field="l17-bridge2-adapt" placeholder="" style="width:100%;"></td>
+        </tr>
+        <tr>
+          <td><input type="text" data-field="l17-bridge3-name" placeholder="" style="width:100%;"></td>
+          <td><input type="text" data-field="l17-bridge3-type" placeholder="" style="width:100%;"></td>
+          <td><input type="text" data-field="l17-bridge3-strong" placeholder="" style="width:100%;"></td>
+          <td><input type="text" data-field="l17-bridge3-adapt" placeholder="" style="width:100%;"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--teal);">&#128203;</div>
+      <div class="section-title">Activity 6: PMI Table (Folio p. 74)</div>
+    </div>
+    <p style="font-size:13px;margin-bottom:8px;">For each bridge you researched, list the Plus (good), Minus (bad), and Interesting aspects.</p>
+    <table>
+      <thead><tr><th style="width:20%;">Bridge</th><th style="width:27%;">Plus (+)</th><th style="width:27%;">Minus (&minus;)</th><th>Interesting (?)</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><input type="text" data-field="l17-pmi1-bridge" placeholder="Bridge 1" style="width:100%;"></td>
+          <td><input type="text" data-field="l17-pmi1-plus" placeholder="" style="width:100%;"></td>
+          <td><input type="text" data-field="l17-pmi1-minus" placeholder="" style="width:100%;"></td>
+          <td><input type="text" data-field="l17-pmi1-int" placeholder="" style="width:100%;"></td>
+        </tr>
+        <tr>
+          <td><input type="text" data-field="l17-pmi2-bridge" placeholder="Bridge 2" style="width:100%;"></td>
+          <td><input type="text" data-field="l17-pmi2-plus" placeholder="" style="width:100%;"></td>
+          <td><input type="text" data-field="l17-pmi2-minus" placeholder="" style="width:100%;"></td>
+          <td><input type="text" data-field="l17-pmi2-int" placeholder="" style="width:100%;"></td>
+        </tr>
+        <tr>
+          <td><input type="text" data-field="l17-pmi3-bridge" placeholder="Bridge 3" style="width:100%;"></td>
+          <td><input type="text" data-field="l17-pmi3-plus" placeholder="" style="width:100%;"></td>
+          <td><input type="text" data-field="l17-pmi3-minus" placeholder="" style="width:100%;"></td>
+          <td><input type="text" data-field="l17-pmi3-int" placeholder="" style="width:100%;"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--bright-orange);">&#9999;</div>
+      <div class="section-title">Activity 7: Thumbnail Sketches 1&ndash;3 (Folio pp. 74&ndash;75)</div>
+    </div>
+    <p style="font-size:13px;margin-bottom:8px;">Draw 3 different bridge design ideas. Annotate each sketch with labels and notes.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
+      <div style="flex:1;min-width:200px;">
+        <p style="font-size:12px;font-weight:600;color:var(--steel-blue);margin-bottom:4px;">Sketch 1:</p>
+        <textarea data-field="l17-sketch1-draw" placeholder="Draw your first bridge design idea here (or describe it in detail)" style="min-height:80px;width:100%;"></textarea>
+        <input type="text" data-field="l17-sketch1-notes" placeholder="Annotations: truss type, materials, key features..." style="width:100%;margin-top:4px;">
+      </div>
+      <div style="flex:1;min-width:200px;">
+        <p style="font-size:12px;font-weight:600;color:var(--bright-orange);margin-bottom:4px;">Sketch 2:</p>
+        <textarea data-field="l17-sketch2-draw" placeholder="Draw your second bridge design idea here" style="min-height:80px;width:100%;"></textarea>
+        <input type="text" data-field="l17-sketch2-notes" placeholder="Annotations: truss type, materials, key features..." style="width:100%;margin-top:4px;">
+      </div>
+      <div style="flex:1;min-width:200px;">
+        <p style="font-size:12px;font-weight:600;color:var(--teal);margin-bottom:4px;">Sketch 3:</p>
+        <textarea data-field="l17-sketch3-draw" placeholder="Draw your third bridge design idea here" style="min-height:80px;width:100%;"></textarea>
+        <input type="text" data-field="l17-sketch3-notes" placeholder="Annotations: truss type, materials, key features..." style="width:100%;margin-top:4px;">
+      </div>
+    </div>
+    <div style="border:2px solid var(--dark-blue);border-radius:6px;padding:10px;margin-top:8px;">
+      <p style="font-size:13px;font-weight:700;color:var(--dark-blue);margin-bottom:6px;">&#10148; Circle your BEST design. Which one did you choose and WHY?</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:120px;"><label style="font-size:12px;font-weight:600;">Chosen design:</label>
+          <input type="text" data-field="l17-chosen" placeholder="Sketch 1, 2, or 3?" style="width:100%;"></div>
+        <div style="flex:3;min-width:200px;"><label style="font-size:12px;font-weight:600;">Why did you choose this design?</label>
+          <input type="text" data-field="l17-chosen-why" placeholder="I chose this design because..." style="width:100%;"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--dark-blue);">&#128221;</div>
+      <div class="section-title">Activity 8: Plan Construction Sequence (Folio p. 75)</div>
+    </div>
+    <p style="font-size:13px;margin-bottom:8px;">Write a numbered list of the steps you will follow to build your bridge.</p>
+    <table>
+      <thead><tr><th style="width:28px;">Step</th><th>What I will do</th></tr></thead>
+      <tbody>
+        <tr><td class="row-num">1</td><td><input type="text" data-field="l17-step1" placeholder="e.g. Gather all materials (craft sticks, PVA glue)" style="width:100%;"></td></tr>
+        <tr><td class="row-num">2</td><td><input type="text" data-field="l17-step2" placeholder="e.g. Lay out sticks for first side truss" style="width:100%;"></td></tr>
+        <tr><td class="row-num">3</td><td><input type="text" data-field="l17-step3" placeholder="" style="width:100%;"></td></tr>
+        <tr><td class="row-num">4</td><td><input type="text" data-field="l17-step4" placeholder="" style="width:100%;"></td></tr>
+        <tr><td class="row-num">5</td><td><input type="text" data-field="l17-step5" placeholder="" style="width:100%;"></td></tr>
+        <tr><td class="row-num">6</td><td><input type="text" data-field="l17-step6" placeholder="" style="width:100%;"></td></tr>
+        <tr><td class="row-num">7</td><td><input type="text" data-field="l17-step7" placeholder="" style="width:100%;"></td></tr>
+        <tr><td class="row-num">8</td><td><input type="text" data-field="l17-step8" placeholder="" style="width:100%;"></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="diff-block support">
+    <div class="diff-label">&#128309; Support &mdash; Scaffold Sheet &amp; Sentence Starters</div>
+    <p style="font-size:13px;margin-bottom:6px;">Use these sentence starters to help you write your design brief:</p>
+    <ol style="font-size:13px;">
+      <li>&ldquo;I need to design a&hellip;&rdquo;</li>
+      <li>&ldquo;The bridge must&hellip;&rdquo;</li>
+      <li>&ldquo;I cannot use&hellip;&rdquo;</li>
+      <li>&ldquo;The bridge needs to span&hellip;&rdquo;</li>
+      <li>&ldquo;My bridge will be strong because&hellip;&rdquo;</li>
+    </ol>
+    <div style="margin-top:6px;"><div class="diff-label" style="margin-bottom:4px;">Word Bank</div>
+      <div class="word-bank">
+        <span>design brief</span><span>specification</span><span>constraint</span><span>truss</span>
+        <span>triangulation</span><span>span</span><span>load</span><span>PVA</span>
+        <span>overlap</span><span>lap joint</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="diff-block extension">
+    <div class="diff-label">&#128992; Extension &mdash; Advanced Design Challenges</div>
+    <p style="font-size:13px;margin-bottom:8px;"><strong>Load-to-weight ratio target:</strong> Calculate a target ratio for your bridge.</p>
+    <textarea data-field="l17-ext-ratio" placeholder="If my bridge weighs approximately ___ g and I want it to hold ___ g, my target ratio is ___ : 1" style="min-height:40px;width:100%;margin-bottom:8px;"></textarea>
+    <p style="font-size:13px;margin-bottom:8px;"><strong>Advanced truss research:</strong> Research a K-truss or modified Warren truss. How does it differ from a standard truss?</p>
+    <textarea data-field="l17-ext-truss" placeholder="A K-truss is different because..." style="min-height:50px;width:100%;margin-bottom:8px;"></textarea>
+    <p style="font-size:13px;margin-bottom:8px;"><strong>Cost constraint challenge:</strong> If each stick costs $1 and glue costs $5, write a budget for your bridge.</p>
+    <textarea data-field="l17-ext-cost" placeholder="Number of sticks: ___ x $1 = $___&#10;Glue: $5&#10;Total budget: $___" style="min-height:50px;width:100%;margin-bottom:8px;"></textarea>
+    <p style="font-size:13px;margin-bottom:8px;"><strong>Formal engineering language:</strong> Rewrite your specifications using formal engineering language.</p>
+    <textarea data-field="l17-ext-formal" placeholder="e.g. 'The structure shall achieve a minimum clear span of 300 mm...'" style="min-height:50px;width:100%;"></textarea>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--teal);">&#127915;</div>
+      <div class="section-title">Exit Ticket &mdash; Reflection</div>
+    </div>
+    <div class="exit-question">
+      <div class="eq-label">1. Describe your chosen bridge design in ONE sentence.</div>
+      <textarea data-field="exit-1" placeholder=""></textarea>
+    </div>
+    <div class="exit-question">
+      <div class="eq-label">2. Name ONE specification and ONE constraint for this project.</div>
+      <textarea data-field="exit-2" placeholder=""></textarea>
+    </div>
+    <div class="exit-question">
+      <div class="eq-label">3. What is the FIRST thing you will do when building starts next lesson?</div>
+      <textarea data-field="exit-3" placeholder=""></textarea>
+    </div>
+
+  </div>
+
+  <div class="section self-assess">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--dark-blue);">&#9989;</div>
+      <div class="section-title">Self-Assessment</div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:55%;">Success Criteria</th>
+          <th class="got" style="width:15%;">Got it &#128994;</th>
+          <th class="nearly" style="width:15%;">Nearly there &#128992;</th>
+          <th class="need" style="width:15%;">Need help &#128308;</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="text-align:left;">I can write a clear design brief with specifications</td>
+          <td><input type="radio" name="sa1" id="sa1a" value="got" data-field="sa1"><label for="sa1a">&#9679;</label></td>
+          <td><input type="radio" name="sa1" id="sa1b" value="nearly" data-field="sa1"><label for="sa1b">&#9679;</label></td>
+          <td><input type="radio" name="sa1" id="sa1c" value="need" data-field="sa1"><label for="sa1c">&#9679;</label></td>
+        </tr>
+        <tr>
+          <td style="text-align:left;">I can research 3 real bridges for inspiration</td>
+          <td><input type="radio" name="sa2" id="sa2a" value="got" data-field="sa2"><label for="sa2a">&#9679;</label></td>
+          <td><input type="radio" name="sa2" id="sa2b" value="nearly" data-field="sa2"><label for="sa2b">&#9679;</label></td>
+          <td><input type="radio" name="sa2" id="sa2c" value="need" data-field="sa2"><label for="sa2c">&#9679;</label></td>
+        </tr>
+        <tr>
+          <td style="text-align:left;">I can create at least 3 thumbnail sketches with annotations</td>
+          <td><input type="radio" name="sa3" id="sa3a" value="got" data-field="sa3"><label for="sa3a">&#9679;</label></td>
+          <td><input type="radio" name="sa3" id="sa3b" value="nearly" data-field="sa3"><label for="sa3b">&#9679;</label></td>
+          <td><input type="radio" name="sa3" id="sa3c" value="need" data-field="sa3"><label for="sa3c">&#9679;</label></td>
+        </tr>
+        <tr>
+          <td style="text-align:left;">I can plan my construction approach</td>
+          <td><input type="radio" name="sa4" id="sa4a" value="got" data-field="sa4"><label for="sa4a">&#9679;</label></td>
+          <td><input type="radio" name="sa4" id="sa4b" value="nearly" data-field="sa4"><label for="sa4b">&#9679;</label></td>
+          <td><input type="radio" name="sa4" id="sa4c" value="need" data-field="sa4"><label for="sa4c">&#9679;</label></td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer">T1-L17 &mdash; Year 7 Technology Mandatory &mdash; Engineering Technologies &amp; Systems &mdash; Bridge It</div>
+</div>
+
+<script>
+
+(function() {
+  'use strict';
+
+  const STORAGE_KEY = 'T1-L17-Worksheet';
+  const saveMsg = document.getElementById('saveMsg');
+  let saveTimer = null;
+
+  // ---- Auto-save to localStorage ----
+  function saveAll() {
+    const data = {};
+    // Text inputs and textareas
+    document.querySelectorAll('[data-field]').forEach(function(el) {
+      if (el.type === 'radio') {
+        if (el.checked) data[el.name] = el.value;
+      } else {
+        data[el.getAttribute('data-field')] = el.value;
+      }
+    });
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      showSaved();
+    } catch(e) { /* localStorage full or blocked */ }
+  }
+
+  function showSaved() {
+    saveMsg.classList.add('show');
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function() { saveMsg.classList.remove('show'); }, 1500);
+  }
+
+  // ---- Load from localStorage ----
+  function loadAll() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const data = JSON.parse(raw);
+
+      // Text inputs and textareas
+      document.querySelectorAll('input[data-field]:not([type=radio]), textarea[data-field]').forEach(function(el) {
+        const key = el.getAttribute('data-field');
+        if (data[key] !== undefined) el.value = data[key];
+      });
+
+      // Radio buttons
+      ['sa1', 'sa2', 'sa3', 'sa4'].forEach(function(name) {
+        if (data[name]) {
+          const radio = document.querySelector('input[name="'+name+'"][value="'+data[name]+'"]');
+          if (radio) radio.checked = true;
+        }
+      });
+    } catch(e) { /* bad data, ignore */ }
+  }
+
+  // ---- Attach listeners ----
+  document.querySelectorAll('input[data-field], textarea[data-field]').forEach(function(el) {
+    el.addEventListener('input', debounce(saveAll, 500));
+    el.addEventListener('change', saveAll);
+  });
+
+  function debounce(fn, ms) {
+    let t;
+    return function() { clearTimeout(t); t = setTimeout(fn, ms); };
+  }
+
+  // ---- Print / Save as PDF ----
+  window.handlePrint = function() {
+    saveAll(); // save before printing
+    window.print();
+  };
+
+  // ---- Clear all ----
+  window.handleClear = function() {
+    if (!confirm('Clear all your answers? This cannot be undone.')) return;
+    document.querySelectorAll('input[data-field]:not([type=radio]), textarea[data-field]').forEach(function(el) {
+      el.value = '';
+    });
+    document.querySelectorAll('input[type=radio]').forEach(function(el) {
+      el.checked = false;
+    });
+    localStorage.removeItem(STORAGE_KEY);
+  };
+
+  // ---- Init ----
+  loadAll();
+})();
+
+</script>
+</body>
+</html>

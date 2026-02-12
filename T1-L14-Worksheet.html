@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T1-L14: Colour in Design &amp; Digital File Types</title>
+<style>
+
+  /* ===== BLUEPRINT THEME ===== */
+  :root {
+    --steel-blue: #2B5F8A;
+    --bright-orange: #E8712B;
+    --charcoal: #333333;
+    --light-grey: #F2F2F2;
+    --teal: #1A8A6E;
+    --support-blue: #D6E8F7;
+    --extension-orange: #FDE8D0;
+    --white: #FFFFFF;
+    --dark-blue: #1A3D5C;
+    --mid-grey: #888888;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Calibri, 'Segoe UI', Arial, sans-serif;
+    font-size: 14px;
+    color: var(--charcoal);
+    background: var(--light-grey);
+    line-height: 1.5;
+  }
+
+  .worksheet {
+    max-width: 210mm;
+    margin: 20px auto;
+    background: var(--white);
+    padding: 28px 32px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: var(--steel-blue);
+    color: var(--white);
+    padding: 18px 24px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    right: -30px; top: -30px;
+    width: 120px; height: 120px;
+    background: var(--bright-orange);
+    border-radius: 50%;
+    opacity: 0.15;
+  }
+  .header h1 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 2px;
+    position: relative;
+    z-index: 1;
+  }
+  .header .subtitle {
+    font-size: 13px;
+    opacity: 0.9;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ===== STUDENT INFO BAR ===== */
+  .info-bar {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+    padding: 10px 14px;
+    background: var(--light-grey);
+    border-radius: 4px;
+    border-left: 4px solid var(--steel-blue);
+    align-items: center;
+  }
+  .info-bar label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--steel-blue);
+    white-space: nowrap;
+  }
+  .info-bar input {
+    border: none;
+    border-bottom: 1.5px solid var(--mid-grey);
+    background: transparent;
+    font-family: inherit;
+    font-size: 13px;
+    padding: 2px 4px;
+    width: 140px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .info-bar input:focus { border-bottom-color: var(--bright-orange); }
+  .info-group { display: flex; align-items: center; gap: 4px; }
+
+  /* ===== OUTCOME BADGES ===== */
+  .outcomes {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .outcomes span.label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--mid-grey);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .badge {
+    display: inline-block;
+    background: var(--dark-blue);
+    color: var(--white);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 12px;
+    letter-spacing: 0.3px;
+  }
+  .badge.folio {
+    background: var(--teal);
+  }
+
+  /* ===== SECTION HEADERS ===== */
+  .section {
+    margin-bottom: 18px;
+    page-break-inside: avoid;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .section-icon {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: var(--white);
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--dark-blue);
+  }
+
+  /* ===== LISC BOX ===== */
+  .lisc-box {
+    background: var(--light-grey);
+    border-radius: 6px;
+    padding: 14px 18px;
+    border-left: 4px solid var(--steel-blue);
+  }
+  .lisc-box .li-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--steel-blue);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+  .lisc-box .li-text {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  .lisc-box ul {
+    margin: 0;
+    padding-left: 20px;
+  }
+  .lisc-box ul li {
+    font-size: 13px;
+    margin-bottom: 3px;
+    color: var(--charcoal);
+  }
+  .lisc-box ul li::marker {
+    color: var(--bright-orange);
+  }
+
+  /* ===== DO NOW TABLE ===== */
+  .prompt-box {
+    background: var(--extension-orange);
+    border-radius: 4px;
+    padding: 10px 14px;
+    font-style: italic;
+    font-size: 14px;
+    margin-bottom: 10px;
+    border-left: 4px solid var(--bright-orange);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 6px;
+    font-size: 13px;
+  }
+  table th {
+    background: var(--steel-blue);
+    color: var(--white);
+    font-weight: 600;
+    font-size: 12px;
+    padding: 8px 10px;
+    text-align: left;
+    border: 1px solid var(--steel-blue);
+  }
+  table td {
+    padding: 4px 6px;
+    border: 1px solid #ccc;
+    vertical-align: top;
+  }
+  table td input,
+  table td textarea {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 13px;
+    padding: 4px 2px;
+    resize: vertical;
+    outline: none;
+    line-height: 1.4;
+  }
+  table td textarea { min-height: 32px; }
+
+  /* Row number column */
+  table td.row-num {
+    width: 28px;
+    text-align: center;
+    font-weight: 600;
+    color: var(--mid-grey);
+    background: var(--light-grey);
+  }
+
+  /* ===== VOCABULARY TABLE ===== */
+  .vocab-table th:first-child { width: 22%; }
+  .vocab-table .def-cell { font-size: 12px; color: var(--mid-grey); }
+  .vocab-table td.sentence-cell { background: var(--light-grey); }
+
+  /* ===== FOCUS AREAS GRID ===== */
+  .focus-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .focus-card {
+    border: 2px solid var(--steel-blue);
+    border-radius: 6px;
+    padding: 10px 12px;
+    background: var(--white);
+  }
+  .focus-card .fc-num {
+    display: inline-block;
+    background: var(--steel-blue);
+    color: var(--white);
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 22px;
+    margin-right: 6px;
+  }
+  .focus-card .fc-name {
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--dark-blue);
+  }
+  .focus-card textarea {
+    width: 100%;
+    margin-top: 6px;
+    border: 1.5px dashed var(--mid-grey);
+    border-radius: 4px;
+    padding: 6px 8px;
+    font-family: inherit;
+    font-size: 13px;
+    min-height: 36px;
+    resize: vertical;
+    outline: none;
+    background: var(--light-grey);
+  }
+  .focus-card textarea::placeholder { color: #aaa; font-style: italic; }
+  .focus-card textarea:focus { border-color: var(--bright-orange); background: var(--white); }
+
+  /* ===== WRITING AREA ===== */
+  .writing-area {
+    border: 2px solid var(--steel-blue);
+    border-radius: 6px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    background: var(--white);
+  }
+  .writing-area .wa-instructions {
+    font-size: 13px;
+    margin-bottom: 8px;
+    color: var(--charcoal);
+  }
+  .writing-area .wa-instructions ul {
+    padding-left: 18px;
+    margin-top: 4px;
+  }
+  .writing-area .wa-instructions li {
+    font-size: 13px;
+    margin-bottom: 2px;
+  }
+  .writing-area .wa-instructions li::marker { color: var(--bright-orange); }
+  .writing-area textarea {
+    width: 100%;
+    border: 1.5px dashed var(--mid-grey);
+    border-radius: 4px;
+    padding: 10px 12px;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.8;
+    min-height: 160px;
+    resize: vertical;
+    outline: none;
+    background: var(--light-grey);
+  }
+  .writing-area textarea::placeholder { color: #aaa; font-style: italic; }
+  .writing-area textarea:focus { border-color: var(--bright-orange); background: var(--white); }
+
+  /* ===== DIFFERENTIATION BLOCKS ===== */
+  .diff-block {
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+  }
+  .diff-block.support {
+    background: var(--support-blue);
+    border-left: 5px solid var(--steel-blue);
+  }
+  .diff-block.extension {
+    background: var(--extension-orange);
+    border-left: 5px solid var(--bright-orange);
+  }
+  .diff-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+  .diff-block.support .diff-label { color: var(--steel-blue); }
+  .diff-block.extension .diff-label { color: var(--bright-orange); }
+  .diff-block ol {
+    padding-left: 20px;
+    margin-bottom: 8px;
+  }
+  .diff-block li {
+    font-size: 13px;
+    margin-bottom: 3px;
+  }
+  .word-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+  }
+  .word-bank span {
+    background: var(--white);
+    border: 1px solid var(--steel-blue);
+    border-radius: 12px;
+    padding: 2px 10px;
+    font-size: 12px;
+    color: var(--dark-blue);
+  }
+  .diff-block textarea,
+  .diff-block input[type="text"] {
+    width: 100%;
+    border: 1.5px dashed rgba(0,0,0,0.2);
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-family: inherit;
+    font-size: 13px;
+    background: rgba(255,255,255,0.7);
+    outline: none;
+    resize: vertical;
+  }
+  .diff-block textarea:focus,
+  .diff-block input[type="text"]:focus {
+    border-color: var(--bright-orange);
+    background: var(--white);
+  }
+
+  /* ===== EXIT TICKET ===== */
+  .exit-question {
+    margin-bottom: 10px;
+  }
+  .exit-question .eq-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--dark-blue);
+    margin-bottom: 4px;
+  }
+  .exit-question textarea {
+    width: 100%;
+    border: 1.5px dashed var(--mid-grey);
+    border-radius: 4px;
+    padding: 8px 10px;
+    font-family: inherit;
+    font-size: 13px;
+    min-height: 40px;
+    resize: vertical;
+    outline: none;
+    background: var(--light-grey);
+  }
+  .exit-question textarea:focus { border-color: var(--bright-orange); background: var(--white); }
+
+  /* ===== SELF-ASSESSMENT ===== */
+  .self-assess table td {
+    text-align: center;
+    padding: 6px 8px;
+  }
+  .self-assess table td:first-child { text-align: left; }
+  .self-assess table td label {
+    cursor: pointer;
+    font-size: 18px;
+    opacity: 0.3;
+    transition: opacity 0.15s;
+  }
+  .self-assess table td input[type="radio"] { display: none; }
+  .self-assess table td input[type="radio"]:checked + label { opacity: 1; }
+  .self-assess table th.got { background: var(--teal); }
+  .self-assess table th.nearly { background: var(--bright-orange); }
+  .self-assess table th.need { background: var(--steel-blue); }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    text-align: center;
+    font-size: 11px;
+    color: var(--mid-grey);
+    padding-top: 12px;
+    border-top: 1px solid #ddd;
+    margin-top: 10px;
+  }
+
+  /* ===== SAVE BUTTON ===== */
+  .btn-bar {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin: 20px auto 10px;
+    max-width: 210mm;
+  }
+  .btn {
+    padding: 10px 28px;
+    border: none;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.2s;
+  }
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 3px 8px rgba(0,0,0,0.15); }
+  .btn-pdf {
+    background: var(--bright-orange);
+    color: var(--white);
+  }
+  .btn-clear {
+    background: var(--white);
+    color: var(--mid-grey);
+    border: 1.5px solid #ccc;
+  }
+  .save-indicator {
+    font-size: 11px;
+    color: var(--teal);
+    text-align: center;
+    margin-top: 4px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .save-indicator.show { opacity: 1; }
+
+  /* ===== DESIGN EVERYWHERE TABLE ===== */
+  .de-table td:first-child { width: 40%; }
+
+  /* ===== PRINT STYLES ===== */
+  @media print {
+    body { background: white; font-size: 12px; }
+    .worksheet {
+      max-width: 100%;
+      margin: 0;
+      padding: 14px 18px;
+      box-shadow: none;
+    }
+    .btn-bar, .save-indicator { display: none !important; }
+    .header { padding: 12px 16px; }
+    .header h1 { font-size: 16px; }
+    .section { page-break-inside: avoid; }
+    .writing-area textarea { min-height: 120px; }
+    textarea, input[type="text"] {
+      border: 1px solid #999 !important;
+      background: white !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .diff-block.support, .diff-block.extension,
+    .prompt-box, .lisc-box, .focus-card textarea,
+    table th, .badge, .section-icon, .info-bar {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .self-assess table td label { opacity: 0.2; }
+    .self-assess table td input[type="radio"]:checked + label { opacity: 1; }
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 600px) {
+    .worksheet { padding: 14px 12px; }
+    .info-bar { flex-direction: column; }
+    .focus-grid { grid-template-columns: 1fr; }
+  }
+
+</style>
+</head>
+<body>
+<div class="btn-bar">
+  <button class="btn btn-pdf" onclick="handlePrint()" title="Opens print dialog — choose 'Save as PDF'">&#128438; Save as PDF</button>
+  <button class="btn btn-clear" onclick="handleClear()" title="Clear all your answers">&#128465; Clear All</button>
+</div>
+<div class="save-indicator" id="saveMsg">&#10003; Auto-saved</div>
+
+<div class="worksheet" id="ws">
+  <div class="header">
+    <h1>T1-L14: Colour in Design &amp; Digital File Types</h1>
+    <div class="subtitle">Year 7 Technology Mandatory &mdash; Engineering Technologies &amp; Systems &mdash; Bridge It</div>
+  </div>
+
+  <div class="info-bar">
+    <div class="info-group"><label>Name:</label> <input type="text" id="f-name" placeholder="Your name" data-field="name"></div>
+    <div class="info-group"><label>Class:</label> <input type="text" id="f-class" placeholder="e.g. 7TECE" data-field="class" style="width:80px;"></div>
+    <div class="info-group"><label>Date:</label> <input type="text" id="f-date" placeholder="DD/MM/YYYY" data-field="date" style="width:100px;"></div>
+    <div class="info-group"><label>Folio:</label> <span style="font-size:13px;">pp. 65–72</span></div>
+  </div>
+
+  <div class="outcomes">
+    <span class="label">Outcomes:</span>
+    <span class="badge">TE4-DES-01</span>
+    <span class="badge">TE4-DIG-01</span>
+    <span class="badge folio">Folio pp. 65–72</span>
+  </div>
+
+  <div class="section">
+    <div class="lisc-box">
+      <div class="li-label">Learning Intention</div>
+      <div class="li-text">We are learning about colour in design and understanding common digital file types.</div>
+      <div class="li-label">Success Criteria</div>
+      <ul>
+        <li>I can distinguish warm from cool colours</li>
+        <li>I can explain how colour affects mood in design</li>
+        <li>I can identify at least 8 common file types and their uses</li>
+        <li>I can choose the correct file type for a given purpose</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--bright-orange);">&#9998;</div>
+      <div class="section-title">Do Now</div>
+    </div>
+    <div class="prompt-box">Name 3 warm colours and 3 cool colours.</div>
+    <table>
+      <thead><tr><th style="width:50%;">Warm colours</th><th style="width:50%;">Cool colours</th></tr></thead>
+      <tbody>
+        <tr><td><input type="text" data-field="dn-warm1" placeholder="1." style="width:100%;"></td><td><input type="text" data-field="dn-cool1" placeholder="1." style="width:100%;"></td></tr>
+        <tr><td><input type="text" data-field="dn-warm2" placeholder="2." style="width:100%;"></td><td><input type="text" data-field="dn-cool2" placeholder="2." style="width:100%;"></td></tr>
+        <tr><td><input type="text" data-field="dn-warm3" placeholder="3." style="width:100%;"></td><td><input type="text" data-field="dn-cool3" placeholder="3." style="width:100%;"></td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:12px;font-weight:600;color:var(--steel-blue);margin-top:8px;">How does each group make you FEEL?</p>
+    <textarea data-field="dn-feel" placeholder="Warm colours make me feel... Cool colours make me feel..." style="min-height:50px;width:100%;"></textarea>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--teal);">&#128218;</div>
+      <div class="section-title">Key Vocabulary</div>
+    </div>
+    <p style="font-size:12px;color:var(--mid-grey);margin-bottom:6px;">
+      <strong>Standard:</strong> Fill in the definition. &nbsp;|&nbsp;
+      <strong>Support:</strong> Definitions shown in grey &mdash; read and copy into your folio. &nbsp;|&nbsp;
+      <strong>Extension:</strong> Use each term in a sentence.
+    </p>
+    <table class="vocab-table">
+      <thead><tr><th>Term</th><th>Definition</th><th>Use in a sentence (Extension)</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Warm colours</strong></td>
+          <td><span class="def-cell">Red, orange, yellow — feel energetic and exciting</span><br>
+            <input type="text" data-field="vocab-def-1" placeholder="Write definition here (Standard)"></td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-1" placeholder="Write a sentence using this term"></td>
+        </tr>
+        <tr>
+          <td><strong>Cool colours</strong></td>
+          <td><span class="def-cell">Blue, green, purple — feel calm and serene</span><br>
+            <input type="text" data-field="vocab-def-2" placeholder="Write definition here (Standard)"></td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-2" placeholder="Write a sentence using this term"></td>
+        </tr>
+        <tr>
+          <td><strong>Mood</strong></td>
+          <td><span class="def-cell">The feeling or emotion a design creates</span><br>
+            <input type="text" data-field="vocab-def-3" placeholder="Write definition here (Standard)"></td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-3" placeholder="Write a sentence using this term"></td>
+        </tr>
+        <tr>
+          <td><strong>Atmosphere</strong></td>
+          <td><span class="def-cell">The overall tone or character of a space or design</span><br>
+            <input type="text" data-field="vocab-def-4" placeholder="Write definition here (Standard)"></td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-4" placeholder="Write a sentence using this term"></td>
+        </tr>
+        <tr>
+          <td><strong>File type</strong></td>
+          <td><span class="def-cell">The format a digital file is saved in, e.g. .jpg, .docx</span><br>
+            <input type="text" data-field="vocab-def-5" placeholder="Write definition here (Standard)"></td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-5" placeholder="Write a sentence using this term"></td>
+        </tr>
+        <tr>
+          <td><strong>Extension</strong></td>
+          <td><span class="def-cell">The letters after the dot in a file name, e.g. .pdf</span><br>
+            <input type="text" data-field="vocab-def-6" placeholder="Write definition here (Standard)"></td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-6" placeholder="Write a sentence using this term"></td>
+        </tr>
+        <tr>
+          <td><strong>Raster</strong></td>
+          <td><span class="def-cell">Image made of pixels — gets blurry when enlarged</span><br>
+            <input type="text" data-field="vocab-def-7" placeholder="Write definition here (Standard)"></td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-7" placeholder="Write a sentence using this term"></td>
+        </tr>
+        <tr>
+          <td><strong>Vector</strong></td>
+          <td><span class="def-cell">Image made of mathematical paths — scales perfectly to any size</span><br>
+            <input type="text" data-field="vocab-def-8" placeholder="Write definition here (Standard)"></td>
+          <td class="sentence-cell"><input type="text" data-field="vocab-sent-8" placeholder="Write a sentence using this term"></td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--steel-blue);">&#127912;</div>
+      <div class="section-title">Warm vs Cool Colours (Folio pp. 65&ndash;66)</div>
+    </div>
+    <p style="font-size:13px;margin-bottom:8px;">Fill in the table with colour examples and the feelings they create.</p>
+    <table>
+      <thead><tr><th style="width:15%;">Type</th><th style="width:25%;">Colour example</th><th>Associated feeling</th></tr></thead>
+      <tbody>
+        <tr><td rowspan="3" style="vertical-align:middle;font-weight:700;color:#D04020;">Warm</td><td><input type="text" data-field="warm-ex1" placeholder="e.g. Red" style="width:100%;"></td><td><input type="text" data-field="warm-feel1" placeholder="e.g. Energy, excitement, danger" style="width:100%;"></td></tr>
+        <tr><td><input type="text" data-field="warm-ex2" placeholder="" style="width:100%;"></td><td><input type="text" data-field="warm-feel2" placeholder="" style="width:100%;"></td></tr>
+        <tr><td><input type="text" data-field="warm-ex3" placeholder="" style="width:100%;"></td><td><input type="text" data-field="warm-feel3" placeholder="" style="width:100%;"></td></tr>
+        <tr><td rowspan="3" style="vertical-align:middle;font-weight:700;color:#2070B0;">Cool</td><td><input type="text" data-field="cool-ex1" placeholder="e.g. Blue" style="width:100%;"></td><td><input type="text" data-field="cool-feel1" placeholder="e.g. Calm, trust, sadness" style="width:100%;"></td></tr>
+        <tr><td><input type="text" data-field="cool-ex2" placeholder="" style="width:100%;"></td><td><input type="text" data-field="cool-feel2" placeholder="" style="width:100%;"></td></tr>
+        <tr><td><input type="text" data-field="cool-ex3" placeholder="" style="width:100%;"></td><td><input type="text" data-field="cool-feel3" placeholder="" style="width:100%;"></td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:13px;margin-top:8px;font-weight:600;">Sketch a product where colour is important &mdash; what mood does it create?</p>
+    <textarea data-field="colour-sketch" placeholder="I chose to sketch... The colours create a mood of..." style="min-height:50px;width:100%;"></textarea>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--bright-orange);">&#127919;</div>
+      <div class="section-title">Colour Mood Challenge</div>
+    </div>
+    <p style="font-size:13px;margin-bottom:8px;">For each space below, choose a colour scheme and explain the mood it creates.</p>
+    <table>
+      <thead><tr><th style="width:25%;">Space</th><th style="width:25%;">Colour scheme</th><th style="width:20%;">Warm or cool?</th><th>What mood does it create?</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Children&rsquo;s playground</strong></td><td><input type="text" data-field="mood-play-colours" placeholder="e.g. bright yellow, red, green" style="width:100%;"></td><td><input type="text" data-field="mood-play-type" placeholder="" style="width:100%;"></td><td><textarea data-field="mood-play-why" placeholder="" style="min-height:40px;"></textarea></td></tr>
+        <tr><td><strong>Luxury day spa</strong></td><td><input type="text" data-field="mood-spa-colours" placeholder="e.g. soft blue, lavender, white" style="width:100%;"></td><td><input type="text" data-field="mood-spa-type" placeholder="" style="width:100%;"></td><td><textarea data-field="mood-spa-why" placeholder="" style="min-height:40px;"></textarea></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--teal);">&#128190;</div>
+      <div class="section-title">Digital File Types Reference (Folio pp. 67&ndash;68)</div>
+    </div>
+    <p style="font-size:13px;margin-bottom:8px;">Complete this reference table of common digital file types.</p>
+    <table>
+      <thead><tr><th style="width:12%;">Category</th><th style="width:12%;">Extension</th><th style="width:30%;">What is it?</th><th style="width:16%;">Raster / Vector?</th><th>Key feature</th></tr></thead>
+      <tbody>
+        <tr><td rowspan="4" style="vertical-align:middle;font-weight:700;font-size:11px;">Documents</td><td><strong>.DOC</strong></td><td><input type="text" data-field="ft-doc" placeholder="Word document" style="width:100%;"></td><td style="color:var(--mid-grey);font-size:11px;">N/A</td><td><input type="text" data-field="ft-doc-feat" placeholder="" style="width:100%;"></td></tr>
+        <tr><td><strong>.XLS</strong></td><td><input type="text" data-field="ft-xls" placeholder="" style="width:100%;"></td><td style="color:var(--mid-grey);font-size:11px;">N/A</td><td><input type="text" data-field="ft-xls-feat" placeholder="" style="width:100%;"></td></tr>
+        <tr><td><strong>.PPT</strong></td><td><input type="text" data-field="ft-ppt" placeholder="" style="width:100%;"></td><td style="color:var(--mid-grey);font-size:11px;">N/A</td><td><input type="text" data-field="ft-ppt-feat" placeholder="" style="width:100%;"></td></tr>
+        <tr><td><strong>.PDF</strong></td><td><input type="text" data-field="ft-pdf" placeholder="" style="width:100%;"></td><td style="color:var(--mid-grey);font-size:11px;">N/A</td><td><input type="text" data-field="ft-pdf-feat" placeholder="" style="width:100%;"></td></tr>
+        <tr><td rowspan="5" style="vertical-align:middle;font-weight:700;font-size:11px;">Images</td><td><strong>.JPG</strong></td><td><input type="text" data-field="ft-jpg" placeholder="" style="width:100%;"></td><td><input type="text" data-field="ft-jpg-rv" placeholder="Raster or Vector?" style="width:100%;"></td><td><input type="text" data-field="ft-jpg-feat" placeholder="" style="width:100%;"></td></tr>
+        <tr><td><strong>.PNG</strong></td><td><input type="text" data-field="ft-png" placeholder="" style="width:100%;"></td><td><input type="text" data-field="ft-png-rv" placeholder="" style="width:100%;"></td><td><input type="text" data-field="ft-png-feat" placeholder="" style="width:100%;"></td></tr>
+        <tr><td><strong>.GIF</strong></td><td><input type="text" data-field="ft-gif" placeholder="" style="width:100%;"></td><td><input type="text" data-field="ft-gif-rv" placeholder="" style="width:100%;"></td><td><input type="text" data-field="ft-gif-feat" placeholder="" style="width:100%;"></td></tr>
+        <tr><td><strong>.PSD</strong></td><td><input type="text" data-field="ft-psd" placeholder="" style="width:100%;"></td><td><input type="text" data-field="ft-psd-rv" placeholder="" style="width:100%;"></td><td><input type="text" data-field="ft-psd-feat" placeholder="" style="width:100%;"></td></tr>
+        <tr><td><strong>.EPS</strong></td><td><input type="text" data-field="ft-eps" placeholder="" style="width:100%;"></td><td><input type="text" data-field="ft-eps-rv" placeholder="" style="width:100%;"></td><td><input type="text" data-field="ft-eps-feat" placeholder="" style="width:100%;"></td></tr>
+        <tr><td rowspan="2" style="vertical-align:middle;font-weight:700;font-size:11px;">Audio</td><td><strong>.WAV</strong></td><td><input type="text" data-field="ft-wav" placeholder="" style="width:100%;"></td><td style="color:var(--mid-grey);font-size:11px;">N/A</td><td><input type="text" data-field="ft-wav-feat" placeholder="" style="width:100%;"></td></tr>
+        <tr><td><strong>.MP3</strong></td><td><input type="text" data-field="ft-mp3" placeholder="" style="width:100%;"></td><td style="color:var(--mid-grey);font-size:11px;">N/A</td><td><input type="text" data-field="ft-mp3-feat" placeholder="" style="width:100%;"></td></tr>
+        <tr><td rowspan="3" style="vertical-align:middle;font-weight:700;font-size:11px;">Video</td><td><strong>.MOV</strong></td><td><input type="text" data-field="ft-mov" placeholder="" style="width:100%;"></td><td style="color:var(--mid-grey);font-size:11px;">N/A</td><td><input type="text" data-field="ft-mov-feat" placeholder="" style="width:100%;"></td></tr>
+        <tr><td><strong>.AVI</strong></td><td><input type="text" data-field="ft-avi" placeholder="" style="width:100%;"></td><td style="color:var(--mid-grey);font-size:11px;">N/A</td><td><input type="text" data-field="ft-avi-feat" placeholder="" style="width:100%;"></td></tr>
+        <tr><td><strong>.MP4</strong></td><td><input type="text" data-field="ft-mp4" placeholder="" style="width:100%;"></td><td style="color:var(--mid-grey);font-size:11px;">N/A</td><td><input type="text" data-field="ft-mp4-feat" placeholder="" style="width:100%;"></td></tr>
+        <tr><td rowspan="2" style="vertical-align:middle;font-weight:700;font-size:11px;">Web</td><td><strong>.HTML</strong></td><td><input type="text" data-field="ft-html" placeholder="" style="width:100%;"></td><td style="color:var(--mid-grey);font-size:11px;">N/A</td><td><input type="text" data-field="ft-html-feat" placeholder="" style="width:100%;"></td></tr>
+        <tr><td><strong>.CSS</strong></td><td><input type="text" data-field="ft-css" placeholder="" style="width:100%;"></td><td style="color:var(--mid-grey);font-size:11px;">N/A</td><td><input type="text" data-field="ft-css-feat" placeholder="" style="width:100%;"></td></tr>
+        <tr><td rowspan="3" style="vertical-align:middle;font-weight:700;font-size:11px;">Other</td><td><strong>.TXT</strong></td><td><input type="text" data-field="ft-txt" placeholder="" style="width:100%;"></td><td style="color:var(--mid-grey);font-size:11px;">N/A</td><td><input type="text" data-field="ft-txt-feat" placeholder="" style="width:100%;"></td></tr>
+        <tr><td><strong>.ZIP</strong></td><td><input type="text" data-field="ft-zip" placeholder="" style="width:100%;"></td><td style="color:var(--mid-grey);font-size:11px;">N/A</td><td><input type="text" data-field="ft-zip-feat" placeholder="" style="width:100%;"></td></tr>
+        <tr><td><strong>.DLL</strong></td><td><input type="text" data-field="ft-dll" placeholder="" style="width:100%;"></td><td style="color:var(--mid-grey);font-size:11px;">N/A</td><td><input type="text" data-field="ft-dll-feat" placeholder="" style="width:100%;"></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--dark-blue);">&#128221;</div>
+      <div class="section-title">File Type Questions (Folio pp. 69&ndash;72)</div>
+    </div>
+    <table>
+      <thead><tr><th style="width:10%;">File type</th><th style="width:30%;">What program opens it?</th><th style="width:30%;">What is it used for?</th><th>One key detail</th></tr></thead>
+      <tbody>
+        <tr><td><strong>.DOC</strong></td><td><input type="text" data-field="fq-doc-prog" placeholder="" style="width:100%;"></td><td><input type="text" data-field="fq-doc-use" placeholder="" style="width:100%;"></td><td><input type="text" data-field="fq-doc-detail" placeholder="" style="width:100%;"></td></tr>
+        <tr><td><strong>.JPG</strong></td><td><input type="text" data-field="fq-jpg-prog" placeholder="" style="width:100%;"></td><td><input type="text" data-field="fq-jpg-use" placeholder="" style="width:100%;"></td><td><input type="text" data-field="fq-jpg-detail" placeholder="" style="width:100%;"></td></tr>
+        <tr><td><strong>.PNG</strong></td><td><input type="text" data-field="fq-png-prog" placeholder="" style="width:100%;"></td><td><input type="text" data-field="fq-png-use" placeholder="" style="width:100%;"></td><td><input type="text" data-field="fq-png-detail" placeholder="" style="width:100%;"></td></tr>
+        <tr><td><strong>.PDF</strong></td><td><input type="text" data-field="fq-pdf-prog" placeholder="" style="width:100%;"></td><td><input type="text" data-field="fq-pdf-use" placeholder="" style="width:100%;"></td><td><input type="text" data-field="fq-pdf-detail" placeholder="" style="width:100%;"></td></tr>
+        <tr><td><strong>.MP3</strong></td><td><input type="text" data-field="fq-mp3-prog" placeholder="" style="width:100%;"></td><td><input type="text" data-field="fq-mp3-use" placeholder="" style="width:100%;"></td><td><input type="text" data-field="fq-mp3-detail" placeholder="" style="width:100%;"></td></tr>
+        <tr><td><strong>.MP4</strong></td><td><input type="text" data-field="fq-mp4-prog" placeholder="" style="width:100%;"></td><td><input type="text" data-field="fq-mp4-use" placeholder="" style="width:100%;"></td><td><input type="text" data-field="fq-mp4-detail" placeholder="" style="width:100%;"></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--bright-orange);">&#128193;</div>
+      <div class="section-title">File Type Sorting Challenge</div>
+    </div>
+    <p style="font-size:13px;margin-bottom:8px;">Sort these 12 file types into the correct category: <strong>.DOC, .JPG, .PNG, .EPS, .MP3, .WAV, .MP4, .AVI, .HTML, .CSS, .PDF, .GIF</strong></p>
+    <table>
+      <thead><tr><th style="width:25%;">Category</th><th>File types that belong here</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Documents</strong></td><td><input type="text" data-field="sort-docs" placeholder="e.g. .DOC, .PDF" style="width:100%;"></td></tr>
+        <tr><td><strong>Raster Images</strong></td><td><input type="text" data-field="sort-raster" placeholder="" style="width:100%;"></td></tr>
+        <tr><td><strong>Vector Images</strong></td><td><input type="text" data-field="sort-vector" placeholder="" style="width:100%;"></td></tr>
+        <tr><td><strong>Audio</strong></td><td><input type="text" data-field="sort-audio" placeholder="" style="width:100%;"></td></tr>
+        <tr><td><strong>Video</strong></td><td><input type="text" data-field="sort-video" placeholder="" style="width:100%;"></td></tr>
+        <tr><td><strong>Web</strong></td><td><input type="text" data-field="sort-web" placeholder="" style="width:100%;"></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="diff-block support">
+    <div class="diff-label">&#128309; Support &mdash; Colour &amp; File Type Helpers</div>
+    <p style="font-size:13px;margin-bottom:6px;">Use a printed colour wheel reference to identify warm and cool colours.</p>
+    <p style="font-size:13px;margin-bottom:6px;">Focus on these 5 key file types only: <strong>.DOC, .JPG, .PNG, .PDF, .MP3</strong></p>
+    <p style="font-size:13px;margin-bottom:6px;"><strong>Sentence starters:</strong></p>
+    <ol style="font-size:13px;">
+      <li>&ldquo;Warm colours make me feel&hellip; because&hellip;&rdquo;</li>
+      <li>&ldquo;A .JPG file is used for&hellip;&rdquo;</li>
+      <li>&ldquo;The difference between raster and vector is&hellip;&rdquo;</li>
+    </ol>
+    <div style="margin-top:6px;"><div class="diff-label" style="margin-bottom:4px;">Word Bank</div>
+      <div class="word-bank">
+        <span>warm</span><span>cool</span><span>mood</span><span>raster</span>
+        <span>vector</span><span>pixel</span><span>path</span><span>extension</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="diff-block extension">
+    <div class="diff-label">&#128992; Extension &mdash; Colour &amp; File Type Mastery</div>
+    <p style="font-size:13px;margin-bottom:8px;"><strong>Brand colour scheme:</strong> Design a colour scheme for a fictional brand. Justify every colour choice.</p>
+    <div style="margin-bottom:8px;">
+      <label style="font-size:12px;font-weight:600;">Brand name:</label>
+      <input type="text" data-field="ext-brand" placeholder="e.g. Ocean Fresh Juice Co." style="width:60%;">
+    </div>
+    <textarea data-field="ext-brand-justify" placeholder="I chose these colours because... The primary colour is... which creates a mood of... The secondary colour is..." style="min-height:60px;width:100%;margin-bottom:8px;"></textarea>
+    <p style="font-size:13px;margin-bottom:8px;"><strong>Compression:</strong> Explain the difference between lossy and lossless compression. Give an example of each.</p>
+    <textarea data-field="ext-compression" placeholder="Lossy compression means... e.g. .JPG. Lossless compression means... e.g. .PNG" style="min-height:50px;width:100%;margin-bottom:8px;"></textarea>
+    <p style="font-size:13px;margin-bottom:8px;"><strong>Research:</strong> Why do some websites load slowly? How do image file sizes affect this?</p>
+    <textarea data-field="ext-web-speed" placeholder="Websites load slowly when..." style="min-height:50px;width:100%;"></textarea>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--teal);">&#127915;</div>
+      <div class="section-title">Exit Ticket &mdash; Reflection</div>
+    </div>
+    <div class="exit-question">
+      <div class="eq-label">1. Name 3 file types and explain when you would use each one.</div>
+      <textarea data-field="exit-1" placeholder=""></textarea>
+    </div>
+    <div class="exit-question">
+      <div class="eq-label">2. Would you use warm or cool colours for a children’s toy shop? Why?</div>
+      <textarea data-field="exit-2" placeholder=""></textarea>
+    </div>
+    <div class="exit-question">
+      <div class="eq-label">3. What is the difference between a raster and a vector image?</div>
+      <textarea data-field="exit-3" placeholder=""></textarea>
+    </div>
+
+  </div>
+
+  <div class="section self-assess">
+    <div class="section-header">
+      <div class="section-icon" style="background:var(--dark-blue);">&#9989;</div>
+      <div class="section-title">Self-Assessment</div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:55%;">Success Criteria</th>
+          <th class="got" style="width:15%;">Got it &#128994;</th>
+          <th class="nearly" style="width:15%;">Nearly there &#128992;</th>
+          <th class="need" style="width:15%;">Need help &#128308;</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="text-align:left;">I can distinguish warm from cool colours</td>
+          <td><input type="radio" name="sa1" id="sa1a" value="got" data-field="sa1"><label for="sa1a">&#9679;</label></td>
+          <td><input type="radio" name="sa1" id="sa1b" value="nearly" data-field="sa1"><label for="sa1b">&#9679;</label></td>
+          <td><input type="radio" name="sa1" id="sa1c" value="need" data-field="sa1"><label for="sa1c">&#9679;</label></td>
+        </tr>
+        <tr>
+          <td style="text-align:left;">I can explain how colour affects mood in design</td>
+          <td><input type="radio" name="sa2" id="sa2a" value="got" data-field="sa2"><label for="sa2a">&#9679;</label></td>
+          <td><input type="radio" name="sa2" id="sa2b" value="nearly" data-field="sa2"><label for="sa2b">&#9679;</label></td>
+          <td><input type="radio" name="sa2" id="sa2c" value="need" data-field="sa2"><label for="sa2c">&#9679;</label></td>
+        </tr>
+        <tr>
+          <td style="text-align:left;">I can identify at least 8 common file types and their uses</td>
+          <td><input type="radio" name="sa3" id="sa3a" value="got" data-field="sa3"><label for="sa3a">&#9679;</label></td>
+          <td><input type="radio" name="sa3" id="sa3b" value="nearly" data-field="sa3"><label for="sa3b">&#9679;</label></td>
+          <td><input type="radio" name="sa3" id="sa3c" value="need" data-field="sa3"><label for="sa3c">&#9679;</label></td>
+        </tr>
+        <tr>
+          <td style="text-align:left;">I can choose the correct file type for a given purpose</td>
+          <td><input type="radio" name="sa4" id="sa4a" value="got" data-field="sa4"><label for="sa4a">&#9679;</label></td>
+          <td><input type="radio" name="sa4" id="sa4b" value="nearly" data-field="sa4"><label for="sa4b">&#9679;</label></td>
+          <td><input type="radio" name="sa4" id="sa4c" value="need" data-field="sa4"><label for="sa4c">&#9679;</label></td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer">T1-L14 &mdash; Year 7 Technology Mandatory &mdash; Engineering Technologies &amp; Systems &mdash; Bridge It</div>
+</div>
+
+<script>
+
+(function() {
+  'use strict';
+
+  const STORAGE_KEY = 'T1-L14-Worksheet';
+  const saveMsg = document.getElementById('saveMsg');
+  let saveTimer = null;
+
+  // ---- Auto-save to localStorage ----
+  function saveAll() {
+    const data = {};
+    // Text inputs and textareas
+    document.querySelectorAll('[data-field]').forEach(function(el) {
+      if (el.type === 'radio') {
+        if (el.checked) data[el.name] = el.value;
+      } else {
+        data[el.getAttribute('data-field')] = el.value;
+      }
+    });
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      showSaved();
+    } catch(e) { /* localStorage full or blocked */ }
+  }
+
+  function showSaved() {
+    saveMsg.classList.add('show');
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function() { saveMsg.classList.remove('show'); }, 1500);
+  }
+
+  // ---- Load from localStorage ----
+  function loadAll() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const data = JSON.parse(raw);
+
+      // Text inputs and textareas
+      document.querySelectorAll('input[data-field]:not([type=radio]), textarea[data-field]').forEach(function(el) {
+        const key = el.getAttribute('data-field');
+        if (data[key] !== undefined) el.value = data[key];
+      });
+
+      // Radio buttons
+      ['sa1', 'sa2', 'sa3', 'sa4'].forEach(function(name) {
+        if (data[name]) {
+          const radio = document.querySelector('input[name="'+name+'"][value="'+data[name]+'"]');
+          if (radio) radio.checked = true;
+        }
+      });
+    } catch(e) { /* bad data, ignore */ }
+  }
+
+  // ---- Attach listeners ----
+  document.querySelectorAll('input[data-field], textarea[data-field]').forEach(function(el) {
+    el.addEventListener('input', debounce(saveAll, 500));
+    el.addEventListener('change', saveAll);
+  });
+
+  function debounce(fn, ms) {
+    let t;
+    return function() { clearTimeout(t); t = setTimeout(fn, ms); };
+  }
+
+  // ---- Print / Save as PDF ----
+  window.handlePrint = function() {
+    saveAll(); // save before printing
+    window.print();
+  };
+
+  // ---- Clear all ----
+  window.handleClear = function() {
+    if (!confirm('Clear all your answers? This cannot be undone.')) return;
+    document.querySelectorAll('input[data-field]:not([type=radio]), textarea[data-field]').forEach(function(el) {
+      el.value = '';
+    });
+    document.querySelectorAll('input[type=radio]').forEach(function(el) {
+      el.checked = false;
+    });
+    localStorage.removeItem(STORAGE_KEY);
+  };
+
+  // ---- Init ----
+  loadAll();
+})();
+
+</script>
+</body>
+</html>
