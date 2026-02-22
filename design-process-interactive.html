@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Design Process — Interactive Workbook</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#4A90D9;--green:#27AE60;--orange:#E67E22;--purple:#8E44AD;
+  --bg:#f0f2f5;--card:#fff;--text:#2c3e50;--muted:#7f8c8d;--border:#dce1e8;
+  --radius:12px;--shadow:0 2px 8px rgba(0,0,0,.08);
+  --step-color:var(--blue);
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+
+/* ── Header ── */
+.app-header{background:linear-gradient(135deg,#2c3e50,#34495e);color:#fff;padding:16px 24px;
+  display:flex;flex-wrap:wrap;align-items:center;gap:12px;position:sticky;top:0;z-index:100}
+.app-header h1{font-size:1.3rem;font-weight:700;flex:1}
+.student-name{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:8px;
+  padding:6px 12px;color:#fff;font-size:.9rem;width:180px}
+.student-name::placeholder{color:rgba(255,255,255,.5)}
+.level-toggle{display:flex;gap:0;border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,.3)}
+.level-btn{background:rgba(255,255,255,.1);border:none;color:rgba(255,255,255,.7);
+  padding:6px 14px;font-size:.8rem;cursor:pointer;transition:.2s}
+.level-btn:hover{background:rgba(255,255,255,.2)}
+.level-btn.active{background:rgba(255,255,255,.95);color:#2c3e50;font-weight:600}
+
+/* ── Progress Bar ── */
+.progress-wrap{background:#e8ecf1;padding:0;margin:0}
+.progress-bar{height:5px;background:linear-gradient(90deg,var(--blue),var(--green),var(--orange),var(--purple));
+  transition:width .5s ease;border-radius:0 3px 3px 0}
+
+/* ── Step Nav ── */
+.step-nav{display:flex;gap:0;background:#fff;border-bottom:2px solid var(--border);padding:0 16px;
+  overflow-x:auto}
+.step-tab{flex:1;min-width:0;padding:14px 8px;text-align:center;font-size:.85rem;font-weight:600;
+  border:none;background:none;cursor:pointer;color:var(--muted);position:relative;
+  transition:.2s;white-space:nowrap}
+.step-tab::after{content:'';position:absolute;bottom:-2px;left:10%;width:80%;height:3px;
+  border-radius:3px 3px 0 0;background:transparent;transition:.2s}
+.step-tab:hover{color:var(--text)}
+.step-tab.active{color:var(--step-color)}
+.step-tab.active::after{background:var(--step-color)}
+.step-tab .tab-num{display:inline-flex;align-items:center;justify-content:center;
+  width:24px;height:24px;border-radius:50%;background:var(--border);color:var(--muted);
+  font-size:.75rem;margin-right:6px;transition:.2s}
+.step-tab.active .tab-num{background:var(--step-color);color:#fff}
+.step-tab.done .tab-num{background:var(--green);color:#fff}
+.step-tab.done .tab-num::after{content:'✓'}
+
+/* ── Main ── */
+main{max-width:900px;margin:0 auto;padding:20px 16px 100px}
+.step-panel{display:none;animation:fadeIn .3s ease}
+.step-panel.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Cards ── */
+.card{background:var(--card);border-radius:var(--radius);padding:20px 24px;margin-bottom:16px;
+  box-shadow:var(--shadow);border:1px solid var(--border)}
+.card h2{font-size:1.15rem;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.card h3{font-size:1rem;margin-bottom:8px;color:var(--step-color)}
+
+/* ── Info Box ── */
+.info-box{background:#eaf4fe;border:1px solid #b8d9f5;border-radius:10px;padding:14px 18px;
+  margin-bottom:16px;font-size:.9rem;line-height:1.7}
+.info-box.green{background:#eafaf1;border-color:#a9dfbf}
+.info-box.orange{background:#fef5e7;border-color:#f9d89c}
+.info-box.purple{background:#f4ecf7;border-color:#d2b4de}
+.info-box strong{color:var(--text)}
+
+/* ── Form Elements ── */
+label.field-label{display:block;font-weight:600;font-size:.9rem;margin-bottom:6px;margin-top:16px}
+label.field-label:first-child{margin-top:0}
+textarea{width:100%;border:2px solid var(--border);border-radius:10px;padding:12px;font:inherit;
+  font-size:.9rem;resize:vertical;min-height:80px;transition:.2s;line-height:1.6}
+textarea:focus{border-color:var(--step-color);outline:none;box-shadow:0 0 0 3px rgba(74,144,217,.15)}
+textarea::placeholder{color:#b0b8c4}
+input[type=text]{width:100%;border:2px solid var(--border);border-radius:10px;padding:10px 14px;
+  font:inherit;font-size:.9rem;transition:.2s}
+input[type=text]:focus{border-color:var(--step-color);outline:none;box-shadow:0 0 0 3px rgba(74,144,217,.15)}
+
+/* ── Sentence Starters ── */
+.starters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.starter-chip{background:#e8f4fd;border:1px solid #b8d9f5;border-radius:20px;padding:5px 14px;
+  font-size:.8rem;cursor:pointer;transition:.15s;user-select:none}
+.starter-chip:hover{background:#cfe7fa;transform:scale(1.03)}
+.starter-chip:active{transform:scale(.97)}
+
+/* ── Word Bank ── */
+.word-bank{margin:12px 0}
+.word-bank summary{font-weight:600;font-size:.85rem;cursor:pointer;color:var(--step-color);
+  user-select:none;padding:4px 0}
+.word-bank summary:hover{text-decoration:underline}
+.word-chips{display:flex;flex-wrap:wrap;gap:5px;padding:10px 0}
+.word-chip{background:#f0f0f0;border:1px solid #ddd;border-radius:16px;padding:4px 12px;
+  font-size:.78rem;cursor:pointer;transition:.15s}
+.word-chip:hover{background:#e0e0e0;transform:scale(1.05)}
+
+/* ── Problem Picker ── */
+.problem-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin:12px 0}
+.problem-option{border:2px solid var(--border);border-radius:10px;padding:12px;text-align:center;
+  cursor:pointer;transition:.2s;font-size:.88rem;background:#fafbfc}
+.problem-option:hover{border-color:var(--blue);background:#f0f7ff}
+.problem-option.selected{border-color:var(--blue);background:#e3f0fc;font-weight:600}
+.problem-option input[type=radio]{display:none}
+.custom-problem{margin-top:8px;display:none}
+.custom-problem.show{display:block}
+
+/* ── Idea Cards ── */
+.idea-cards{display:flex;flex-direction:column;gap:16px}
+.idea-card{border:2px solid var(--border);border-radius:var(--radius);padding:16px;
+  background:#fafbfc;transition:.2s}
+.idea-card.selected{border-color:var(--green);background:#f0faf4}
+.idea-card h4{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.star-btn{background:none;border:none;font-size:1.2rem;cursor:pointer;padding:2px 6px;
+  filter:grayscale(1);opacity:.5;transition:.2s}
+.star-btn:hover,.star-btn.starred{filter:none;opacity:1}
+
+/* ── Canvas & Drawing ── */
+.canvas-wrap{margin:10px 0;border-radius:10px;overflow:hidden;border:2px solid var(--border);
+  background:#fff}
+.canvas-toolbar{display:flex;align-items:center;gap:6px;padding:8px 10px;background:#f5f7fa;
+  border-bottom:1px solid var(--border);flex-wrap:wrap}
+.tool-btn{background:#fff;border:1px solid #ddd;border-radius:8px;padding:6px 10px;
+  cursor:pointer;font-size:.85rem;transition:.15s;display:flex;align-items:center;gap:4px}
+.tool-btn:hover{background:#e8ecf1}
+.tool-btn.active{background:var(--step-color);color:#fff;border-color:var(--step-color)}
+.size-slider{width:80px;accent-color:var(--step-color)}
+.color-swatches{display:flex;gap:4px;margin-left:4px}
+.swatch{width:22px;height:22px;border-radius:50%;border:2px solid #ddd;cursor:pointer;transition:.15s}
+.swatch:hover{transform:scale(1.15)}
+.swatch.active{border-color:#333;box-shadow:0 0 0 2px var(--step-color)}
+canvas.sketch{display:block;width:100%;cursor:crosshair;touch-action:none}
+
+/* ── Evaluation ── */
+.eval-grid{display:flex;flex-direction:column;gap:12px}
+.eval-q{border:1px solid var(--border);border-radius:10px;padding:14px;background:#fafbfc;transition:.2s}
+.eval-q.answered{border-color:var(--green);background:#f7fdf9}
+.eval-q .q-text{font-weight:600;font-size:.9rem;margin-bottom:8px}
+.eval-counter{text-align:center;font-size:.9rem;color:var(--muted);margin:12px 0;padding:10px;
+  background:#fff;border-radius:10px;border:1px solid var(--border)}
+.eval-counter strong{color:var(--green)}
+
+/* ── Self Assessment ── */
+.star-rating{display:flex;gap:4px;margin:8px 0}
+.rate-star{font-size:1.6rem;cursor:pointer;filter:grayscale(1);opacity:.4;
+  transition:.15s;background:none;border:none}
+.rate-star:hover,.rate-star.lit{filter:none;opacity:1}
+
+/* ── Making Log ── */
+.log-entries{display:flex;flex-direction:column;gap:8px;margin:8px 0}
+.log-entry{display:flex;gap:8px;align-items:flex-start}
+.log-entry .step-num{min-width:28px;height:28px;border-radius:50%;background:var(--orange);
+  color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;margin-top:8px}
+.log-entry textarea{flex:1;min-height:50px}
+.add-step-btn{background:var(--orange);color:#fff;border:none;border-radius:8px;
+  padding:8px 16px;cursor:pointer;font-size:.85rem;transition:.15s;align-self:flex-start}
+.add-step-btn:hover{filter:brightness(1.1)}
+
+/* ── Navigation Footer ── */
+.nav-footer{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:2px solid var(--border);
+  padding:12px 24px;display:flex;justify-content:space-between;align-items:center;z-index:100}
+.nav-btn{padding:10px 28px;border-radius:10px;font-size:.9rem;font-weight:600;border:none;
+  cursor:pointer;transition:.2s;display:flex;align-items:center;gap:6px}
+.nav-btn.prev{background:#e8ecf1;color:var(--text)}
+.nav-btn.prev:hover{background:#dce1e8}
+.nav-btn.next{background:var(--step-color);color:#fff}
+.nav-btn.next:hover{filter:brightness(1.1)}
+.nav-btn:disabled{opacity:.4;cursor:not-allowed}
+.save-indicator{font-size:.78rem;color:var(--muted)}
+
+/* ── Utility Buttons ── */
+.util-btns{display:flex;gap:8px}
+.util-btn{background:#e8ecf1;border:none;border-radius:8px;padding:8px 14px;
+  font-size:.8rem;cursor:pointer;transition:.15s;color:var(--text)}
+.util-btn:hover{background:#dce1e8}
+
+/* ── Scaffold visibility ── */
+.scaffold-extra{display:none}
+.scaffold-medium{display:none}
+body.level-emerging .scaffold-extra{display:block}
+body.level-emerging .scaffold-medium,
+body.level-developing .scaffold-medium{display:block}
+/* For flex containers */
+.scaffold-extra-flex{display:none!important}
+.scaffold-medium-flex{display:none!important}
+body.level-emerging .scaffold-extra-flex{display:flex!important}
+body.level-emerging .scaffold-medium-flex,
+body.level-developing .scaffold-medium-flex{display:flex!important}
+
+/* ── Hint / Example ── */
+.example-toggle{font-size:.82rem;color:var(--step-color);cursor:pointer;
+  background:none;border:none;text-decoration:underline;margin:6px 0;display:inline-block}
+.example-box{background:#fffde7;border:1px solid #f0e68c;border-radius:8px;padding:12px;
+  font-size:.85rem;margin:6px 0;display:none;font-style:italic;line-height:1.6}
+.example-box.show{display:block}
+.hint-text{font-size:.82rem;color:var(--muted);margin-top:4px}
+
+/* ── Print ── */
+@media print{
+  .app-header,.step-nav,.nav-footer,.progress-wrap,.canvas-toolbar,
+  .tool-btn,.level-toggle,.util-btns,.starters,.word-bank,
+  .example-toggle,.example-box,.starter-chip,.word-chip,.save-indicator,
+  .problem-option input,.star-btn,.add-step-btn,.nav-btn{display:none!important}
+  body{background:#fff!important}
+  .step-panel{display:block!important;page-break-inside:avoid;margin-bottom:24px}
+  .card{box-shadow:none;border:1px solid #ccc;page-break-inside:avoid}
+  main{max-width:100%;padding:0 20px}
+  canvas.sketch{border:1px solid #ccc}
+  textarea{border:1px solid #ccc;min-height:40px}
+  .print-header{display:block!important;text-align:center;margin-bottom:20px;
+    padding:10px;border-bottom:2px solid #333}
+  .print-header h1{font-size:1.3rem}
+}
+.print-header{display:none}
+
+/* ── Responsive ── */
+@media(max-width:600px){
+  .app-header{padding:12px 16px}
+  .app-header h1{font-size:1.1rem;width:100%}
+  .student-name{width:140px}
+  .problem-grid{grid-template-columns:1fr 1fr}
+  main{padding:12px 10px 90px}
+  .card{padding:14px 16px}
+  .nav-btn{padding:8px 18px;font-size:.85rem}
+}
+</style>
+</head>
+<body class="level-developing">
+
+<!-- Print Header -->
+<div class="print-header">
+  <h1>The Design Process — Interactive Workbook</h1>
+  <p>Student: <span id="printName">_______________</span> &nbsp; | &nbsp; Class: _______________</p>
+</div>
+
+<!-- App Header -->
+<header class="app-header">
+  <h1>The Design Process</h1>
+  <input type="text" class="student-name" id="studentName" placeholder="Your name..." aria-label="Student name">
+  <div class="level-toggle" title="Scaffolding level — how much help do you need?">
+    <button class="level-btn" data-level="proficient">Challenge</button>
+    <button class="level-btn active" data-level="developing">Standard</button>
+    <button class="level-btn" data-level="emerging">Extra Help</button>
+  </div>
+  <div class="util-btns">
+    <button class="util-btn" onclick="window.print()" title="Print or save as PDF">Print</button>
+    <button class="util-btn" onclick="clearAll()" title="Clear all work">Reset</button>
+  </div>
+</header>
+
+<!-- Progress -->
+<div class="progress-wrap"><div class="progress-bar" id="progressBar" style="width:5%"></div></div>
+
+<!-- Step Tabs -->
+<nav class="step-nav">
+  <button class="step-tab active" data-step="0" style="--step-color:var(--blue)">
+    <span class="tab-num">1</span> Design Brief
+  </button>
+  <button class="step-tab" data-step="1" style="--step-color:var(--green)">
+    <span class="tab-num">2</span> Planning
+  </button>
+  <button class="step-tab" data-step="2" style="--step-color:var(--orange)">
+    <span class="tab-num">3</span> Production
+  </button>
+  <button class="step-tab" data-step="3" style="--step-color:var(--purple)">
+    <span class="tab-num">4</span> Evaluation
+  </button>
+</nav>
+
+<main>
+
+<!-- ═══════════ STEP 1: DESIGN BRIEF ═══════════ -->
+<section class="step-panel active" id="step0">
+  <div class="card" style="--step-color:var(--blue)">
+    <h2>Step 1: Design Brief</h2>
+
+    <div class="info-box">
+      <strong>What is a Design Brief?</strong><br>
+      A design brief is a short written description of what you are going to design and make.
+      Answer these questions: <strong>What</strong> are you making? <strong>Who</strong> is it for?
+      <strong>Why</strong> is it needed? What <strong>rules or limits</strong> are there?
+    </div>
+
+    <div class="scaffold-medium">
+      <button class="example-toggle" onclick="toggleExample('ex-brief')">Show me an example</button>
+      <div class="example-box" id="ex-brief">
+        <strong>Example:</strong> "My design brief is to create a device that stops chairs from scraping
+        on the floor. I am making this for my classroom because the noise is very distracting
+        during quiet work time. My limitations are that I can only use cardboard, tape, and
+        rubber bands, and it must be finished in 30 minutes."
+      </div>
+    </div>
+
+    <!-- Problem Picker -->
+    <label class="field-label">Choose a classroom problem to solve:</label>
+    <div class="problem-grid" id="problemGrid">
+      <label class="problem-option" onclick="selectProblem(this,'Squeaky shoes')">
+        <input type="radio" name="problem" value="Squeaky shoes">
+        Squeaky Shoes
+      </label>
+      <label class="problem-option" onclick="selectProblem(this,'Chatting in class')">
+        <input type="radio" name="problem" value="Chatting in class">
+        Chatting in Class
+      </label>
+      <label class="problem-option" onclick="selectProblem(this,'Chairs scraping on the ground')">
+        <input type="radio" name="problem" value="Chairs scraping on the ground">
+        Chairs Scraping
+      </label>
+      <label class="problem-option" onclick="selectProblem(this,'Pencils always snapping')">
+        <input type="radio" name="problem" value="Pencils always snapping">
+        Pencils Snapping
+      </label>
+      <label class="problem-option" onclick="selectProblem(this,'Whistling')">
+        <input type="radio" name="problem" value="Whistling">
+        Whistling
+      </label>
+      <label class="problem-option" onclick="selectProblem(this,'custom')">
+        <input type="radio" name="problem" value="custom">
+        My Own Problem...
+      </label>
+    </div>
+    <div class="custom-problem" id="customProblem">
+      <input type="text" id="customProblemText" placeholder="Describe your classroom problem..." oninput="save()">
+    </div>
+
+    <!-- Brief Fields -->
+    <label class="field-label">1. My Design Brief is to...</label>
+    <div class="starters scaffold-medium-flex">
+      <span class="starter-chip" data-target="briefWhat">My Design Brief is to create</span>
+      <span class="starter-chip" data-target="briefWhat">I am going to design and build</span>
+      <span class="starter-chip" data-target="briefWhat">The purpose of my project is to</span>
+    </div>
+    <textarea id="briefWhat" placeholder="What are you going to design and make?" rows="3" oninput="save()"></textarea>
+
+    <label class="field-label">2. I am making this for...</label>
+    <div class="starters scaffold-medium-flex">
+      <span class="starter-chip" data-target="briefWho">I am making this for</span>
+      <span class="starter-chip" data-target="briefWho">This is designed for</span>
+      <span class="starter-chip" data-target="briefWho">The target user is</span>
+    </div>
+    <textarea id="briefWho" placeholder="Who is it for? (e.g., students, teachers, the classroom)" rows="2" oninput="save()"></textarea>
+
+    <label class="field-label">3. It is needed because...</label>
+    <div class="starters scaffold-medium-flex">
+      <span class="starter-chip" data-target="briefWhy">It is needed because</span>
+      <span class="starter-chip" data-target="briefWhy">This would help solve the problem of</span>
+      <span class="starter-chip" data-target="briefWhy">Without this solution,</span>
+    </div>
+    <textarea id="briefWhy" placeholder="Why is it needed? What problem does it solve?" rows="2" oninput="save()"></textarea>
+
+    <label class="field-label">4. My limitations are...</label>
+    <div class="starters scaffold-medium-flex">
+      <span class="starter-chip" data-target="briefLimits">My limitations are</span>
+      <span class="starter-chip" data-target="briefLimits">I can only use</span>
+      <span class="starter-chip" data-target="briefLimits">I must finish within</span>
+    </div>
+    <textarea id="briefLimits" placeholder="What rules or limits are there? (materials, size, cost, time)" rows="2" oninput="save()"></textarea>
+
+    <details class="word-bank scaffold-medium">
+      <summary>Word Bank — click a word to add it</summary>
+      <div class="word-chips">
+        <span class="word-chip">design</span><span class="word-chip">create</span>
+        <span class="word-chip">build</span><span class="word-chip">solve</span>
+        <span class="word-chip">improve</span><span class="word-chip">protect</span>
+        <span class="word-chip">reduce</span><span class="word-chip">prevent</span>
+        <span class="word-chip">comfortable</span><span class="word-chip">safe</span>
+        <span class="word-chip">efficient</span><span class="word-chip">practical</span>
+        <span class="word-chip">durable</span><span class="word-chip">lightweight</span>
+        <span class="word-chip">portable</span><span class="word-chip">affordable</span>
+        <span class="word-chip">students</span><span class="word-chip">teachers</span>
+        <span class="word-chip">classroom</span><span class="word-chip">school</span>
+        <span class="word-chip">materials</span><span class="word-chip">time limit</span>
+        <span class="word-chip">budget</span><span class="word-chip">size</span>
+      </div>
+    </details>
+
+    <div class="scaffold-extra">
+      <p class="hint-text">Aim to write at least 2 sentences for each section above.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ STEP 2: PLANNING ═══════════ -->
+<section class="step-panel" id="step1">
+  <div class="card" style="--step-color:var(--green)">
+    <h2>Step 2: Planning — Generation of Ideas</h2>
+
+    <div class="info-box green">
+      <strong>Brainstorm at least 3 ideas</strong> to solve your problem.
+      For each idea, give it a name, sketch a quick drawing, and describe how it would work.
+      Then choose your <strong>best idea</strong> with the star button.
+    </div>
+
+    <div class="scaffold-medium">
+      <button class="example-toggle" onclick="toggleExample('ex-plan')">Tips for good sketches</button>
+      <div class="example-box" id="ex-plan">
+        <strong>Sketching tips:</strong> Draw quickly — sketches don't need to be perfect!
+        Label the important parts. Show the size or scale. Use arrows to show how things move or connect.
+        Add notes about materials you would use.
+      </div>
+    </div>
+
+    <div class="idea-cards">
+      <!-- Idea 1 -->
+      <div class="idea-card" id="ideaCard0">
+        <h4>
+          <button class="star-btn" onclick="starIdea(0)" title="Choose as best idea">&#9733;</button>
+          Idea 1
+        </h4>
+        <input type="text" id="ideaName0" placeholder="Give your idea a name..." oninput="save()">
+        <div class="canvas-wrap" style="margin-top:10px">
+          <div class="canvas-toolbar" id="toolbar-idea0"></div>
+          <canvas class="sketch" id="canvas-idea0" width="800" height="400"></canvas>
+        </div>
+        <label class="field-label" style="margin-top:10px">Describe how it works:</label>
+        <div class="starters scaffold-medium-flex">
+          <span class="starter-chip" data-target="ideaDesc0">This idea works by</span>
+          <span class="starter-chip" data-target="ideaDesc0">It would be made from</span>
+        </div>
+        <textarea id="ideaDesc0" placeholder="How would this idea work? What materials would you need?" rows="2" oninput="save()"></textarea>
+      </div>
+
+      <!-- Idea 2 -->
+      <div class="idea-card" id="ideaCard1">
+        <h4>
+          <button class="star-btn" onclick="starIdea(1)" title="Choose as best idea">&#9733;</button>
+          Idea 2
+        </h4>
+        <input type="text" id="ideaName1" placeholder="Give your idea a name..." oninput="save()">
+        <div class="canvas-wrap" style="margin-top:10px">
+          <div class="canvas-toolbar" id="toolbar-idea1"></div>
+          <canvas class="sketch" id="canvas-idea1" width="800" height="400"></canvas>
+        </div>
+        <label class="field-label" style="margin-top:10px">Describe how it works:</label>
+        <div class="starters scaffold-medium-flex">
+          <span class="starter-chip" data-target="ideaDesc1">This idea works by</span>
+          <span class="starter-chip" data-target="ideaDesc1">It would be made from</span>
+        </div>
+        <textarea id="ideaDesc1" placeholder="How would this idea work?" rows="2" oninput="save()"></textarea>
+      </div>
+
+      <!-- Idea 3 -->
+      <div class="idea-card" id="ideaCard2">
+        <h4>
+          <button class="star-btn" onclick="starIdea(2)" title="Choose as best idea">&#9733;</button>
+          Idea 3
+        </h4>
+        <input type="text" id="ideaName2" placeholder="Give your idea a name..." oninput="save()">
+        <div class="canvas-wrap" style="margin-top:10px">
+          <div class="canvas-toolbar" id="toolbar-idea2"></div>
+          <canvas class="sketch" id="canvas-idea2" width="800" height="400"></canvas>
+        </div>
+        <label class="field-label" style="margin-top:10px">Describe how it works:</label>
+        <div class="starters scaffold-medium-flex">
+          <span class="starter-chip" data-target="ideaDesc2">This idea works by</span>
+          <span class="starter-chip" data-target="ideaDesc2">It would be made from</span>
+        </div>
+        <textarea id="ideaDesc2" placeholder="How would this idea work?" rows="2" oninput="save()"></textarea>
+      </div>
+    </div>
+
+    <details class="word-bank scaffold-medium">
+      <summary>Word Bank — click a word to add it</summary>
+      <div class="word-chips">
+        <span class="word-chip">sketch</span><span class="word-chip">idea</span>
+        <span class="word-chip">brainstorm</span><span class="word-chip">concept</span>
+        <span class="word-chip">prototype</span><span class="word-chip">cardboard</span>
+        <span class="word-chip">tape</span><span class="word-chip">string</span>
+        <span class="word-chip">paper</span><span class="word-chip">glue</span>
+        <span class="word-chip">scissors</span><span class="word-chip">craft sticks</span>
+        <span class="word-chip">rubber bands</span><span class="word-chip">fabric</span>
+        <span class="word-chip">measure</span><span class="word-chip">cut</span>
+        <span class="word-chip">join</span><span class="word-chip">attach</span>
+        <span class="word-chip">assemble</span><span class="word-chip">fold</span>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ═══════════ STEP 3: PRODUCTION ═══════════ -->
+<section class="step-panel" id="step2">
+  <div class="card" style="--step-color:var(--orange)">
+    <h2>Step 3: Production — Making Time!</h2>
+
+    <div class="info-box orange">
+      <strong>Time to build!</strong> Use the equipment provided to MAKE a solution to your problem.
+      As you build, record the steps you follow below and sketch your final product.
+    </div>
+
+    <h3>Making Log — What did you do?</h3>
+    <p class="hint-text scaffold-medium">Record each step of your making process in order.</p>
+    <div class="log-entries" id="logEntries">
+      <div class="log-entry">
+        <span class="step-num">1</span>
+        <textarea placeholder="First, I..." oninput="save()" class="log-text"></textarea>
+      </div>
+      <div class="log-entry">
+        <span class="step-num">2</span>
+        <textarea placeholder="Next, I..." oninput="save()" class="log-text"></textarea>
+      </div>
+      <div class="log-entry">
+        <span class="step-num">3</span>
+        <textarea placeholder="Then, I..." oninput="save()" class="log-text"></textarea>
+      </div>
+    </div>
+    <button class="add-step-btn" onclick="addLogStep()">+ Add another step</button>
+
+    <h3 style="margin-top:20px">Sketch your final product</h3>
+    <p class="hint-text scaffold-medium">Draw what your finished product looks like. Label the important parts!</p>
+    <div class="canvas-wrap">
+      <div class="canvas-toolbar" id="toolbar-prod"></div>
+      <canvas class="sketch" id="canvas-prod" width="800" height="500"></canvas>
+    </div>
+
+    <label class="field-label" style="margin-top:14px">Notes about your product:</label>
+    <div class="starters scaffold-medium-flex">
+      <span class="starter-chip" data-target="prodNotes">My finished product is</span>
+      <span class="starter-chip" data-target="prodNotes">The materials I used were</span>
+      <span class="starter-chip" data-target="prodNotes">I changed my original design because</span>
+    </div>
+    <textarea id="prodNotes" placeholder="Describe your finished product..." rows="3" oninput="save()"></textarea>
+  </div>
+</section>
+
+<!-- ═══════════ STEP 4: EVALUATION ═══════════ -->
+<section class="step-panel" id="step3">
+  <div class="card" style="--step-color:var(--purple)">
+    <h2>Step 4: Testing &amp; Evaluation</h2>
+
+    <div class="info-box purple">
+      <strong>Test your design</strong> and evaluate its success by answering <strong>at least 5</strong>
+      of the questions below. Use <strong>full sentences</strong> in your answers.
+    </div>
+
+    <div class="scaffold-medium">
+      <button class="example-toggle" onclick="toggleExample('ex-eval')">Show me an example answer</button>
+      <div class="example-box" id="ex-eval">
+        <strong>Question:</strong> "Did your project work the way you planned?"<br>
+        <strong>Good answer:</strong> "My project mostly worked the way I planned. The rubber feet I made
+        stopped the chairs from scraping, but they kept falling off because I only used tape.
+        Next time I would use stronger glue to attach them."
+      </div>
+    </div>
+
+    <div class="eval-counter" id="evalCounter">
+      You have answered <strong>0</strong> out of 9 questions. (Minimum: 5)
+    </div>
+
+    <div class="eval-grid">
+      <div class="eval-q" id="eq0">
+        <div class="q-text">1. Did your project work the way you planned?</div>
+        <div class="starters scaffold-extra-flex">
+          <span class="starter-chip" data-target="evalA0">My project worked well because</span>
+          <span class="starter-chip" data-target="evalA0">My project did not work as planned because</span>
+        </div>
+        <textarea id="evalA0" placeholder="Explain whether it worked as planned..." rows="2" oninput="updateEval()"></textarea>
+      </div>
+
+      <div class="eval-q" id="eq1">
+        <div class="q-text">2. Does it solve the problem in the design brief?</div>
+        <div class="starters scaffold-extra-flex">
+          <span class="starter-chip" data-target="evalA1">Yes, it solves the problem because</span>
+          <span class="starter-chip" data-target="evalA1">It partly solves the problem because</span>
+        </div>
+        <textarea id="evalA1" placeholder="Does it solve the original problem?" rows="2" oninput="updateEval()"></textarea>
+      </div>
+
+      <div class="eval-q" id="eq2">
+        <div class="q-text">3. Is it strong and safe to use?</div>
+        <div class="starters scaffold-extra-flex">
+          <span class="starter-chip" data-target="evalA2">It is strong because</span>
+          <span class="starter-chip" data-target="evalA2">It could be made stronger by</span>
+        </div>
+        <textarea id="evalA2" placeholder="Is it sturdy? Is it safe?" rows="2" oninput="updateEval()"></textarea>
+      </div>
+
+      <div class="eval-q" id="eq3">
+        <div class="q-text">4. What was the hardest part?</div>
+        <div class="starters scaffold-extra-flex">
+          <span class="starter-chip" data-target="evalA3">The hardest part was</span>
+          <span class="starter-chip" data-target="evalA3">I found it challenging to</span>
+        </div>
+        <textarea id="evalA3" placeholder="What did you find most difficult?" rows="2" oninput="updateEval()"></textarea>
+      </div>
+
+      <div class="eval-q" id="eq4">
+        <div class="q-text">5. What skills did you learn?</div>
+        <div class="starters scaffold-extra-flex">
+          <span class="starter-chip" data-target="evalA4">I learned how to</span>
+          <span class="starter-chip" data-target="evalA4">A new skill I developed was</span>
+        </div>
+        <textarea id="evalA4" placeholder="What new skills did you learn?" rows="2" oninput="updateEval()"></textarea>
+      </div>
+
+      <div class="eval-q" id="eq5">
+        <div class="q-text">6. What would you improve next time?</div>
+        <div class="starters scaffold-extra-flex">
+          <span class="starter-chip" data-target="evalA5">Next time I would improve</span>
+          <span class="starter-chip" data-target="evalA5">If I did this again, I would change</span>
+        </div>
+        <textarea id="evalA5" placeholder="What changes would make it better?" rows="2" oninput="updateEval()"></textarea>
+      </div>
+
+      <div class="eval-q" id="eq6">
+        <div class="q-text">7. Does it look neat and well finished?</div>
+        <div class="starters scaffold-extra-flex">
+          <span class="starter-chip" data-target="evalA6">My product looks</span>
+          <span class="starter-chip" data-target="evalA6">To improve the appearance, I could</span>
+        </div>
+        <textarea id="evalA6" placeholder="How does it look? Is it well finished?" rows="2" oninput="updateEval()"></textarea>
+      </div>
+
+      <div class="eval-q" id="eq7">
+        <div class="q-text">8. Did you follow the size, time and material limits?</div>
+        <div class="starters scaffold-extra-flex">
+          <span class="starter-chip" data-target="evalA7">I followed the limits by</span>
+          <span class="starter-chip" data-target="evalA7">I went over the limit because</span>
+        </div>
+        <textarea id="evalA7" placeholder="Did you stay within the rules?" rows="2" oninput="updateEval()"></textarea>
+      </div>
+
+      <div class="eval-q" id="eq8">
+        <div class="q-text">9. What was the best part of your project?</div>
+        <div class="starters scaffold-extra-flex">
+          <span class="starter-chip" data-target="evalA8">The best part of my project was</span>
+          <span class="starter-chip" data-target="evalA8">I am most proud of</span>
+        </div>
+        <textarea id="evalA8" placeholder="What are you most proud of?" rows="2" oninput="updateEval()"></textarea>
+      </div>
+    </div>
+
+    <h3 style="margin-top:20px">Overall Reflection</h3>
+    <div class="starters scaffold-medium-flex">
+      <span class="starter-chip" data-target="reflection">Overall, I think my project was</span>
+      <span class="starter-chip" data-target="reflection">The most important thing I learned was</span>
+    </div>
+    <textarea id="reflection" placeholder="Write a short reflection about your whole design process experience..." rows="4" oninput="save()"></textarea>
+
+    <h3 style="margin-top:16px">Self-Assessment: How well did you go?</h3>
+    <div class="star-rating" id="selfRating">
+      <button class="rate-star" onclick="setRating(1)">&#9733;</button>
+      <button class="rate-star" onclick="setRating(2)">&#9733;</button>
+      <button class="rate-star" onclick="setRating(3)">&#9733;</button>
+      <button class="rate-star" onclick="setRating(4)">&#9733;</button>
+      <button class="rate-star" onclick="setRating(5)">&#9733;</button>
+    </div>
+    <p class="hint-text scaffold-medium" id="ratingHint">Click a star to rate your effort (1 = needs improvement, 5 = excellent)</p>
+
+    <details class="word-bank scaffold-medium">
+      <summary>Word Bank — click a word to add it</summary>
+      <div class="word-chips">
+        <span class="word-chip">successful</span><span class="word-chip">effective</span>
+        <span class="word-chip">improved</span><span class="word-chip">strong</span>
+        <span class="word-chip">sturdy</span><span class="word-chip">weak</span>
+        <span class="word-chip">modification</span><span class="word-chip">adjustment</span>
+        <span class="word-chip">enhancement</span><span class="word-chip">learned</span>
+        <span class="word-chip">discovered</span><span class="word-chip">realised</span>
+        <span class="word-chip">challenge</span><span class="word-chip">solution</span>
+        <span class="word-chip">creative</span><span class="word-chip">functional</span>
+      </div>
+    </details>
+  </div>
+</section>
+
+</main>
+
+<!-- Navigation Footer -->
+<footer class="nav-footer">
+  <button class="nav-btn prev" id="prevBtn" onclick="changeStep(-1)" disabled>&#8592; Previous</button>
+  <span class="save-indicator" id="saveStatus">Auto-saved</span>
+  <button class="nav-btn next" id="nextBtn" onclick="changeStep(1)">Next: Planning &#8594;</button>
+</footer>
+
+<script>
+/* ═══════════ STATE ═══════════ */
+const STORE_KEY = 'designProcess_v2';
+let currentStep = 0;
+let state = {
+  name:'', level:'developing', step:0,
+  problem:'', customProblem:'',
+  briefWhat:'', briefWho:'', briefWhy:'', briefLimits:'',
+  ideaNames:['','',''], ideaDescs:['','',''], bestIdea:-1,
+  logSteps:['','',''], prodNotes:'',
+  evalAnswers:['','','','','','','','',''],
+  reflection:'', rating:0,
+  canvasData:{}
+};
+
+const stepColors = ['var(--blue)','var(--green)','var(--orange)','var(--purple)'];
+const stepNames = ['Design Brief','Planning','Production','Evaluation'];
+
+/* ═══════════ SKETCH PAD ═══════════ */
+class SketchPad {
+  constructor(canvasId, toolbarId) {
+    this.canvas = document.getElementById(canvasId);
+    this.ctx = this.canvas.getContext('2d');
+    this.drawing = false;
+    this.color = '#333333';
+    this.size = 3;
+    this.erasing = false;
+    this.history = [];
+    this.buildToolbar(toolbarId);
+    this.bindEvents();
+    this.clearCanvas();
+    this.saveHistory();
+  }
+
+  buildToolbar(toolbarId) {
+    const tb = document.getElementById(toolbarId);
+    if (!tb) return;
+    tb.innerHTML = `
+      <button class="tool-btn active" data-action="pen" title="Pen">&#9998; Pen</button>
+      <button class="tool-btn" data-action="eraser" title="Eraser">&#9634; Eraser</button>
+      <button class="tool-btn" data-action="undo" title="Undo">&#8630; Undo</button>
+      <button class="tool-btn" data-action="clear" title="Clear All">&#10005; Clear</button>
+      <input type="range" class="size-slider" min="1" max="12" value="3" title="Brush size">
+      <div class="color-swatches">
+        <button class="swatch active" style="background:#333" data-color="#333333"></button>
+        <button class="swatch" style="background:#e74c3c" data-color="#e74c3c"></button>
+        <button class="swatch" style="background:#3498db" data-color="#3498db"></button>
+        <button class="swatch" style="background:#27ae60" data-color="#27ae60"></button>
+        <button class="swatch" style="background:#f39c12" data-color="#f39c12"></button>
+        <button class="swatch" style="background:#8e44ad" data-color="#8e44ad"></button>
+        <button class="swatch" style="background:#fff;border-color:#999" data-color="#ffffff"></button>
+      </div>`;
+    const self = this;
+    tb.querySelectorAll('.tool-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const a = btn.dataset.action;
+        if (a === 'pen') { self.erasing = false; self.setActiveTool(tb, btn); }
+        else if (a === 'eraser') { self.erasing = true; self.setActiveTool(tb, btn); }
+        else if (a === 'undo') self.undo();
+        else if (a === 'clear') { if(confirm('Clear this sketch?')) { self.clearCanvas(); self.saveHistory(); save(); } }
+      });
+    });
+    tb.querySelector('.size-slider').addEventListener('input', e => { self.size = +e.target.value; });
+    tb.querySelectorAll('.swatch').forEach(sw => {
+      sw.addEventListener('click', () => {
+        self.color = sw.dataset.color;
+        self.erasing = false;
+        self.setActiveTool(tb, tb.querySelector('[data-action="pen"]'));
+        tb.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+        sw.classList.add('active');
+      });
+    });
+  }
+
+  setActiveTool(tb, activeBtn) {
+    tb.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+    activeBtn.classList.add('active');
+  }
+
+  bindEvents() {
+    const c = this.canvas;
+    c.addEventListener('mousedown', e => this.start(e));
+    c.addEventListener('mousemove', e => this.draw(e));
+    c.addEventListener('mouseup', () => this.stop());
+    c.addEventListener('mouseleave', () => this.stop());
+    c.addEventListener('touchstart', e => { e.preventDefault(); this.start(e.touches[0]); }, {passive:false});
+    c.addEventListener('touchmove', e => { e.preventDefault(); this.draw(e.touches[0]); }, {passive:false});
+    c.addEventListener('touchend', () => this.stop());
+  }
+
+  getPos(e) {
+    const r = this.canvas.getBoundingClientRect();
+    return {
+      x: (e.clientX - r.left) * (this.canvas.width / r.width),
+      y: (e.clientY - r.top) * (this.canvas.height / r.height)
+    };
+  }
+
+  start(e) {
+    this.drawing = true;
+    const p = this.getPos(e);
+    this.ctx.beginPath();
+    this.ctx.moveTo(p.x, p.y);
+    // Draw a dot for single clicks
+    this.ctx.lineCap = 'round';
+    this.ctx.lineJoin = 'round';
+    this.ctx.lineWidth = this.erasing ? this.size * 4 : this.size;
+    this.ctx.strokeStyle = this.erasing ? '#ffffff' : this.color;
+    this.ctx.lineTo(p.x + 0.1, p.y + 0.1);
+    this.ctx.stroke();
+  }
+
+  draw(e) {
+    if (!this.drawing) return;
+    const p = this.getPos(e);
+    this.ctx.lineWidth = this.erasing ? this.size * 4 : this.size;
+    this.ctx.lineCap = 'round';
+    this.ctx.lineJoin = 'round';
+    this.ctx.strokeStyle = this.erasing ? '#ffffff' : this.color;
+    this.ctx.lineTo(p.x, p.y);
+    this.ctx.stroke();
+  }
+
+  stop() {
+    if (this.drawing) {
+      this.drawing = false;
+      this.saveHistory();
+      save();
+    }
+  }
+
+  saveHistory() {
+    this.history.push(this.canvas.toDataURL('image/png', 0.6));
+    if (this.history.length > 15) this.history.shift();
+  }
+
+  undo() {
+    if (this.history.length > 1) {
+      this.history.pop();
+      this.loadDataUrl(this.history[this.history.length - 1]);
+    }
+  }
+
+  clearCanvas() {
+    this.ctx.fillStyle = '#ffffff';
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+  }
+
+  getData() { return this.canvas.toDataURL('image/png', 0.5); }
+
+  loadDataUrl(url) {
+    if (!url) return;
+    const img = new Image();
+    img.onload = () => {
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      this.ctx.drawImage(img, 0, 0);
+    };
+    img.src = url;
+  }
+
+  loadData(url) {
+    this.loadDataUrl(url);
+    this.history = [url];
+  }
+}
+
+/* ═══════════ INIT SKETCH PADS ═══════════ */
+let pads = {};
+
+function initPads() {
+  pads = {
+    idea0: new SketchPad('canvas-idea0', 'toolbar-idea0'),
+    idea1: new SketchPad('canvas-idea1', 'toolbar-idea1'),
+    idea2: new SketchPad('canvas-idea2', 'toolbar-idea2'),
+    prod:  new SketchPad('canvas-prod',  'toolbar-prod')
+  };
+}
+
+/* ═══════════ STEP NAVIGATION ═══════════ */
+function goToStep(n) {
+  if (n < 0 || n > 3) return;
+  currentStep = n;
+  state.step = n;
+  document.documentElement.style.setProperty('--step-color', stepColors[n]);
+
+  document.querySelectorAll('.step-panel').forEach((p, i) => p.classList.toggle('active', i === n));
+  document.querySelectorAll('.step-tab').forEach((t, i) => t.classList.toggle('active', i === n));
+
+  const prev = document.getElementById('prevBtn');
+  const next = document.getElementById('nextBtn');
+  prev.disabled = n === 0;
+  if (n === 3) {
+    next.textContent = 'Finished!';
+    next.disabled = true;
+  } else {
+    next.innerHTML = `Next: ${stepNames[n + 1]} &#8594;`;
+    next.disabled = false;
+  }
+  next.style.background = stepColors[n];
+
+  updateProgress();
+  save();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function changeStep(dir) { goToStep(currentStep + dir); }
+
+/* ═══════════ PROGRESS ═══════════ */
+function updateProgress() {
+  let pct = 0;
+  // Step 1: problem + 4 fields
+  if (state.problem) pct += 4;
+  if (state.briefWhat.trim()) pct += 4;
+  if (state.briefWho.trim()) pct += 4;
+  if (state.briefWhy.trim()) pct += 4;
+  if (state.briefLimits.trim()) pct += 4;
+  // Step 2: ideas
+  for (let i = 0; i < 3; i++) {
+    if (state.ideaNames[i].trim()) pct += 3;
+    if (state.ideaDescs[i].trim()) pct += 3;
+  }
+  if (state.bestIdea >= 0) pct += 4;
+  // Step 3: log + notes
+  const filledLogs = state.logSteps.filter(s => s.trim()).length;
+  pct += Math.min(filledLogs * 4, 12);
+  if (state.prodNotes.trim()) pct += 4;
+  // Step 4: eval answers
+  const answered = state.evalAnswers.filter(a => a.trim()).length;
+  pct += answered * 3;
+  if (state.reflection.trim()) pct += 4;
+  if (state.rating > 0) pct += 3;
+
+  pct = Math.min(Math.round(pct), 100);
+  document.getElementById('progressBar').style.width = pct + '%';
+}
+
+/* ═══════════ PROBLEM PICKER ═══════════ */
+function selectProblem(el, val) {
+  document.querySelectorAll('.problem-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('customProblem').classList.toggle('show', val === 'custom');
+  state.problem = val;
+  save();
+}
+
+/* ═══════════ IDEA STAR ═══════════ */
+function starIdea(idx) {
+  state.bestIdea = idx;
+  document.querySelectorAll('.star-btn').forEach((b, i) => b.classList.toggle('starred', i === idx));
+  document.querySelectorAll('.idea-card').forEach((c, i) => c.classList.toggle('selected', i === idx));
+  save();
+}
+
+/* ═══════════ MAKING LOG ═══════════ */
+function addLogStep() {
+  const container = document.getElementById('logEntries');
+  const n = container.children.length + 1;
+  const starters = ['After that, I...', 'Finally, I...', 'I also...', 'The last step was...'];
+  const placeholder = starters[Math.min(n - 4, starters.length - 1)] || 'Next, I...';
+  const div = document.createElement('div');
+  div.className = 'log-entry';
+  div.innerHTML = `<span class="step-num">${n}</span>
+    <textarea placeholder="${placeholder}" oninput="save()" class="log-text"></textarea>`;
+  container.appendChild(div);
+  state.logSteps.push('');
+}
+
+/* ═══════════ EVALUATION ═══════════ */
+function updateEval() {
+  let count = 0;
+  for (let i = 0; i < 9; i++) {
+    const val = document.getElementById('evalA' + i).value.trim();
+    state.evalAnswers[i] = val;
+    const q = document.getElementById('eq' + i);
+    if (val.length > 5) { count++; q.classList.add('answered'); }
+    else { q.classList.remove('answered'); }
+  }
+  const counter = document.getElementById('evalCounter');
+  const met = count >= 5;
+  counter.innerHTML = `You have answered <strong>${count}</strong> out of 9 questions. ` +
+    (met ? '<span style="color:var(--green)">Minimum met!</span>' : '(Minimum: 5)');
+  save();
+}
+
+/* ═══════════ SELF RATING ═══════════ */
+function setRating(n) {
+  state.rating = n;
+  document.querySelectorAll('.rate-star').forEach((s, i) => s.classList.toggle('lit', i < n));
+  const hints = ['', 'Needs more effort', 'Getting there', 'Good work', 'Great effort!', 'Outstanding!'];
+  document.getElementById('ratingHint').textContent = hints[n] || '';
+  save();
+}
+
+/* ═══════════ TOGGLE EXAMPLES ═══════════ */
+function toggleExample(id) {
+  document.getElementById(id).classList.toggle('show');
+}
+
+/* ═══════════ SENTENCE STARTERS ═══════════ */
+let lastFocusedTextarea = null;
+document.addEventListener('focusin', e => {
+  if (e.target.tagName === 'TEXTAREA') lastFocusedTextarea = e.target;
+});
+
+document.addEventListener('click', e => {
+  if (e.target.classList.contains('starter-chip')) {
+    const targetId = e.target.dataset.target;
+    const ta = document.getElementById(targetId);
+    if (ta) {
+      if (ta.value === '') ta.value = e.target.textContent + ' ';
+      else ta.value += ' ' + e.target.textContent + ' ';
+      ta.focus();
+      ta.dispatchEvent(new Event('input'));
+    }
+  }
+  if (e.target.classList.contains('word-chip')) {
+    if (lastFocusedTextarea) {
+      const pos = lastFocusedTextarea.selectionStart;
+      const val = lastFocusedTextarea.value;
+      const word = e.target.textContent;
+      const before = val.slice(0, pos);
+      const after = val.slice(pos);
+      const space = before.length > 0 && !before.endsWith(' ') ? ' ' : '';
+      lastFocusedTextarea.value = before + space + word + ' ' + after;
+      lastFocusedTextarea.focus();
+      const newPos = pos + space.length + word.length + 1;
+      lastFocusedTextarea.setSelectionRange(newPos, newPos);
+      lastFocusedTextarea.dispatchEvent(new Event('input'));
+    }
+  }
+});
+
+/* ═══════════ SCAFFOLDING LEVEL ═══════════ */
+document.querySelectorAll('.level-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const level = btn.dataset.level;
+    document.body.className = 'level-' + level;
+    state.level = level;
+    save();
+  });
+});
+
+/* ═══════════ STEP TABS ═══════════ */
+document.querySelectorAll('.step-tab').forEach(tab => {
+  tab.addEventListener('click', () => goToStep(+tab.dataset.step));
+});
+
+/* ═══════════ SAVE / LOAD ═══════════ */
+let saveTimeout;
+function save() {
+  clearTimeout(saveTimeout);
+  saveTimeout = setTimeout(doSave, 400);
+}
+
+function doSave() {
+  // Gather state from DOM
+  state.name = document.getElementById('studentName').value;
+  state.customProblem = document.getElementById('customProblemText').value;
+  state.briefWhat = document.getElementById('briefWhat').value;
+  state.briefWho = document.getElementById('briefWho').value;
+  state.briefWhy = document.getElementById('briefWhy').value;
+  state.briefLimits = document.getElementById('briefLimits').value;
+
+  for (let i = 0; i < 3; i++) {
+    state.ideaNames[i] = document.getElementById('ideaName' + i).value;
+    state.ideaDescs[i] = document.getElementById('ideaDesc' + i).value;
+  }
+
+  const logTexts = document.querySelectorAll('.log-text');
+  state.logSteps = Array.from(logTexts).map(t => t.value);
+
+  state.prodNotes = document.getElementById('prodNotes').value;
+
+  for (let i = 0; i < 9; i++) {
+    state.evalAnswers[i] = document.getElementById('evalA' + i).value;
+  }
+  state.reflection = document.getElementById('reflection').value;
+
+  // Save canvas data
+  if (pads.idea0) {
+    state.canvasData = {
+      idea0: pads.idea0.getData(),
+      idea1: pads.idea1.getData(),
+      idea2: pads.idea2.getData(),
+      prod:  pads.prod.getData()
+    };
+  }
+
+  try {
+    localStorage.setItem(STORE_KEY, JSON.stringify(state));
+    document.getElementById('saveStatus').textContent = 'Saved just now';
+  } catch(e) {
+    document.getElementById('saveStatus').textContent = 'Could not save (storage full)';
+  }
+
+  updateProgress();
+  document.getElementById('printName').textContent = state.name || '_______________';
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (!raw) return;
+    const saved = JSON.parse(raw);
+    Object.assign(state, saved);
+  } catch(e) { return; }
+
+  // Restore to DOM
+  document.getElementById('studentName').value = state.name || '';
+  document.getElementById('customProblemText').value = state.customProblem || '';
+  document.getElementById('briefWhat').value = state.briefWhat || '';
+  document.getElementById('briefWho').value = state.briefWho || '';
+  document.getElementById('briefWhy').value = state.briefWhy || '';
+  document.getElementById('briefLimits').value = state.briefLimits || '';
+
+  // Problem
+  if (state.problem) {
+    document.querySelectorAll('.problem-option').forEach(o => {
+      const radio = o.querySelector('input[type=radio]');
+      if (radio && radio.value === state.problem) {
+        o.classList.add('selected');
+        radio.checked = true;
+      }
+      if (state.problem === 'custom') {
+        const customOpt = document.querySelector('.problem-option:last-child');
+        if (customOpt) customOpt.classList.add('selected');
+        document.getElementById('customProblem').classList.add('show');
+      }
+    });
+  }
+
+  // Ideas
+  for (let i = 0; i < 3; i++) {
+    document.getElementById('ideaName' + i).value = state.ideaNames[i] || '';
+    document.getElementById('ideaDesc' + i).value = state.ideaDescs[i] || '';
+  }
+  if (state.bestIdea >= 0) starIdea(state.bestIdea);
+
+  // Log steps
+  const logContainer = document.getElementById('logEntries');
+  while (state.logSteps.length > logContainer.children.length) addLogStep();
+  const logTexts = logContainer.querySelectorAll('.log-text');
+  state.logSteps.forEach((v, i) => { if (logTexts[i]) logTexts[i].value = v; });
+
+  document.getElementById('prodNotes').value = state.prodNotes || '';
+
+  // Eval
+  for (let i = 0; i < 9; i++) {
+    document.getElementById('evalA' + i).value = state.evalAnswers[i] || '';
+  }
+  document.getElementById('reflection').value = state.reflection || '';
+  if (state.rating > 0) setRating(state.rating);
+
+  // Level
+  if (state.level) {
+    document.body.className = 'level-' + state.level;
+    document.querySelectorAll('.level-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.level === state.level);
+    });
+  }
+
+  // Canvas data (load after pads init)
+  setTimeout(() => {
+    if (state.canvasData) {
+      if (state.canvasData.idea0 && pads.idea0) pads.idea0.loadData(state.canvasData.idea0);
+      if (state.canvasData.idea1 && pads.idea1) pads.idea1.loadData(state.canvasData.idea1);
+      if (state.canvasData.idea2 && pads.idea2) pads.idea2.loadData(state.canvasData.idea2);
+      if (state.canvasData.prod && pads.prod) pads.prod.loadData(state.canvasData.prod);
+    }
+  }, 200);
+
+  // Step
+  goToStep(state.step || 0);
+  updateEval();
+  updateProgress();
+}
+
+/* ═══════════ CLEAR ALL ═══════════ */
+function clearAll() {
+  if (!confirm('Are you sure you want to clear ALL your work? This cannot be undone!')) return;
+  localStorage.removeItem(STORE_KEY);
+  location.reload();
+}
+
+/* ═══════════ INIT ═══════════ */
+window.addEventListener('DOMContentLoaded', () => {
+  initPads();
+  loadState();
+});
+</script>
+</body>
+</html>
