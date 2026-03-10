@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Write It Right — Relief Teacher Guide</title>
+<style>
+  @media print {
+    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .no-print { display: none !important; }
+    .page-break { page-break-before: always; }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Calibri, 'Segoe UI', Arial, sans-serif;
+    color: #222;
+    line-height: 1.5;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 24px;
+    background: #fff;
+  }
+  .header {
+    background: #2c5f8a;
+    color: #fff;
+    padding: 18px 24px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .header h1 { font-size: 20px; }
+  .header .badge {
+    background: rgba(255,255,255,0.2);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+  }
+  h2 {
+    font-size: 16px;
+    color: #2c5f8a;
+    border-bottom: 2px solid #2c5f8a;
+    padding-bottom: 4px;
+    margin: 18px 0 10px;
+  }
+  h3 { font-size: 14px; color: #1a8a7d; margin: 12px 0 6px; }
+  .info-grid {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 4px 12px;
+    font-size: 13px;
+    margin-bottom: 12px;
+  }
+  .info-grid .label {
+    font-weight: 700;
+    color: #555;
+  }
+  .url-box {
+    background: #f0f6fc;
+    border: 2px dashed #2c5f8a;
+    border-radius: 8px;
+    padding: 12px 16px;
+    text-align: center;
+    margin: 12px 0;
+    font-size: 14px;
+  }
+  .url-box code {
+    display: block;
+    font-size: 16px;
+    font-weight: 700;
+    color: #2c5f8a;
+    margin-top: 4px;
+    word-break: break-all;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin: 8px 0;
+  }
+  th {
+    background: #2c5f8a;
+    color: #fff;
+    padding: 6px 10px;
+    text-align: left;
+    font-size: 12px;
+  }
+  td {
+    padding: 6px 10px;
+    border-bottom: 1px solid #ddd;
+    vertical-align: top;
+  }
+  tr:nth-child(even) { background: #f8f9fa; }
+  .alert {
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    margin: 10px 0;
+  }
+  .alert-green { background: #e6f9e6; border-left: 4px solid #1a8a7d; }
+  .alert-orange { background: #fff3e0; border-left: 4px solid #e67e22; }
+  .alert-blue { background: #e8f0fe; border-left: 4px solid #2c5f8a; }
+  .alert-red { background: #fde8e8; border-left: 4px solid #c0392b; }
+  ul { margin: 4px 0 8px 20px; font-size: 13px; }
+  li { margin-bottom: 3px; }
+  .checklist { list-style: none; margin-left: 0; }
+  .checklist li::before { content: "☐ "; font-size: 14px; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .step-num {
+    display: inline-block;
+    background: #2c5f8a;
+    color: #fff;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 24px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-right: 6px;
+  }
+  .footer {
+    text-align: center;
+    font-size: 11px;
+    color: #999;
+    margin-top: 20px;
+    padding-top: 12px;
+    border-top: 1px solid #ddd;
+  }
+  .print-btn {
+    background: #2c5f8a;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    margin: 12px 0;
+  }
+  .print-btn:hover { background: #1e4a6e; }
+</style>
+</head>
+<body>
+
+<div class="no-print" style="text-align:center; margin-bottom:12px;">
+  <button class="print-btn" onclick="window.print()">🖨️ Print This Guide</button>
+</div>
+
+<div class="header">
+  <div>
+    <h1>Write It Right — Relief Teacher Guide</h1>
+    <div style="font-size:13px; opacity:0.9;">Year 7 Technology Mandatory — Academic Writing Toolkit</div>
+  </div>
+  <div class="badge">75 min</div>
+</div>
+
+<div class="info-grid">
+  <div class="label">Class:</div><div>7TECI — Year 7 Technology Mandatory</div>
+  <div class="label">Room:</div><div>_______________</div>
+  <div class="label">Duration:</div><div>75 minutes (1 period)</div>
+  <div class="label">Students need:</div><div>Laptop/Chromebook/iPad with internet access</div>
+  <div class="label">Software:</div><div>Just a web browser — nothing to install</div>
+  <div class="label">Your role:</div><div>Facilitate + circulate. The tool is self-guided.</div>
+</div>
+
+<div class="url-box">
+  Students open this link in their browser:
+  <code>https://yunshugao.github.io/y7-worksheets/Write-It-Right.html</code>
+</div>
+
+<h2>🎯 What Is This Lesson?</h2>
+<p style="font-size:13px;">Students work through an <strong>interactive academic writing program</strong> on their laptops. It teaches Technology vocabulary, text types, how to read exam questions, and how to write structured paragraphs (TEEL). The tool is <strong>self-paced</strong> — students click through modules and complete activities at their own speed. All work saves automatically in the browser.</p>
+
+<div class="alert alert-green">
+  <strong>Good news:</strong> You don't need any Technology subject knowledge. The tool teaches everything. Your job is to get students on task and keep them working.
+</div>
+
+<h2>⏱️ Lesson Timeline</h2>
+<table>
+  <tr><th>Time</th><th>What Happens</th><th>Your Action</th></tr>
+  <tr>
+    <td><strong>0–5 min</strong></td>
+    <td>Students settle, open laptops, type the URL</td>
+    <td>Write URL on the board. Help students who can't find the browser.</td>
+  </tr>
+  <tr>
+    <td><strong>5–10 min</strong></td>
+    <td>Students enter their name and start the <em>Diagnostic</em> (word matching, 3 MCQs, short write)</td>
+    <td>Tell students: <em>"Type your real name — the teacher will check your work."</em></td>
+  </tr>
+  <tr>
+    <td><strong>10–60 min</strong></td>
+    <td>Students work through Modules 1–4+ at their own pace</td>
+    <td>Walk around. Check screens are on the right site. Encourage students who are stuck to read the help boxes.</td>
+  </tr>
+  <tr>
+    <td><strong>60–65 min</strong></td>
+    <td>Give a 10-minute warning. Students finish current activity.</td>
+    <td>Say: <em>"Start finishing the activity you're on. Your work saves automatically."</em></td>
+  </tr>
+  <tr>
+    <td><strong>65–70 min</strong></td>
+    <td>Students close laptops and pack up</td>
+    <td>Remind: <em>"Your work is saved. You can continue next lesson on the same computer."</em></td>
+  </tr>
+  <tr>
+    <td><strong>70–75 min</strong></td>
+    <td>Pack-up, return devices</td>
+    <td>Ensure all devices are returned and room is tidy</td>
+  </tr>
+</table>
+
+<h2>📋 What to Say to Students (Script)</h2>
+
+<div class="alert alert-blue">
+  <strong><span class="step-num">1</span> Opening (read aloud):</strong><br>
+  <em>"Today you're working on an online writing program called Write It Right. It teaches you how to use Technology vocabulary and write better answers for assessments. Open your browsers and type the link on the board. Enter your full name at the top — your teacher will see your work."</em>
+</div>
+
+<div class="alert alert-blue">
+  <strong><span class="step-num">2</span> After diagnostic (5 min in):</strong><br>
+  <em>"Once you've done the word match and quiz, click 'See My Results'. The program will show you which level you're starting at — that's totally fine, it just adjusts the help you get. Then click through to Module 1 and keep working."</em>
+</div>
+
+<div class="alert alert-blue">
+  <strong><span class="step-num">3</span> During work time:</strong><br>
+  <em>"Work at your own pace. Read the instructions on each page. If you see a coloured help box, that's a hint for you. You don't have to rush — quality of writing matters more than speed."</em>
+</div>
+
+<div class="alert alert-blue">
+  <strong><span class="step-num">4</span> About vocabulary:</strong><br>
+  <em>"You'll see some words you haven't learned yet, like 'isometric' or 'orthogonal'. That's OK — the program explains what they mean. You'll cover them properly in later lessons."</em>
+</div>
+
+<h2>🔧 Troubleshooting</h2>
+<table>
+  <tr><th style="width:40%">Problem</th><th>Solution</th></tr>
+  <tr><td>"The link doesn't work"</td><td>Check the URL is typed exactly right. Try Google Chrome if using another browser.</td></tr>
+  <tr><td>"It says I'm Beginning level — is that bad?"</td><td>No! Tell them: <em>"It just means you get extra help boxes. That's a good thing."</em></td></tr>
+  <tr><td>"I lost my work"</td><td>Work saves automatically IF they use the same browser on the same device. If they switched devices, they start fresh — that's OK.</td></tr>
+  <tr><td>"I finished everything!"</td><td>Congratulate them. They can click the Print button at the top to save their work as a PDF, or revisit any module to improve their answers.</td></tr>
+  <tr><td>"I don't know what to write"</td><td>Tell them to read the coloured help boxes and sentence starters. These give them a starting point.</td></tr>
+  <tr><td>Student is off-task / on another site</td><td>Redirect them back to the Write It Right URL. It's a single-page tool, so you can see the blue header bar when they're on the right page.</td></tr>
+  <tr><td>No internet / device issue</td><td>Pair them with a neighbour to share a screen, or give them a textbook to read quietly.</td></tr>
+</table>
+
+<h2>📊 What to Look For (Walking Around)</h2>
+<div class="two-col">
+  <div>
+    <h3>✅ On Track</h3>
+    <ul>
+      <li>Blue header bar visible on screen</li>
+      <li>Student name entered at top</li>
+      <li>Progress bar showing 1+ modules</li>
+      <li>Student typing in text boxes</li>
+      <li>Clicking through quiz options</li>
+    </ul>
+  </div>
+  <div>
+    <h3>⚠️ Needs Attention</h3>
+    <ul>
+      <li>Blank screen / different website</li>
+      <li>No name entered</li>
+      <li>Stuck on the same page for 10+ min</li>
+      <li>Copying from a neighbour</li>
+      <li>Typing random text to skip ahead</li>
+    </ul>
+  </div>
+</div>
+
+<h2>📌 Important Notes</h2>
+<div class="alert alert-orange">
+  <strong>AI Policy:</strong> Students must NOT use ChatGPT or any AI tool to write their answers. This is an academic integrity requirement. If you see a student using AI, ask them to close it and write in their own words.
+</div>
+
+<div class="alert alert-red">
+  <strong>Do NOT:</strong> Reset anyone's progress (the reset button is at the top — if a student accidentally clicks it, their work is gone). If asked, say <em>"Check with your teacher next lesson."</em>
+</div>
+
+<h2>✅ End-of-Lesson Checklist</h2>
+<ul class="checklist">
+  <li>All devices returned and plugged in to charge</li>
+  <li>Room is tidy (chairs pushed in, no rubbish)</li>
+  <li>Note any students who were absent or had device issues</li>
+  <li>Leave a note for the regular teacher: how far most students got (e.g., "Most reached Module 3")</li>
+</ul>
+
+<div class="footer">
+  Year 7 Technology Mandatory — Arthur Phillip High School — 2026<br>
+  Write It Right v1.0 — Relief Teacher Guide
+</div>
+
+</body>
+</html>

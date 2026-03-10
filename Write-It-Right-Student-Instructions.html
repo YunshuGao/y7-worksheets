@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Write It Right — Student Instructions</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Calibri, 'Segoe UI', Arial, sans-serif;
+    background: #f0f4f8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 24px;
+  }
+  .card {
+    background: #fff;
+    max-width: 720px;
+    width: 100%;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    overflow: hidden;
+  }
+  .card-header {
+    background: #2c5f8a;
+    color: #fff;
+    padding: 24px 32px;
+    text-align: center;
+  }
+  .card-header h1 { font-size: 32px; margin-bottom: 4px; }
+  .card-header p { font-size: 16px; opacity: 0.9; }
+  .card-body { padding: 24px 32px 32px; }
+  .url-box {
+    background: #f0f6fc;
+    border: 3px dashed #2c5f8a;
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    margin: 16px 0 20px;
+  }
+  .url-box .label { font-size: 14px; color: #555; margin-bottom: 4px; }
+  .url-box code {
+    display: block;
+    font-size: 22px;
+    font-weight: 700;
+    color: #2c5f8a;
+    word-break: break-all;
+    letter-spacing: 0.5px;
+  }
+  .steps { list-style: none; counter-reset: steps; }
+  .steps li {
+    counter-increment: steps;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 14px;
+    font-size: 18px;
+    line-height: 1.4;
+  }
+  .steps li::before {
+    content: counter(steps);
+    background: #1a8a7d;
+    color: #fff;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .rules {
+    background: #fff3e0;
+    border-left: 5px solid #e67e22;
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin-top: 20px;
+  }
+  .rules h3 { color: #e67e22; font-size: 16px; margin-bottom: 6px; }
+  .rules ul { margin-left: 20px; font-size: 16px; }
+  .rules li { margin-bottom: 4px; }
+  .tip {
+    background: #e6f9e6;
+    border-left: 5px solid #1a8a7d;
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin-top: 14px;
+    font-size: 16px;
+  }
+  .tip strong { color: #1a8a7d; }
+  @media print {
+    body { background: #fff; padding: 0; }
+    .card { box-shadow: none; border: 2px solid #2c5f8a; }
+  }
+  @media (max-width: 500px) {
+    .card-header h1 { font-size: 24px; }
+    .url-box code { font-size: 16px; }
+    .steps li { font-size: 15px; }
+    .card-body { padding: 16px 20px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="card-header">
+    <h1>✏️ Write It Right</h1>
+    <p>Year 7 Technology — Academic Writing Program</p>
+  </div>
+  <div class="card-body">
+
+    <div class="url-box">
+      <div class="label">Open this link in your browser:</div>
+      <code>yunshugao.github.io/y7-worksheets/Write-It-Right.html</code>
+    </div>
+
+    <ol class="steps">
+      <li>Open <strong>Google Chrome</strong> and type the link above.</li>
+      <li>Enter your <strong>full name</strong> at the top of the page.</li>
+      <li>Start with the <strong>Diagnostic</strong> — match words, answer 3 questions, write 2 sentences.</li>
+      <li>Click <strong>"See My Results"</strong> to get your starting level.</li>
+      <li>Work through <strong>Module 1, 2, 3, 4...</strong> at your own pace.</li>
+      <li>Read the <strong>coloured help boxes</strong> — they give you hints and sentence starters.</li>
+    </ol>
+
+    <div class="rules">
+      <h3>⚠️ Rules</h3>
+      <ul>
+        <li><strong>No ChatGPT or AI tools</strong> — write in your own words</li>
+        <li><strong>Do NOT click Reset</strong> — it deletes all your work</li>
+        <li>Your work <strong>saves automatically</strong> — you can continue next lesson</li>
+      </ul>
+    </div>
+
+    <div class="tip">
+      <strong>💡 Tip:</strong> You'll see some words you haven't learned yet (like <em>isometric</em>). That's fine — the program explains them. You'll cover them properly in future lessons.
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
