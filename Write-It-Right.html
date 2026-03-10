@@ -610,6 +610,119 @@ body.fade-none .scaffold-partial { display: none; }
 .analysis-card.evaluate { border-left-color: var(--purple); }
 .analysis-card h4 { font-size: 0.9rem; margin-bottom: 6px; }
 
+/* ========== Save/Load Modal ========== */
+.save-overlay {
+  display: none;
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 2000;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+.save-overlay.open { display: flex; }
+.save-modal {
+  background: #fff;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+  overflow: hidden;
+}
+.save-modal-header {
+  background: linear-gradient(135deg, var(--blue-dark), var(--blue));
+  color: #fff;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.save-modal-header h2 { font-size: 1.1rem; margin: 0; }
+.save-modal-close {
+  background: rgba(255,255,255,0.2);
+  border: none;
+  color: #fff;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.save-modal-close:hover { background: rgba(255,255,255,0.35); }
+.save-tabs {
+  display: flex;
+  border-bottom: 2px solid #e0e0e0;
+}
+.save-tab {
+  flex: 1;
+  padding: 12px;
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: #f5f5f5;
+  border: none;
+  color: #666;
+  transition: all 0.2s;
+}
+.save-tab.active {
+  background: #fff;
+  color: var(--blue);
+  border-bottom: 3px solid var(--blue);
+}
+.save-tab:hover:not(.active) { background: #eee; }
+.save-panel { display: none; padding: 20px; }
+.save-panel.active { display: block; }
+.save-panel p {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+.save-panel textarea {
+  width: 100%;
+  min-height: 100px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  padding: 12px;
+  font-family: monospace;
+  font-size: 0.8rem;
+  resize: vertical;
+  word-break: break-all;
+}
+.save-panel textarea:focus { border-color: var(--blue); outline: none; }
+.save-btn-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+.save-btn {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.save-btn:hover { opacity: 0.85; }
+.save-btn-copy { background: var(--teal); color: #fff; }
+.save-btn-load { background: var(--blue); color: #fff; }
+.save-btn-email { background: var(--orange); color: #fff; }
+.save-msg {
+  margin-top: 10px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: none;
+}
+.save-msg.success { display: block; background: #e6f9e6; color: #1a7a3a; }
+.save-msg.error { display: block; background: #fde8e8; color: #c0392b; }
+
 /* ========== Responsive ========== */
 @media (max-width: 700px) {
   .topbar { padding: 8px 12px; gap: 8px; }
@@ -629,7 +742,7 @@ body.fade-none .scaffold-partial { display: none; }
 
 /* ========== Print ========== */
 @media print {
-  .topbar, .tab-bar, .progress-bar-container { display: none; }
+  .topbar, .tab-bar, .progress-bar-container, .save-overlay { display: none !important; }
   body { padding-top: 0; background: white; }
   .module { display: block !important; max-width: 100%; page-break-inside: avoid; }
   .section-card { box-shadow: none; border: 1px solid #ddd; page-break-inside: avoid; }
@@ -656,6 +769,7 @@ body.fade-none .scaffold-partial { display: none; }
   <h1>Write It Right</h1>
   <input type="text" id="studentName" placeholder="Your name..." oninput="saveAll()">
   <span class="band-badge" id="bandBadge">Not assessed yet</span>
+  <button onclick="openSaveModal()" title="Save or load your work across devices" style="background:rgba(26,138,125,0.5); border-color:rgba(26,138,125,0.7);">&#128190; Save / Load</button>
   <button onclick="window.print()" title="Print / Save as PDF">Print</button>
   <button onclick="confirmReset()" title="Start over">Reset</button>
 </div>
@@ -1877,6 +1991,41 @@ body.fade-none .scaffold-partial { display: none; }
 
 </div>
 
+<!-- Save/Load Modal -->
+<div class="save-overlay" id="saveOverlay" onclick="if(event.target===this)closeSaveModal()">
+  <div class="save-modal">
+    <div class="save-modal-header">
+      <h2>&#128190; Save / Load Your Work</h2>
+      <button class="save-modal-close" onclick="closeSaveModal()">&times;</button>
+    </div>
+    <div class="save-tabs">
+      <button class="save-tab active" onclick="switchSaveTab('save')">&#128228; Save My Work</button>
+      <button class="save-tab" onclick="switchSaveTab('load')">&#128229; Load My Work</button>
+    </div>
+
+    <!-- SAVE PANEL -->
+    <div class="save-panel active" id="savePanel">
+      <p><strong>Switching computers next lesson?</strong> Copy your save code below and paste it somewhere safe — like Google Classroom, an email to yourself, or a Google Doc.</p>
+      <textarea id="saveCodeOutput" readonly onclick="this.select()" placeholder="Click 'Generate Save Code' to create your code..."></textarea>
+      <div class="save-btn-row">
+        <button class="save-btn save-btn-copy" onclick="generateAndCopy()">&#128203; Copy Save Code</button>
+        <button class="save-btn save-btn-email" onclick="emailSaveCode()">&#128231; Email to Myself</button>
+      </div>
+      <div class="save-msg" id="saveMsg"></div>
+    </div>
+
+    <!-- LOAD PANEL -->
+    <div class="save-panel" id="loadPanel">
+      <p><strong>Continuing from last lesson?</strong> Paste your save code below to pick up right where you left off.</p>
+      <textarea id="saveCodeInput" placeholder="Paste your save code here..."></textarea>
+      <div class="save-btn-row">
+        <button class="save-btn save-btn-load" onclick="loadFromCode()">&#128229; Load My Work</button>
+      </div>
+      <div class="save-msg" id="loadMsg"></div>
+    </div>
+  </div>
+</div>
+
 <script>
 /* ========== DATA STORE ========== */
 const STORAGE_KEY = 'y7wir-data';
@@ -1937,6 +2086,74 @@ function confirmReset() {
     localStorage.removeItem(STORAGE_KEY);
     location.reload();
   }
+}
+
+/* ========== SAVE / LOAD (cross-device) ========== */
+function openSaveModal() {
+  saveAll();
+  const code = btoa(unescape(encodeURIComponent(JSON.stringify(appData))));
+  document.getElementById('saveCodeOutput').value = code;
+  document.getElementById('saveOverlay').classList.add('open');
+}
+function closeSaveModal() {
+  document.getElementById('saveOverlay').classList.remove('open');
+}
+function switchSaveTab(tab) {
+  document.querySelectorAll('.save-tab').forEach((t, i) => {
+    t.classList.toggle('active', (tab === 'save' && i === 0) || (tab === 'load' && i === 1));
+  });
+  document.getElementById('savePanel').classList.toggle('active', tab === 'save');
+  document.getElementById('loadPanel').classList.toggle('active', tab === 'load');
+  document.getElementById('saveMsg').className = 'save-msg';
+  document.getElementById('loadMsg').className = 'save-msg';
+}
+function generateAndCopy() {
+  const ta = document.getElementById('saveCodeOutput');
+  ta.select();
+  navigator.clipboard.writeText(ta.value).then(() => {
+    showSaveMsg('saveMsg', 'Copied! Now paste it somewhere safe (Google Classroom, email, or a Doc).', 'success');
+  }).catch(() => {
+    document.execCommand('copy');
+    showSaveMsg('saveMsg', 'Copied! Now paste it somewhere safe.', 'success');
+  });
+}
+function emailSaveCode() {
+  const code = document.getElementById('saveCodeOutput').value;
+  if (!code) { showSaveMsg('saveMsg', 'No save code generated yet.', 'error'); return; }
+  const name = appData.studentName || 'Student';
+  const subject = encodeURIComponent('Write It Right — Save Code for ' + name);
+  const body = encodeURIComponent(
+    'Hi ' + name + ',\n\nHere is your Write It Right save code. ' +
+    'Next lesson, open the tool, click Save/Load, go to the Load tab, and paste this code:\n\n' +
+    code + '\n\nDo not edit the code or it will not work.\n'
+  );
+  window.open('mailto:?subject=' + subject + '&body=' + body, '_blank');
+  showSaveMsg('saveMsg', 'Email app opened — send it to yourself!', 'success');
+}
+function loadFromCode() {
+  const code = document.getElementById('saveCodeInput').value.trim();
+  if (!code) {
+    showSaveMsg('loadMsg', 'Please paste your save code first.', 'error');
+    return;
+  }
+  try {
+    const json = decodeURIComponent(escape(atob(code)));
+    const parsed = JSON.parse(json);
+    if (!parsed.studentName && !parsed.band && !parsed.responses) {
+      throw new Error('Invalid data');
+    }
+    appData = { ...appData, ...parsed };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+    showSaveMsg('loadMsg', 'Loaded! Welcome back, ' + (appData.studentName || 'Student') + '! Refreshing...', 'success');
+    setTimeout(() => location.reload(), 1200);
+  } catch (e) {
+    showSaveMsg('loadMsg', 'That code didn\'t work. Check you copied the whole thing with no extra spaces.', 'error');
+  }
+}
+function showSaveMsg(id, text, type) {
+  const el = document.getElementById(id);
+  el.textContent = text;
+  el.className = 'save-msg ' + type;
 }
 
 /* ========== MODULE NAVIGATION ========== */
