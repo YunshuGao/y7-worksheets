@@ -1,0 +1,2759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Write It Right — Y7 Academic Writing Toolkit</title>
+<style>
+/* ========== CSS Custom Properties ========== */
+:root {
+  --blue: #2c5f8a;
+  --blue-light: #e8f0f8;
+  --blue-dark: #1a3d5c;
+  --teal: #1a8a7d;
+  --teal-light: #e0f5f2;
+  --orange: #e67e22;
+  --orange-light: #fdf0e0;
+  --green: #27ae60;
+  --green-light: #e8f8ef;
+  --purple: #8e44ad;
+  --purple-light: #f3e8f9;
+  --red: #c0392b;
+  --red-light: #fce4e4;
+  --grey: #7f8c8d;
+  --grey-light: #f4f6f7;
+  --grey-dark: #2c3e50;
+  --white: #ffffff;
+  --shadow: 0 2px 8px rgba(0,0,0,0.10);
+  --radius: 10px;
+  --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --band-beginning: #e67e22;
+  --band-developing: #2980b9;
+  --band-consolidating: #27ae60;
+}
+
+/* ========== Reset & Base ========== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font);
+  background: var(--grey-light);
+  color: var(--grey-dark);
+  line-height: 1.6;
+  padding-top: 60px;
+}
+
+/* ========== Top Bar ========== */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: linear-gradient(135deg, var(--blue-dark), var(--blue));
+  color: var(--white);
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 20px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  flex-wrap: wrap;
+}
+.topbar .badge {
+  background: var(--teal);
+  font-size: 0.7rem; font-weight: 700;
+  padding: 3px 10px; border-radius: 20px;
+  text-transform: uppercase; letter-spacing: 1px;
+  white-space: nowrap;
+}
+.topbar h1 {
+  font-size: 1.1rem; font-weight: 700;
+  flex: 1; min-width: 120px;
+}
+.topbar input[type="text"] {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: var(--white);
+  padding: 5px 12px; border-radius: 6px;
+  font-size: 0.85rem; width: 160px;
+}
+.topbar input[type="text"]::placeholder { color: rgba(255,255,255,0.6); }
+.topbar input[type="text"]:focus { outline: none; background: rgba(255,255,255,0.25); border-color: var(--teal); }
+.band-badge {
+  font-size: 0.75rem; font-weight: 600;
+  padding: 4px 12px; border-radius: 20px;
+  background: var(--grey); color: var(--white);
+  white-space: nowrap;
+}
+.band-badge.beginning { background: var(--band-beginning); }
+.band-badge.developing { background: var(--band-developing); }
+.band-badge.consolidating { background: var(--band-consolidating); }
+.topbar button {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: var(--white);
+  padding: 5px 14px; border-radius: 6px;
+  font-size: 0.8rem; cursor: pointer;
+  transition: background 0.2s;
+}
+.topbar button:hover { background: rgba(255,255,255,0.3); }
+
+/* ========== Progress Bar ========== */
+.progress-bar-container {
+  background: var(--white);
+  padding: 12px 20px;
+  border-bottom: 1px solid #ddd;
+  display: flex; align-items: center; gap: 12px;
+}
+.progress-bar-container span { font-size: 0.85rem; color: var(--grey); font-weight: 600; white-space: nowrap; }
+.progress-track {
+  flex: 1; height: 10px; background: #e0e0e0; border-radius: 5px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%; background: linear-gradient(90deg, var(--teal), var(--green));
+  border-radius: 5px; transition: width 0.5s ease;
+  width: 0%;
+}
+
+/* ========== Tab Bar ========== */
+.tab-bar {
+  background: var(--white);
+  display: flex; overflow-x: auto; gap: 0;
+  border-bottom: 3px solid var(--blue);
+  padding: 0 10px;
+}
+.tab-bar button {
+  background: none; border: none; border-bottom: 3px solid transparent;
+  padding: 12px 16px; font-size: 0.82rem; font-weight: 600;
+  color: var(--grey); cursor: pointer;
+  white-space: nowrap; transition: all 0.2s;
+  margin-bottom: -3px;
+}
+.tab-bar button:hover { color: var(--blue); background: var(--blue-light); }
+.tab-bar button.active {
+  color: var(--blue); border-bottom-color: var(--orange);
+  background: var(--blue-light);
+}
+.tab-bar button.completed { color: var(--green); }
+.tab-bar button.completed::after { content: ' \2713'; }
+
+/* ========== Module Container ========== */
+.module {
+  display: none;
+  max-width: 860px;
+  margin: 20px auto;
+  padding: 0 16px 40px;
+}
+.module.active { display: block; }
+
+/* ========== Section Cards ========== */
+.section-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.section-card h2 {
+  font-size: 1.15rem; color: var(--blue);
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--blue-light);
+}
+.section-card h3 {
+  font-size: 1rem; color: var(--teal);
+  margin: 16px 0 8px;
+}
+
+/* ========== EALD Language Help Boxes ========== */
+.eald-box {
+  background: var(--teal-light);
+  border-left: 4px solid var(--teal);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 14px 18px;
+  margin: 12px 0;
+  font-size: 0.9rem;
+}
+.eald-box .eald-label {
+  font-weight: 700; color: var(--teal);
+  font-size: 0.8rem; text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+/* ========== Info Boxes ========== */
+.info-box {
+  background: var(--blue-light);
+  border-left: 4px solid var(--blue);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 14px 18px;
+  margin: 12px 0;
+  font-size: 0.9rem;
+}
+.tip-box {
+  background: var(--orange-light);
+  border-left: 4px solid var(--orange);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 14px 18px;
+  margin: 12px 0;
+  font-size: 0.9rem;
+}
+
+/* ========== Word Bank ========== */
+.word-bank {
+  background: var(--green-light);
+  border: 2px dashed var(--green);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  margin: 12px 0;
+}
+.word-bank .wb-title {
+  font-weight: 700; color: var(--green);
+  font-size: 0.8rem; text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.word-bank .word-pill {
+  display: inline-block;
+  background: var(--white);
+  border: 1px solid var(--green);
+  border-radius: 20px;
+  padding: 4px 12px;
+  margin: 3px 4px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.word-bank .word-pill:hover { background: var(--green); color: var(--white); }
+
+/* ========== Visual Dictionary Cards ========== */
+.visual-dict {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+  margin: 12px 0;
+}
+.dict-card {
+  background: var(--white);
+  border: 2px solid var(--blue-light);
+  border-radius: var(--radius);
+  padding: 14px;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.dict-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.dict-card .dict-icon { font-size: 2rem; margin-bottom: 6px; }
+.dict-card .dict-word { font-weight: 700; color: var(--blue); font-size: 0.95rem; }
+.dict-card .dict-def { font-size: 0.8rem; color: var(--grey); margin-top: 4px; }
+.dict-card .dict-example { font-size: 0.78rem; color: var(--teal); font-style: italic; margin-top: 6px; }
+
+/* ========== Quiz / MCQ ========== */
+.quiz-group { margin: 16px 0; }
+.quiz-group .quiz-q {
+  font-weight: 600; margin-bottom: 8px; font-size: 0.95rem;
+}
+.quiz-group .quiz-options { display: flex; flex-direction: column; gap: 6px; }
+.quiz-option {
+  display: block; width: 100%;
+  background: var(--white);
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+}
+.quiz-option:hover { border-color: var(--blue); background: var(--blue-light); }
+.quiz-option.selected { border-color: var(--blue); background: var(--blue-light); font-weight: 600; }
+.quiz-option.correct { border-color: var(--green); background: var(--green-light); }
+.quiz-option.incorrect { border-color: var(--red); background: var(--red-light); }
+.quiz-option:disabled { cursor: default; opacity: 0.85; }
+.quiz-feedback {
+  margin-top: 8px; padding: 8px 14px;
+  border-radius: 6px; font-size: 0.85rem;
+  display: none;
+}
+.quiz-feedback.show { display: block; }
+.quiz-feedback.correct { background: var(--green-light); color: var(--green); }
+.quiz-feedback.incorrect { background: var(--red-light); color: var(--red); }
+
+/* ========== Writing Areas ========== */
+.write-area {
+  margin: 12px 0;
+}
+.write-area label {
+  display: block; font-weight: 600; margin-bottom: 6px;
+  font-size: 0.9rem; color: var(--blue);
+}
+.write-area textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-family: var(--font);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  resize: vertical;
+  transition: border-color 0.2s;
+}
+.write-area textarea:focus { outline: none; border-color: var(--teal); }
+.write-area .word-count {
+  font-size: 0.8rem; color: var(--grey);
+  margin-top: 4px; text-align: right;
+}
+.write-area .key-terms-found {
+  font-size: 0.8rem; color: var(--green);
+  margin-top: 2px; text-align: right;
+}
+
+/* ========== Sentence Frames ========== */
+.sentence-frame {
+  background: var(--purple-light);
+  border: 1px dashed var(--purple);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin: 8px 0;
+  font-size: 0.88rem;
+  font-style: italic;
+  color: var(--purple);
+}
+
+/* ========== Paragraph Builder (TEEL) ========== */
+.para-builder {
+  margin: 16px 0;
+}
+.para-step {
+  margin-bottom: 14px;
+  padding-left: 14px;
+  border-left: 4px solid var(--grey-light);
+}
+.para-step.step-t { border-left-color: var(--blue); }
+.para-step.step-e1 { border-left-color: var(--green); }
+.para-step.step-e2 { border-left-color: var(--orange); }
+.para-step.step-l { border-left-color: var(--purple); }
+.para-step label {
+  font-weight: 700; font-size: 0.85rem;
+  display: flex; align-items: center; gap: 6px;
+}
+.para-step .step-badge {
+  display: inline-block;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  color: var(--white);
+  text-align: center; line-height: 24px;
+  font-size: 0.75rem; font-weight: 700;
+}
+.step-t .step-badge { background: var(--blue); }
+.step-e1 .step-badge { background: var(--green); }
+.step-e2 .step-badge { background: var(--orange); }
+.step-l .step-badge { background: var(--purple); }
+.para-step textarea {
+  width: 100%; min-height: 60px;
+  padding: 10px; margin-top: 6px;
+  border: 2px solid #ddd; border-radius: 8px;
+  font-family: var(--font); font-size: 0.88rem;
+  resize: vertical;
+}
+.para-step textarea:focus { outline: none; border-color: var(--teal); }
+
+/* ========== Paragraph Preview ========== */
+.para-preview {
+  background: var(--blue-light);
+  border: 2px solid var(--blue);
+  border-radius: var(--radius);
+  padding: 18px;
+  margin: 16px 0;
+  font-size: 0.95rem;
+  line-height: 1.8;
+  min-height: 60px;
+}
+.para-preview .highlight-term {
+  background: var(--green-light);
+  border-radius: 3px;
+  padding: 1px 4px;
+  font-weight: 600;
+}
+.para-stats {
+  display: flex; gap: 16px; flex-wrap: wrap;
+  margin-top: 8px; font-size: 0.8rem; color: var(--grey);
+}
+.para-stats .stat { display: flex; align-items: center; gap: 4px; }
+.para-stats .stat.good { color: var(--green); font-weight: 600; }
+
+/* ========== Connectives Wall ========== */
+.connectives-wall {
+  background: var(--orange-light);
+  border: 2px dashed var(--orange);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  margin: 12px 0;
+}
+.connectives-wall .cw-title {
+  font-weight: 700; color: var(--orange);
+  font-size: 0.8rem; text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.connectives-wall .cw-group { margin-bottom: 8px; }
+.connectives-wall .cw-group-label { font-weight: 600; font-size: 0.82rem; color: var(--grey-dark); }
+.connectives-wall .conn-pill {
+  display: inline-block;
+  background: var(--white);
+  border: 1px solid var(--orange);
+  border-radius: 20px;
+  padding: 3px 10px;
+  margin: 2px 3px;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+.connectives-wall .conn-pill:hover { background: var(--orange); color: var(--white); }
+
+/* ========== Drag-Drop Zones ========== */
+.drop-zone {
+  border: 2px dashed #bbb;
+  border-radius: var(--radius);
+  padding: 16px;
+  min-height: 60px;
+  margin: 8px 0;
+  background: var(--white);
+  transition: border-color 0.2s, background 0.2s;
+}
+.drop-zone.active { border-color: var(--teal); background: var(--teal-light); }
+.drop-zone .zone-label {
+  font-weight: 600; font-size: 0.82rem;
+  color: var(--grey); margin-bottom: 8px;
+}
+.draggable-pill {
+  display: inline-block;
+  background: var(--blue-light);
+  border: 2px solid var(--blue);
+  border-radius: 20px;
+  padding: 6px 14px;
+  margin: 4px;
+  font-size: 0.88rem;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s;
+}
+.draggable-pill:hover { background: var(--blue); color: var(--white); }
+.draggable-pill.selected { background: var(--blue); color: var(--white); box-shadow: 0 0 0 3px rgba(44,95,138,0.3); }
+.draggable-pill.placed { opacity: 0.5; cursor: default; }
+.draggable-pill.correct-place { background: var(--green-light); border-color: var(--green); color: var(--green); }
+.draggable-pill.incorrect-place { background: var(--red-light); border-color: var(--red); color: var(--red); }
+
+/* ========== Checklist ========== */
+.checklist { margin: 16px 0; }
+.checklist h3 { font-size: 0.95rem; color: var(--teal); margin-bottom: 8px; }
+.check-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 0; font-size: 0.9rem;
+}
+.check-item input[type="checkbox"] {
+  width: 18px; height: 18px; accent-color: var(--teal);
+}
+.check-item.checked label { text-decoration: line-through; color: var(--grey); }
+
+/* ========== VSCC Highlighter Colours ========== */
+.vscc-verb { background: var(--blue-light); border-bottom: 2px solid var(--blue); padding: 1px 2px; }
+.vscc-subject { background: var(--orange-light); border-bottom: 2px solid var(--orange); padding: 1px 2px; }
+.vscc-content { background: var(--green-light); border-bottom: 2px solid var(--green); padding: 1px 2px; }
+.vscc-concept { background: var(--purple-light); border-bottom: 2px solid var(--purple); padding: 1px 2px; }
+
+/* ========== TEEL Colours for Labels ========== */
+.teel-t { color: var(--blue); }
+.teel-e1 { color: var(--green); }
+.teel-e2 { color: var(--orange); }
+.teel-l { color: var(--purple); }
+
+/* ========== Buttons ========== */
+.btn {
+  display: inline-block;
+  padding: 10px 24px;
+  border: none; border-radius: 8px;
+  font-size: 0.9rem; font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+.btn-primary { background: var(--blue); color: var(--white); }
+.btn-primary:hover { background: var(--blue-dark); }
+.btn-teal { background: var(--teal); color: var(--white); }
+.btn-teal:hover { background: #158a7a; }
+.btn-orange { background: var(--orange); color: var(--white); }
+.btn-orange:hover { background: #cf6d17; }
+.btn-green { background: var(--green); color: var(--white); }
+.btn-green:hover { background: #1e8449; }
+.btn-outline {
+  background: var(--white); color: var(--blue);
+  border: 2px solid var(--blue);
+}
+.btn-outline:hover { background: var(--blue-light); }
+.btn-sm { padding: 6px 16px; font-size: 0.82rem; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ========== Grid Utilities ========== */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.flex-between { display: flex; align-items: center; justify-content: space-between; }
+.mt-1 { margin-top: 8px; }
+.mt-2 { margin-top: 16px; }
+.mt-3 { margin-top: 24px; }
+.mb-1 { margin-bottom: 8px; }
+.mb-2 { margin-bottom: 16px; }
+.text-center { text-align: center; }
+
+/* ========== Adaptive Visibility ========== */
+.show-beginning { display: none !important; }
+.show-developing { display: none !important; }
+.show-consolidating { display: none !important; }
+body.band-beginning .show-beginning { display: block !important; }
+body.band-beginning .show-beginning.inline { display: inline !important; }
+body.band-developing .show-developing { display: block !important; }
+body.band-developing .show-developing.inline { display: inline !important; }
+body.band-consolidating .show-consolidating { display: block !important; }
+body.band-consolidating .show-consolidating.inline { display: inline !important; }
+
+.hide-beginning { display: block; }
+.hide-developing { display: block; }
+.hide-consolidating { display: block; }
+body.band-beginning .hide-beginning { display: none !important; }
+body.band-developing .hide-developing { display: none !important; }
+body.band-consolidating .hide-consolidating { display: none !important; }
+
+.show-scaffolded { display: none !important; }
+body.band-beginning .show-scaffolded { display: block !important; }
+body.band-developing .show-scaffolded { display: block !important; }
+
+.scaffold-full { display: block; }
+.scaffold-partial { display: block; }
+.scaffold-none { display: none; }
+body.fade-partial .scaffold-full { display: none; }
+body.fade-none .scaffold-full { display: none; }
+body.fade-none .scaffold-partial { display: none; }
+
+/* ========== Self-Assessment ========== */
+.self-assess { margin: 16px 0; }
+.grade-option {
+  display: block; width: 100%;
+  background: var(--white);
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 6px 0;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+}
+.grade-option:hover { border-color: var(--blue); }
+.grade-option.selected { border-color: var(--teal); background: var(--teal-light); }
+.grade-label { font-weight: 700; margin-right: 8px; }
+
+/* ========== Reflection ========== */
+.reflection-step {
+  margin: 12px 0;
+  padding: 14px;
+  border-radius: var(--radius);
+}
+.reflection-step.www { background: var(--green-light); border-left: 4px solid var(--green); }
+.reflection-step.ebi { background: var(--orange-light); border-left: 4px solid var(--orange); }
+.reflection-step.yns { background: var(--purple-light); border-left: 4px solid var(--purple); }
+.reflection-step label { font-weight: 700; font-size: 0.9rem; display: block; margin-bottom: 6px; }
+.reflection-step textarea {
+  width: 100%; min-height: 60px; padding: 10px;
+  border: 1px solid #ddd; border-radius: 6px;
+  font-family: var(--font); font-size: 0.88rem;
+}
+
+/* ========== Match Game (Diagnostic) ========== */
+.match-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 12px 0;
+}
+.match-item {
+  background: var(--white);
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+}
+.match-item:hover { border-color: var(--blue); }
+.match-item.selected { border-color: var(--blue); background: var(--blue-light); box-shadow: 0 0 0 3px rgba(44,95,138,0.2); }
+.match-item.matched { border-color: var(--green); background: var(--green-light); cursor: default; }
+.match-item.wrong { border-color: var(--red); background: var(--red-light); }
+.match-item .match-icon { font-size: 2rem; }
+
+/* ========== Results Banner ========== */
+.result-banner {
+  text-align: center;
+  padding: 30px;
+  border-radius: var(--radius);
+  margin: 20px 0;
+}
+.result-banner.beginning { background: linear-gradient(135deg, #ffecd2, #fcb69f); }
+.result-banner.developing { background: linear-gradient(135deg, #a1c4fd, #c2e9fb); }
+.result-banner.consolidating { background: linear-gradient(135deg, #a8edea, #fed6e3); }
+.result-banner .result-icon { font-size: 3rem; margin-bottom: 10px; }
+.result-banner h2 { font-size: 1.3rem; margin-bottom: 6px; }
+.result-banner p { font-size: 0.95rem; color: var(--grey-dark); }
+
+/* ========== Analysis Framework Cards ========== */
+.analysis-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 16px;
+  border-left: 4px solid var(--grey);
+}
+.analysis-card.observe { border-left-color: var(--blue); }
+.analysis-card.identify { border-left-color: var(--teal); }
+.analysis-card.analyse { border-left-color: var(--orange); }
+.analysis-card.evaluate { border-left-color: var(--purple); }
+.analysis-card h4 { font-size: 0.9rem; margin-bottom: 6px; }
+
+/* ========== Responsive ========== */
+@media (max-width: 700px) {
+  .topbar { padding: 8px 12px; gap: 8px; }
+  .topbar h1 { font-size: 0.95rem; }
+  .topbar input[type="text"] { width: 120px; }
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .match-grid { grid-template-columns: 1fr 1fr; }
+  .visual-dict { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+  .tab-bar button { padding: 10px 10px; font-size: 0.75rem; }
+  .module { padding: 0 10px 30px; }
+  .section-card { padding: 16px; }
+}
+@media (max-width: 500px) {
+  .topbar { flex-direction: column; align-items: flex-start; }
+  .match-grid { grid-template-columns: 1fr; }
+}
+
+/* ========== Print ========== */
+@media print {
+  .topbar, .tab-bar, .progress-bar-container { display: none; }
+  body { padding-top: 0; background: white; }
+  .module { display: block !important; max-width: 100%; page-break-inside: avoid; }
+  .section-card { box-shadow: none; border: 1px solid #ddd; page-break-inside: avoid; }
+  .btn, button { display: none; }
+  .write-area textarea, .para-step textarea, .reflection-step textarea {
+    border: 1px solid #999; min-height: auto;
+  }
+  .print-header { display: block !important; text-align: center; padding: 20px 0; border-bottom: 2px solid #333; margin-bottom: 20px; }
+}
+.print-header { display: none; }
+</style>
+</head>
+<body>
+
+<!-- Print Header -->
+<div class="print-header">
+  <h1>Write It Right — Year 7 Academic Writing Toolkit</h1>
+  <p>Student Name: <span id="printName">_______________</span> | Band: <span id="printBand">___</span></p>
+</div>
+
+<!-- Top Bar -->
+<div class="topbar">
+  <span class="badge">Year 7</span>
+  <h1>Write It Right</h1>
+  <input type="text" id="studentName" placeholder="Your name..." oninput="saveAll()">
+  <span class="band-badge" id="bandBadge">Not assessed yet</span>
+  <button onclick="window.print()" title="Print / Save as PDF">Print</button>
+  <button onclick="confirmReset()" title="Start over">Reset</button>
+</div>
+
+<!-- Progress Bar -->
+<div class="progress-bar-container">
+  <span id="progressLabel">Progress: 0 / 6 modules</span>
+  <div class="progress-track">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+</div>
+
+<!-- Tab Bar -->
+<div class="tab-bar" id="tabBar">
+  <button class="active" onclick="switchModule(0)">Diagnostic</button>
+  <button onclick="switchModule(1)">1. Word Power</button>
+  <button onclick="switchModule(2)">2. Text Types</button>
+  <button onclick="switchModule(3)">3. Read the Question</button>
+  <button onclick="switchModule(4)">4. Build a Paragraph</button>
+  <button onclick="switchModule(5)">5. Analyse a Design</button>
+  <button onclick="switchModule(6)">6. Put It All Together</button>
+</div>
+
+<!-- ========== MODULE 0: Diagnostic ========== -->
+<div class="module active" id="mod0">
+
+  <div class="section-card">
+    <h2>Welcome to Write It Right!</h2>
+    <p>This toolkit will help you become a better writer in Technology class. Before we start, let's see what you already know. This is <strong>not</strong> a test — it just helps the tool give you the right level of support.</p>
+    <div class="eald-box">
+      <div class="eald-label">Language Help</div>
+      <strong>Diagnostic</strong> means a quick check to find out what you know. There are no wrong answers — just do your best!
+    </div>
+  </div>
+
+  <!-- Part A: Word-Picture Match -->
+  <div class="section-card" id="diagPartA">
+    <h2>Part A — Match the Word to the Picture</h2>
+    <p>Click a <strong>word</strong>, then click the matching <strong>picture</strong>. Try to match all 6 pairs.</p>
+
+    <div class="match-grid" id="matchGrid">
+      <!-- Words column -->
+      <div class="match-item word-match" data-match="sketch" onclick="selectMatch(this)">sketch</div>
+      <div class="match-item icon-match" data-match="evaluate" onclick="selectMatch(this)"><span class="match-icon">&#9733;</span><br><small>judge quality</small></div>
+
+      <div class="match-item word-match" data-match="perimeter" onclick="selectMatch(this)">perimeter</div>
+      <div class="match-item icon-match" data-match="sketch" onclick="selectMatch(this)"><span class="match-icon">&#9998;</span><br><small>quick drawing</small></div>
+
+      <div class="match-item word-match" data-match="aesthetics" onclick="selectMatch(this)">aesthetics</div>
+      <div class="match-item icon-match" data-match="capacity" onclick="selectMatch(this)"><span class="match-icon">&#127827;</span><br><small>how much fits</small></div>
+
+      <div class="match-item word-match" data-match="isometric" onclick="selectMatch(this)">isometric</div>
+      <div class="match-item icon-match" data-match="perimeter" onclick="selectMatch(this)"><span class="match-icon">&#11036;</span><br><small>distance around</small></div>
+
+      <div class="match-item word-match" data-match="capacity" onclick="selectMatch(this)">capacity</div>
+      <div class="match-item icon-match" data-match="aesthetics" onclick="selectMatch(this)"><span class="match-icon">&#127912;</span><br><small>how it looks</small></div>
+
+      <div class="match-item word-match" data-match="evaluate" onclick="selectMatch(this)">evaluate</div>
+      <div class="match-item icon-match" data-match="isometric" onclick="selectMatch(this)"><span class="match-icon">&#9649;</span><br><small>3D drawing</small></div>
+    </div>
+
+    <div id="matchResult" style="margin-top:10px; font-weight:600; display:none;"></div>
+  </div>
+
+  <!-- Part B: Sentence Check MCQs -->
+  <div class="section-card" id="diagPartB">
+    <h2>Part B — Sentence Check</h2>
+    <p>Choose the best answer for each question.</p>
+
+    <div class="quiz-group" id="diagQ1">
+      <div class="quiz-q">1. Which sentence is correct?</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="diagMCQ(1, this, false)">The designs was very creative.</button>
+        <button class="quiz-option" onclick="diagMCQ(1, this, true)">The designs were very creative.</button>
+        <button class="quiz-option" onclick="diagMCQ(1, this, false)">The designs is very creative.</button>
+      </div>
+      <div class="quiz-feedback" id="diagFb1"></div>
+    </div>
+
+    <div class="quiz-group" id="diagQ2">
+      <div class="quiz-q">2. Which sentence uses the right Technology word?</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="diagMCQ(2, this, false)">I need to <em>guess</em> if my design works well.</button>
+        <button class="quiz-option" onclick="diagMCQ(2, this, false)">I need to <em>look at</em> if my design works well.</button>
+        <button class="quiz-option" onclick="diagMCQ(2, this, true)">I need to <em>evaluate</em> if my design works well.</button>
+      </div>
+      <div class="quiz-feedback" id="diagFb2"></div>
+    </div>
+
+    <div class="quiz-group" id="diagQ3">
+      <div class="quiz-q">3. Which sentence gives the MOST detail?</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="diagMCQ(3, this, false)">My tower was good.</button>
+        <button class="quiz-option" onclick="diagMCQ(3, this, false)">My tower was tall and strong.</button>
+        <button class="quiz-option" onclick="diagMCQ(3, this, true)">My tower was 45cm tall and supported 200g because I used triangular bracing for strength.</button>
+      </div>
+      <div class="quiz-feedback" id="diagFb3"></div>
+    </div>
+  </div>
+
+  <!-- Part C: Mini Write -->
+  <div class="section-card" id="diagPartC">
+    <h2>Part C — Mini Write</h2>
+    <p>Write <strong>2 sentences</strong> about something you designed or built in Technology class this term.</p>
+    <div class="eald-box">
+      <div class="eald-label">Language Help</div>
+      Think about your paper boat, tower, or marble run. What did you make? What worked well?
+    </div>
+    <div class="write-area">
+      <textarea id="diagWrite" placeholder="Write your 2 sentences here..." oninput="updateWordCount('diagWrite','diagWC','diagKT'); saveResponse('diagWrite')"></textarea>
+      <div class="word-count" id="diagWC">0 words</div>
+      <div class="key-terms-found" id="diagKT"></div>
+    </div>
+  </div>
+
+  <!-- Submit Diagnostic -->
+  <div class="section-card text-center" id="diagSubmitSection">
+    <button class="btn btn-teal" id="diagSubmitBtn" onclick="submitDiagnostic()">See My Results</button>
+  </div>
+
+  <!-- Results (hidden until submit) -->
+  <div id="diagResults" style="display:none;">
+    <div class="result-banner" id="diagResultBanner">
+      <div class="result-icon" id="diagResultIcon"></div>
+      <h2 id="diagResultTitle"></h2>
+      <p id="diagResultMsg"></p>
+    </div>
+    <div class="section-card text-center">
+      <p>Your support level has been set. You can always change modules using the tabs above.</p>
+      <button class="btn btn-primary mt-2" onclick="switchModule(1)">Start Module 1: Word Power</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ========== MODULE 1: Word Power ========== -->
+<div class="module" id="mod1">
+
+  <!-- Learn: Beck's 3 Tiers -->
+  <div class="section-card">
+    <h2>Word Power — Vocabulary Tiers</h2>
+    <div class="eald-box">
+      <div class="eald-label">Language Help</div>
+      Words can be sorted into <strong>3 levels</strong> (called tiers). <strong>Tier 1</strong> = everyday words everyone knows. <strong>Tier 2</strong> = academic words used in school subjects. <strong>Tier 3</strong> = technical words used only in Technology class.
+    </div>
+
+    <div class="grid-3 mt-2">
+      <div style="background:var(--green-light);padding:16px;border-radius:var(--radius);text-align:center;">
+        <div style="font-size:2rem;">&#127793;</div>
+        <h3 style="color:var(--green);">Tier 1 — Everyday</h3>
+        <p style="font-size:0.85rem;">Words you use every day.<br><em>build, draw, strong</em></p>
+      </div>
+      <div style="background:var(--blue-light);padding:16px;border-radius:var(--radius);text-align:center;">
+        <div style="font-size:2rem;">&#128218;</div>
+        <h3 style="color:var(--blue);">Tier 2 — Academic</h3>
+        <p style="font-size:0.85rem;">Words used across school subjects.<br><em>evaluate, identify, function</em></p>
+      </div>
+      <div style="background:var(--purple-light);padding:16px;border-radius:var(--radius);text-align:center;">
+        <div style="font-size:2rem;">&#128295;</div>
+        <h3 style="color:var(--purple);">Tier 3 — Technical</h3>
+        <p style="font-size:0.85rem;">Specialist Technology words.<br><em>isometric, aesthetics, orthogonal</em></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Visual Dictionary -->
+  <div class="section-card">
+    <h2>Visual Dictionary</h2>
+    <p>Learn these important words from your Technology lessons.</p>
+
+    <!-- Tier 1 words (hidden for developing/consolidating) -->
+    <h3 class="show-beginning" style="color:var(--green);">Tier 1 — Everyday Words</h3>
+    <div class="visual-dict show-beginning">
+      <div class="dict-card"><div class="dict-icon">&#128296;</div><div class="dict-word">build</div><div class="dict-def">To make or put together</div><div class="dict-example">"We build models in class."</div></div>
+      <div class="dict-card"><div class="dict-icon">&#9999;</div><div class="dict-word">draw</div><div class="dict-def">To make a picture with lines</div><div class="dict-example">"I draw my design ideas first."</div></div>
+      <div class="dict-card"><div class="dict-icon">&#128170;</div><div class="dict-word">strong</div><div class="dict-def">Able to hold weight without breaking</div><div class="dict-example">"Triangles make structures strong."</div></div>
+      <div class="dict-card"><div class="dict-icon">&#9878;</div><div class="dict-word">heavy</div><div class="dict-def">Having a lot of weight</div><div class="dict-example">"The base needs to hold heavy items."</div></div>
+      <div class="dict-card"><div class="dict-icon">&#9986;</div><div class="dict-word">cut</div><div class="dict-def">To separate using scissors or knife</div><div class="dict-example">"Cut along the dotted line carefully."</div></div>
+      <div class="dict-card"><div class="dict-icon">&#11044;</div><div class="dict-word">shape</div><div class="dict-def">The form of an object (circle, square)</div><div class="dict-example">"Choose a shape for your container."</div></div>
+    </div>
+
+    <!-- Tier 2 words (hidden for consolidating) -->
+    <h3 class="hide-consolidating" style="color:var(--blue);">Tier 2 — Academic Words</h3>
+    <div class="visual-dict hide-consolidating">
+      <div class="dict-card"><div class="dict-icon">&#128269;</div><div class="dict-word">investigate</div><div class="dict-def">To look into something carefully</div><div class="dict-example">"Investigate how bridges stay up."</div></div>
+      <div class="dict-card"><div class="dict-icon">&#9733;</div><div class="dict-word">evaluate</div><div class="dict-def">To judge how good something is</div><div class="dict-example">"Evaluate your design against the criteria."</div></div>
+      <div class="dict-card"><div class="dict-icon">&#9881;</div><div class="dict-word">function</div><div class="dict-def">What something does or its purpose</div><div class="dict-example">"The function of a handle is to carry."</div></div>
+      <div class="dict-card"><div class="dict-icon">&#9989;</div><div class="dict-word">suitable</div><div class="dict-def">Right for the purpose</div><div class="dict-example">"Cardboard is suitable for our model."</div></div>
+      <div class="dict-card"><div class="dict-icon">&#128065;</div><div class="dict-word">identify</div><div class="dict-def">To recognise or name something</div><div class="dict-example">"Identify the materials in the design."</div></div>
+      <div class="dict-card"><div class="dict-icon">&#129300;</div><div class="dict-word">consider</div><div class="dict-def">To think carefully about</div><div class="dict-example">"Consider safety when choosing tools."</div></div>
+    </div>
+
+    <!-- Tier 3 words (always shown) -->
+    <h3 style="color:var(--purple);">Tier 3 — Technical Words</h3>
+    <div class="visual-dict">
+      <div class="dict-card"><div class="dict-icon">&#9649;</div><div class="dict-word">isometric</div><div class="dict-def">A 3D drawing at a 30-degree angle</div><div class="dict-example">"Draw an isometric view of the box."</div></div>
+      <div class="dict-card"><div class="dict-icon">&#128208;</div><div class="dict-word">orthogonal</div><div class="dict-def">A flat view from one side (front, top, side)</div><div class="dict-example">"The orthogonal view shows the front."</div></div>
+      <div class="dict-card"><div class="dict-icon">&#11036;</div><div class="dict-word">perimeter</div><div class="dict-def">The total distance around a shape</div><div class="dict-example">"Measure the perimeter of the base."</div></div>
+      <div class="dict-card"><div class="dict-icon">&#127912;</div><div class="dict-word">aesthetics</div><div class="dict-def">How something looks and feels (beauty)</div><div class="dict-example">"Good aesthetics make products appealing."</div></div>
+      <div class="dict-card"><div class="dict-icon">&#127827;</div><div class="dict-word">capacity</div><div class="dict-def">How much something can hold</div><div class="dict-example">"The container's capacity is 2 litres."</div></div>
+      <div class="dict-card"><div class="dict-icon">&#127807;</div><div class="dict-word">sustainable</div><div class="dict-def">Good for the environment long-term</div><div class="dict-example">"Using recycled materials is sustainable."</div></div>
+    </div>
+  </div>
+
+  <!-- Activity: Word Sort -->
+  <div class="section-card">
+    <h2>Activity — Word Sort</h2>
+    <p>Click a word, then click the correct tier to sort it. <span class="show-beginning inline" style="font-size:0.85rem;color:var(--teal);">(Hint: look at the Visual Dictionary above!)</span></p>
+
+    <div id="sortWordsContainer" style="margin:12px 0; text-align:center;"></div>
+
+    <div class="grid-3 mt-2">
+      <div class="drop-zone" id="sortZone1" onclick="placeWord(1)">
+        <div class="zone-label">&#127793; Tier 1 — Everyday</div>
+        <div id="sortZone1Words"></div>
+      </div>
+      <div class="drop-zone" id="sortZone2" onclick="placeWord(2)">
+        <div class="zone-label">&#128218; Tier 2 — Academic</div>
+        <div id="sortZone2Words"></div>
+      </div>
+      <div class="drop-zone" id="sortZone3" onclick="placeWord(3)">
+        <div class="zone-label">&#128295; Tier 3 — Technical</div>
+        <div id="sortZone3Words"></div>
+      </div>
+    </div>
+
+    <div id="sortResult" style="margin-top:10px; font-weight:600; display:none;"></div>
+    <button class="btn btn-sm btn-outline mt-1" id="sortResetBtn" onclick="resetWordSort()" style="display:none;">Try Again</button>
+  </div>
+
+  <!-- Activity: Gap Fill -->
+  <div class="section-card">
+    <h2>Activity — Fill the Gap</h2>
+    <p>Choose the best word to complete each sentence.</p>
+
+    <div class="word-bank show-scaffolded">
+      <div class="wb-title">Word Bank</div>
+      <span class="word-pill">evaluate</span>
+      <span class="word-pill">isometric</span>
+      <span class="word-pill">investigate</span>
+      <span class="word-pill">sustainable</span>
+    </div>
+
+    <div class="quiz-group">
+      <div class="quiz-q">1. I need to ___ my design to check if it meets the criteria.</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="gapFill(1, this, false)">investigate</button>
+        <button class="quiz-option" onclick="gapFill(1, this, true)">evaluate</button>
+        <button class="quiz-option" onclick="gapFill(1, this, false)">build</button>
+      </div>
+      <div class="quiz-feedback" id="gapFb1"></div>
+    </div>
+
+    <div class="quiz-group">
+      <div class="quiz-q">2. We drew an ___ view to show our design in 3D.</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="gapFill(2, this, false)">orthogonal</button>
+        <button class="quiz-option" onclick="gapFill(2, this, true)">isometric</button>
+        <button class="quiz-option" onclick="gapFill(2, this, false)">flat</button>
+      </div>
+      <div class="quiz-feedback" id="gapFb2"></div>
+    </div>
+
+    <div class="quiz-group">
+      <div class="quiz-q">3. Before designing, you need to ___ the problem first.</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="gapFill(3, this, true)">investigate</button>
+        <button class="quiz-option" onclick="gapFill(3, this, false)">evaluate</button>
+        <button class="quiz-option" onclick="gapFill(3, this, false)">shape</button>
+      </div>
+      <div class="quiz-feedback" id="gapFb3"></div>
+    </div>
+
+    <div class="quiz-group">
+      <div class="quiz-q">4. Using recycled materials makes a design more ___.</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="gapFill(4, this, false)">heavy</button>
+        <button class="quiz-option" onclick="gapFill(4, this, false)">strong</button>
+        <button class="quiz-option" onclick="gapFill(4, this, true)">sustainable</button>
+      </div>
+      <div class="quiz-feedback" id="gapFb4"></div>
+    </div>
+  </div>
+
+  <!-- Activity: Use It Writing Challenge -->
+  <div class="section-card">
+    <h2>Activity — Use It!</h2>
+    <p>Choose one word from the list below. Write <strong>one sentence</strong> using that word about something from Technology class.</p>
+
+    <div class="word-bank">
+      <div class="wb-title">Choose a Word</div>
+      <span class="word-pill" onclick="this.classList.toggle('selected')">evaluate</span>
+      <span class="word-pill" onclick="this.classList.toggle('selected')">investigate</span>
+      <span class="word-pill" onclick="this.classList.toggle('selected')">aesthetics</span>
+      <span class="word-pill" onclick="this.classList.toggle('selected')">sustainable</span>
+      <span class="word-pill" onclick="this.classList.toggle('selected')">isometric</span>
+      <span class="word-pill" onclick="this.classList.toggle('selected')">function</span>
+    </div>
+
+    <div class="sentence-frame show-scaffolded">
+      Sentence starter: "In Technology class, I learned that [word] means... For example, ..."
+    </div>
+
+    <div class="write-area">
+      <textarea id="mod1Write" placeholder="Write your sentence here..." oninput="updateWordCount('mod1Write','mod1WC','mod1KT'); saveResponse('mod1Write')"></textarea>
+      <div class="word-count" id="mod1WC">0 words</div>
+      <div class="key-terms-found" id="mod1KT"></div>
+    </div>
+
+    <button class="btn btn-sm btn-green mt-1" onclick="checkMod1Write()">Check My Sentence</button>
+    <div class="quiz-feedback" id="mod1WriteFb"></div>
+  </div>
+
+  <!-- Checklist -->
+  <div class="section-card">
+    <div class="checklist">
+      <h3>Module 1 Checklist</h3>
+      <div class="check-item"><input type="checkbox" id="chk1a" onchange="saveChecklist('chk1a')"><label>I read the Visual Dictionary</label></div>
+      <div class="check-item"><input type="checkbox" id="chk1b" onchange="saveChecklist('chk1b')"><label>I completed the Word Sort</label></div>
+      <div class="check-item"><input type="checkbox" id="chk1c" onchange="saveChecklist('chk1c')"><label>I completed the Gap Fill</label></div>
+      <div class="check-item"><input type="checkbox" id="chk1d" onchange="saveChecklist('chk1d')"><label>I wrote my "Use It" sentence</label></div>
+    </div>
+    <button class="btn btn-teal mt-2" onclick="finishModule1()">Complete Module 1 &rarr; Next</button>
+  </div>
+
+</div>
+
+<!-- ========== MODULE 2: Text Types ========== -->
+<div class="module" id="mod2">
+
+  <!-- Learn: 4 Text Types -->
+  <div class="section-card">
+    <h2>Text Types — Writing for Different Purposes</h2>
+    <div class="eald-box">
+      <div class="eald-label">Language Help</div>
+      In English, we write in different ways for different <strong>purposes</strong>. A <strong>text type</strong> is the kind of writing you use. The purpose changes <em>how</em> you write.
+    </div>
+
+    <div class="grid-2 mt-2">
+      <div style="background:#e8f8ef;padding:16px;border-radius:var(--radius);border-left:4px solid var(--green);">
+        <h3 style="color:var(--green);">Procedure</h3>
+        <p style="font-size:0.85rem;"><strong>Purpose:</strong> Tell someone how to do something step by step.</p>
+        <p style="font-size:0.82rem;"><strong>Key words:</strong> First, Then, Next, Finally, After that</p>
+        <p style="font-size:0.82rem;font-style:italic;color:var(--grey-dark);margin-top:6px;">"First, measure the cardboard to 30cm. Then, cut along the line. Next, fold at the marks. Finally, glue the edges together."</p>
+      </div>
+
+      <div style="background:#e8f0f8;padding:16px;border-radius:var(--radius);border-left:4px solid var(--blue);">
+        <h3 style="color:var(--blue);">Information Report</h3>
+        <p style="font-size:0.85rem;"><strong>Purpose:</strong> Give facts about a topic.</p>
+        <p style="font-size:0.82rem;"><strong>Key words:</strong> is, are, has, contains, includes, consists of</p>
+        <p style="font-size:0.82rem;font-style:italic;color:var(--grey-dark);margin-top:6px;">"The design process has five stages. It includes investigating, designing, producing, testing, and evaluating."</p>
+      </div>
+
+      <div style="background:#fdf0e0;padding:16px;border-radius:var(--radius);border-left:4px solid var(--orange);">
+        <h3 style="color:var(--orange);">Explanation</h3>
+        <p style="font-size:0.85rem;"><strong>Purpose:</strong> Explain why or how something works.</p>
+        <p style="font-size:0.82rem;"><strong>Key words:</strong> because, this causes, as a result, therefore, due to</p>
+        <p style="font-size:0.82rem;font-style:italic;color:var(--grey-dark);margin-top:6px;">"Triangles are used in structures because they distribute weight evenly. This causes the structure to be more stable."</p>
+      </div>
+
+      <div style="background:#f3e8f9;padding:16px;border-radius:var(--radius);border-left:4px solid var(--purple);">
+        <h3 style="color:var(--purple);">Persuasive</h3>
+        <p style="font-size:0.85rem;"><strong>Purpose:</strong> Convince someone to agree with you.</p>
+        <p style="font-size:0.82rem;"><strong>Key words:</strong> should, must, it is clear that, I believe, the evidence shows</p>
+        <p style="font-size:0.82rem;font-style:italic;color:var(--grey-dark);margin-top:6px;">"Schools should teach more about sustainable design because it helps students understand environmental issues."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Activity: Text Type Identifier -->
+  <div class="section-card">
+    <h2>Activity — Identify the Text Type</h2>
+    <p>Read each paragraph and choose which text type it is.</p>
+
+    <div class="quiz-group">
+      <div class="quiz-q" style="background:var(--grey-light);padding:12px;border-radius:8px;font-weight:normal;font-style:italic;">
+        "First, draw your design on graph paper. Then, label all the measurements. Next, add notes about materials. Finally, check your drawing against the design brief."
+      </div>
+      <div class="quiz-options" style="margin-top:8px;">
+        <button class="quiz-option" onclick="textTypeQ(1, this, true)">Procedure</button>
+        <button class="quiz-option" onclick="textTypeQ(1, this, false)">Information Report</button>
+        <button class="quiz-option hide-beginning" onclick="textTypeQ(1, this, false)">Explanation</button>
+        <button class="quiz-option hide-beginning" onclick="textTypeQ(1, this, false)">Persuasive</button>
+      </div>
+      <div class="quiz-feedback" id="ttFb1"></div>
+    </div>
+
+    <div class="quiz-group">
+      <div class="quiz-q" style="background:var(--grey-light);padding:12px;border-radius:8px;font-weight:normal;font-style:italic;">
+        "Triangles are strong shapes because they cannot be pushed out of shape easily. This is due to the way forces are spread along all three sides."
+      </div>
+      <div class="quiz-options" style="margin-top:8px;">
+        <button class="quiz-option" onclick="textTypeQ(2, this, false)">Procedure</button>
+        <button class="quiz-option" onclick="textTypeQ(2, this, false)">Information Report</button>
+        <button class="quiz-option hide-beginning" onclick="textTypeQ(2, this, true)">Explanation</button>
+        <button class="quiz-option hide-beginning" onclick="textTypeQ(2, this, false)">Persuasive</button>
+      </div>
+      <div class="quiz-feedback" id="ttFb2"></div>
+    </div>
+
+    <div class="quiz-group">
+      <div class="quiz-q" style="background:var(--grey-light);padding:12px;border-radius:8px;font-weight:normal;font-style:italic;">
+        "The design process is a series of steps used to solve problems. It includes five stages: investigating, designing, producing, testing, and evaluating."
+      </div>
+      <div class="quiz-options" style="margin-top:8px;">
+        <button class="quiz-option" onclick="textTypeQ(3, this, false)">Procedure</button>
+        <button class="quiz-option" onclick="textTypeQ(3, this, true)">Information Report</button>
+        <button class="quiz-option hide-beginning" onclick="textTypeQ(3, this, false)">Explanation</button>
+        <button class="quiz-option hide-beginning" onclick="textTypeQ(3, this, false)">Persuasive</button>
+      </div>
+      <div class="quiz-feedback" id="ttFb3"></div>
+    </div>
+
+    <div class="quiz-group">
+      <div class="quiz-q" style="background:var(--grey-light);padding:12px;border-radius:8px;font-weight:normal;font-style:italic;">
+        "All students should learn about sustainable design. It is clear that using recycled materials helps protect the environment for future generations."
+      </div>
+      <div class="quiz-options" style="margin-top:8px;">
+        <button class="quiz-option" onclick="textTypeQ(4, this, false)">Procedure</button>
+        <button class="quiz-option" onclick="textTypeQ(4, this, false)">Information Report</button>
+        <button class="quiz-option hide-beginning" onclick="textTypeQ(4, this, false)">Explanation</button>
+        <button class="quiz-option hide-beginning" onclick="textTypeQ(4, this, true)">Persuasive</button>
+      </div>
+      <div class="quiz-feedback" id="ttFb4"></div>
+    </div>
+  </div>
+
+  <!-- Activity: Sentence Transformer -->
+  <div class="section-card">
+    <h2>Activity — Same Topic, Different Text Type</h2>
+    <p>The same idea can be written in different text types. Read how "Triangles are strong" is written in each type:</p>
+
+    <div class="grid-2 mt-2">
+      <div style="padding:12px;background:var(--green-light);border-radius:8px;">
+        <strong style="color:var(--green);">Procedure:</strong><br>
+        <em>"First, arrange three sticks in a triangle. Then, glue them together. Finally, test the strength."</em>
+      </div>
+      <div style="padding:12px;background:var(--blue-light);border-radius:8px;">
+        <strong style="color:var(--blue);">Info Report:</strong><br>
+        <em>"Triangles are one of the strongest shapes in engineering. They are used in bridges, roofs, and towers."</em>
+      </div>
+      <div style="padding:12px;background:var(--orange-light);border-radius:8px;">
+        <strong style="color:var(--orange);">Explanation:</strong><br>
+        <em>"Triangles are strong because the force is spread evenly along all three sides. This prevents the shape from collapsing."</em>
+      </div>
+      <div style="padding:12px;background:var(--purple-light);border-radius:8px;">
+        <strong style="color:var(--purple);">Persuasive:</strong><br>
+        <em>"Engineers should use triangles more often because they are the most efficient shape for supporting weight."</em>
+      </div>
+    </div>
+
+    <div class="tip-box mt-2">
+      <strong>Key takeaway:</strong> The PURPOSE changes HOW you write. Same information, different style!
+    </div>
+  </div>
+
+  <!-- Mini-Write -->
+  <div class="section-card">
+    <h2>Mini-Write — Information Report</h2>
+    <p>Choose ONE topic from Technology class. Write <strong>3-4 sentences</strong> as an Information Report.</p>
+
+    <div class="word-bank">
+      <div class="wb-title">Choose a Topic</div>
+      <span class="word-pill" onclick="selectTopic(this)">The Design Process</span>
+      <span class="word-pill" onclick="selectTopic(this)">Elements of Design</span>
+      <span class="word-pill" onclick="selectTopic(this)">Measurement in Technology</span>
+    </div>
+
+    <div class="sentence-frame show-beginning">
+      <strong>Beginning frames:</strong><br>
+      "[Topic] is ___. It has ___ parts. The first part is ___. The second part is ___."
+    </div>
+    <div class="sentence-frame show-developing">
+      <strong>Developing frames:</strong><br>
+      "[Topic] is an important part of Technology. It involves ___. For example, ___."
+    </div>
+
+    <div class="write-area">
+      <textarea id="mod2Write" placeholder="Write your Information Report here..." oninput="updateWordCount('mod2Write','mod2WC','mod2KT'); saveResponse('mod2Write')"></textarea>
+      <div class="word-count" id="mod2WC">0 words</div>
+      <div class="key-terms-found" id="mod2KT"></div>
+    </div>
+  </div>
+
+  <!-- Checklist -->
+  <div class="section-card">
+    <div class="checklist">
+      <h3>Module 2 Checklist</h3>
+      <div class="check-item"><input type="checkbox" id="chk2a" onchange="saveChecklist('chk2a')"><label>I learned about the 4 text types</label></div>
+      <div class="check-item"><input type="checkbox" id="chk2b" onchange="saveChecklist('chk2b')"><label>I identified text types correctly</label></div>
+      <div class="check-item"><input type="checkbox" id="chk2c" onchange="saveChecklist('chk2c')"><label>I read the Sentence Transformer examples</label></div>
+      <div class="check-item"><input type="checkbox" id="chk2d" onchange="saveChecklist('chk2d')"><label>I wrote my Information Report</label></div>
+    </div>
+    <button class="btn btn-teal mt-2" onclick="finishModule2()">Complete Module 2 &rarr; Next</button>
+  </div>
+
+</div>
+
+<!-- ========== MODULE 3: Read the Question ========== -->
+<div class="module" id="mod3">
+
+  <!-- Learn: Key Verbs -->
+  <div class="section-card">
+    <h2>Read the Question — Key Verbs</h2>
+    <div class="eald-box">
+      <div class="eald-label">Language Help</div>
+      A <strong>verb</strong> is an action word. In test questions, the verb tells you <em>what to do</em> and <em>how much detail</em> to write. Different verbs need different amounts of detail.
+    </div>
+
+    <div class="grid-4 mt-2">
+      <div style="background:var(--green-light);padding:14px;border-radius:8px;text-align:center;">
+        <div style="font-size:1.5rem;">&#128220;</div>
+        <strong style="color:var(--green);">List / Name</strong>
+        <p style="font-size:0.8rem;margin-top:4px;">Write short answers.<br>Least detail needed.</p>
+      </div>
+      <div style="background:var(--blue-light);padding:14px;border-radius:8px;text-align:center;">
+        <div style="font-size:1.5rem;">&#128221;</div>
+        <strong style="color:var(--blue);">Describe</strong>
+        <p style="font-size:0.8rem;margin-top:4px;">Say what something is like.<br>Some detail needed.</p>
+      </div>
+      <div style="background:var(--orange-light);padding:14px;border-radius:8px;text-align:center;">
+        <div style="font-size:1.5rem;">&#128214;</div>
+        <strong style="color:var(--orange);">Explain</strong>
+        <p style="font-size:0.8rem;margin-top:4px;">Say why or how.<br>More detail needed.</p>
+      </div>
+      <div style="background:var(--purple-light);padding:14px;border-radius:8px;text-align:center;">
+        <div style="font-size:1.5rem;">&#9733;</div>
+        <strong style="color:var(--purple);">Evaluate</strong>
+        <p style="font-size:0.8rem;margin-top:4px;">Judge quality with reasons.<br>Most detail needed.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Learn: ALARM -->
+  <div class="section-card">
+    <h2>The ALARM Matrix</h2>
+    <div class="eald-box">
+      <div class="eald-label">Language Help</div>
+      <strong>ALARM</strong> stands for: <strong>A</strong>cquire, <strong>L</strong>ink, <strong>A</strong>nalyse, <strong>R</strong>espond, <strong>M</strong>ake. It shows 5 levels of thinking, from simple to complex.
+    </div>
+    <div style="display:flex;gap:4px;margin-top:12px;flex-wrap:wrap;">
+      <div style="flex:1;min-width:100px;background:var(--green-light);padding:10px;border-radius:6px;text-align:center;font-size:0.82rem;">
+        <strong style="color:var(--green);">A</strong>cquire<br><small>Get info</small>
+      </div>
+      <div style="flex:1;min-width:100px;background:var(--blue-light);padding:10px;border-radius:6px;text-align:center;font-size:0.82rem;">
+        <strong style="color:var(--blue);">L</strong>ink<br><small>Connect ideas</small>
+      </div>
+      <div style="flex:1;min-width:100px;background:var(--orange-light);padding:10px;border-radius:6px;text-align:center;font-size:0.82rem;">
+        <strong style="color:var(--orange);">A</strong>nalyse<br><small>Break down</small>
+      </div>
+      <div style="flex:1;min-width:100px;background:var(--purple-light);padding:10px;border-radius:6px;text-align:center;font-size:0.82rem;">
+        <strong style="color:var(--purple);">R</strong>espond<br><small>Give opinion</small>
+      </div>
+      <div style="flex:1;min-width:100px;background:var(--red-light);padding:10px;border-radius:6px;text-align:center;font-size:0.82rem;">
+        <strong style="color:var(--red);">M</strong>ake<br><small>Create new</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Activity: Verb Detail Quiz -->
+  <div class="section-card">
+    <h2>Activity — How Much Detail?</h2>
+    <p>For each question, decide: does the verb ask for the <strong>least</strong>, <strong>some</strong>, <strong>more</strong>, or <strong>most</strong> detail?</p>
+
+    <div class="quiz-group">
+      <div class="quiz-q">1. "List three elements of design."</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="verbQ(1, this, true)">Least detail (just write 3 things)</button>
+        <button class="quiz-option" onclick="verbQ(1, this, false)">Some detail</button>
+        <button class="quiz-option" onclick="verbQ(1, this, false)">Most detail</button>
+      </div>
+      <div class="quiz-feedback" id="verbFb1"></div>
+    </div>
+
+    <div class="quiz-group">
+      <div class="quiz-q">2. "Describe the design process."</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="verbQ(2, this, false)">Least detail</button>
+        <button class="quiz-option" onclick="verbQ(2, this, true)">Some detail (say what it is like)</button>
+        <button class="quiz-option" onclick="verbQ(2, this, false)">Most detail</button>
+      </div>
+      <div class="quiz-feedback" id="verbFb2"></div>
+    </div>
+
+    <div class="quiz-group">
+      <div class="quiz-q">3. "Explain why measurement is important in Technology."</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="verbQ(3, this, false)">Some detail</button>
+        <button class="quiz-option" onclick="verbQ(3, this, true)">More detail (say why or how)</button>
+        <button class="quiz-option" onclick="verbQ(3, this, false)">Least detail</button>
+      </div>
+      <div class="quiz-feedback" id="verbFb3"></div>
+    </div>
+
+    <div class="quiz-group">
+      <div class="quiz-q">4. "Evaluate your paper boat design."</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="verbQ(4, this, false)">Some detail</button>
+        <button class="quiz-option" onclick="verbQ(4, this, false)">More detail</button>
+        <button class="quiz-option" onclick="verbQ(4, this, true)">Most detail (judge with reasons)</button>
+      </div>
+      <div class="quiz-feedback" id="verbFb4"></div>
+    </div>
+  </div>
+
+  <!-- Learn: VSCC -->
+  <div class="section-card">
+    <h2>VSCC — Breaking Down Questions</h2>
+    <div class="eald-box">
+      <div class="eald-label">Language Help</div>
+      <strong>VSCC</strong> helps you break a question into 4 parts:<br>
+      <span class="vscc-verb"><strong>V</strong> = Verb</span> (what to do) |
+      <span class="vscc-subject"><strong>S</strong> = Subject</span> (the topic) |
+      <span class="vscc-content"><strong>C</strong> = Content</span> (the details) |
+      <span class="vscc-concept"><strong>C</strong> = Concept</span> (the big idea)
+    </div>
+
+    <div class="info-box mt-2">
+      <strong>Worked Example:</strong><br>
+      Question: "Explain why the design process is useful when creating a product."<br><br>
+      <span class="vscc-verb">Explain</span>
+      <span class="vscc-concept">why</span>
+      <span class="vscc-subject">the design process</span>
+      <span class="vscc-content">is useful when creating a product</span>
+    </div>
+  </div>
+
+  <!-- Activity: VSCC Highlighter -->
+  <div class="section-card">
+    <h2>Activity — VSCC Colour Highlighter</h2>
+    <p>Click a colour below, then click the words in each question to highlight them.</p>
+
+    <div style="display:flex;gap:8px;margin:12px 0;flex-wrap:wrap;" id="vsccPalette">
+      <button class="btn btn-sm" style="background:var(--blue);color:white;" onclick="setVSCCColour('verb')">V — Verb</button>
+      <button class="btn btn-sm" style="background:var(--orange);color:white;" onclick="setVSCCColour('subject')">S — Subject</button>
+      <button class="btn btn-sm" style="background:var(--green);color:white;" onclick="setVSCCColour('content')">C — Content</button>
+      <button class="btn btn-sm" style="background:var(--purple);color:white;" onclick="setVSCCColour('concept')">C — Concept</button>
+      <button class="btn btn-sm btn-outline" onclick="setVSCCColour(null)">Clear</button>
+    </div>
+
+    <!-- Question 1 -->
+    <div style="margin:16px 0;">
+      <strong>Question 1:</strong>
+      <div class="vscc-question" id="vsccQ1" style="background:var(--grey-light);padding:14px;border-radius:8px;margin-top:6px;font-size:1rem;line-height:2;">
+        <span class="vscc-word show-beginning vscc-verb" data-role="verb" onclick="toggleVSCC(this)">Describe</span>
+        <span class="vscc-word" data-role="subject" onclick="toggleVSCC(this)">the design process</span>
+        <span class="vscc-word" data-role="content" onclick="toggleVSCC(this)">and its five stages.</span>
+      </div>
+    </div>
+
+    <!-- Question 2 -->
+    <div style="margin:16px 0;">
+      <strong>Question 2:</strong>
+      <div class="vscc-question" id="vsccQ2" style="background:var(--grey-light);padding:14px;border-radius:8px;margin-top:6px;font-size:1rem;line-height:2;">
+        <span class="vscc-word" data-role="verb" onclick="toggleVSCC(this)">Explain</span>
+        <span class="vscc-word" data-role="concept" onclick="toggleVSCC(this)">why</span>
+        <span class="vscc-word" data-role="subject" onclick="toggleVSCC(this)">measurement</span>
+        <span class="vscc-word" data-role="content" onclick="toggleVSCC(this)">is important when building a model.</span>
+      </div>
+    </div>
+
+    <!-- Question 3 -->
+    <div style="margin:16px 0;">
+      <strong>Question 3:</strong>
+      <div class="vscc-question" id="vsccQ3" style="background:var(--grey-light);padding:14px;border-radius:8px;margin-top:6px;font-size:1rem;line-height:2;">
+        <span class="vscc-word" data-role="verb" onclick="toggleVSCC(this)">Evaluate</span>
+        <span class="vscc-word" data-role="subject" onclick="toggleVSCC(this)">your tower design</span>
+        <span class="vscc-word" data-role="content" onclick="toggleVSCC(this)">against the criteria</span>
+        <span class="vscc-word" data-role="concept" onclick="toggleVSCC(this)">of strength and stability.</span>
+      </div>
+    </div>
+
+    <button class="btn btn-sm btn-green mt-2" onclick="checkVSCC()">Check My Highlights</button>
+    <div class="quiz-feedback" id="vsccFeedback"></div>
+  </div>
+
+  <!-- Checklist -->
+  <div class="section-card">
+    <div class="checklist">
+      <h3>Module 3 Checklist</h3>
+      <div class="check-item"><input type="checkbox" id="chk3a" onchange="saveChecklist('chk3a')"><label>I understand the 4 verb levels</label></div>
+      <div class="check-item"><input type="checkbox" id="chk3b" onchange="saveChecklist('chk3b')"><label>I completed the verb detail quiz</label></div>
+      <div class="check-item"><input type="checkbox" id="chk3c" onchange="saveChecklist('chk3c')"><label>I highlighted questions using VSCC</label></div>
+    </div>
+    <button class="btn btn-teal mt-2" onclick="finishModule3()">Complete Module 3 &rarr; Next</button>
+  </div>
+
+</div>
+
+<!-- ========== MODULE 4: Build a Paragraph ========== -->
+<div class="module" id="mod4">
+
+  <!-- Learn: TEEL -->
+  <div class="section-card">
+    <h2>Build a Paragraph — TEEL Structure</h2>
+    <div class="eald-box">
+      <div class="eald-label">Language Help</div>
+      <strong>TEEL</strong> is a way to organise a paragraph so it is clear and detailed. Each letter stands for a part of the paragraph.
+    </div>
+    <div class="grid-4 mt-2">
+      <div style="background:var(--blue-light);padding:14px;border-radius:8px;text-align:center;">
+        <div style="font-size:1.8rem;font-weight:700;color:var(--blue);">T</div>
+        <strong class="teel-t">Topic</strong>
+        <p style="font-size:0.8rem;margin-top:4px;">State your main idea.</p>
+        <p style="font-size:0.78rem;font-style:italic;color:var(--grey);margin-top:4px;">"The design process is useful because..."</p>
+      </div>
+      <div style="background:var(--green-light);padding:14px;border-radius:8px;text-align:center;">
+        <div style="font-size:1.8rem;font-weight:700;color:var(--green);">E</div>
+        <strong class="teel-e1">Evidence</strong>
+        <p style="font-size:0.8rem;margin-top:4px;">Give a fact or example.</p>
+        <p style="font-size:0.78rem;font-style:italic;color:var(--grey);margin-top:4px;">"For example, in class we used it to design..."</p>
+      </div>
+      <div style="background:var(--orange-light);padding:14px;border-radius:8px;text-align:center;">
+        <div style="font-size:1.8rem;font-weight:700;color:var(--orange);">E</div>
+        <strong class="teel-e2">Explain</strong>
+        <p style="font-size:0.8rem;margin-top:4px;">Explain why your evidence matters.</p>
+        <p style="font-size:0.78rem;font-style:italic;color:var(--grey);margin-top:4px;">"This shows that..."</p>
+      </div>
+      <div style="background:var(--purple-light);padding:14px;border-radius:8px;text-align:center;">
+        <div style="font-size:1.8rem;font-weight:700;color:var(--purple);">L</div>
+        <strong class="teel-l">Link</strong>
+        <p style="font-size:0.8rem;margin-top:4px;">Connect back to the topic.</p>
+        <p style="font-size:0.78rem;font-style:italic;color:var(--grey);margin-top:4px;">"Therefore, the design process helps..."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Activity: TEEL Jigsaw -->
+  <div class="section-card">
+    <h2>Activity — TEEL Jigsaw</h2>
+    <p>These sentences are mixed up. Click them in the correct TEEL order (T first, then E, E, L).</p>
+
+    <div id="jigsawContainer"></div>
+    <div id="jigsawOrder" style="margin-top:12px;"></div>
+    <div class="quiz-feedback" id="jigsawFb"></div>
+    <button class="btn btn-sm btn-outline mt-1" onclick="resetJigsaw()" id="jigsawResetBtn" style="display:none;">Try Again</button>
+  </div>
+
+  <!-- Activity: Spot the Level -->
+  <div class="section-card">
+    <h2>Activity — Spot the Level</h2>
+    <p>Read these 3 paragraphs about the design process. Click to label each as <strong>Grade A</strong>, <strong>Grade C</strong>, or <strong>Grade E</strong>.</p>
+
+    <div style="background:var(--grey-light);padding:14px;border-radius:8px;margin:10px 0;">
+      <strong>Paragraph 1:</strong><br>
+      <em>"The design process is good. I liked it."</em>
+    </div>
+    <div class="quiz-options">
+      <button class="quiz-option" onclick="spotLevel(1, this, false)">Grade A</button>
+      <button class="quiz-option" onclick="spotLevel(1, this, false)">Grade C</button>
+      <button class="quiz-option" onclick="spotLevel(1, this, true)">Grade E</button>
+    </div>
+    <div class="quiz-feedback" id="spotFb1"></div>
+
+    <div style="background:var(--grey-light);padding:14px;border-radius:8px;margin:10px 0;">
+      <strong>Paragraph 2:</strong><br>
+      <em>"The design process is useful because it helps you plan. For example, we used it to design our towers. It has steps like investigate and design. Overall, it makes projects better."</em>
+    </div>
+    <div class="quiz-options">
+      <button class="quiz-option" onclick="spotLevel(2, this, false)">Grade A</button>
+      <button class="quiz-option" onclick="spotLevel(2, this, true)">Grade C</button>
+      <button class="quiz-option" onclick="spotLevel(2, this, false)">Grade E</button>
+    </div>
+    <div class="quiz-feedback" id="spotFb2"></div>
+
+    <div style="background:var(--grey-light);padding:14px;border-radius:8px;margin:10px 0;">
+      <strong>Paragraph 3:</strong><br>
+      <em>"The design process is an essential tool for creating effective products because it provides a structured framework for problem-solving. For example, when we designed our paper boats in class, we followed the five stages: investigate, design, produce, test, and evaluate. This systematic approach ensured that we considered the constraints of materials and capacity before building. As a result, students who followed the design process produced boats that held more weight, demonstrating that structured planning leads to better design outcomes."</em>
+    </div>
+    <div class="quiz-options">
+      <button class="quiz-option" onclick="spotLevel(3, this, true)">Grade A</button>
+      <button class="quiz-option" onclick="spotLevel(3, this, false)">Grade C</button>
+      <button class="quiz-option" onclick="spotLevel(3, this, false)">Grade E</button>
+    </div>
+    <div class="quiz-feedback" id="spotFb3"></div>
+  </div>
+
+  <!-- Paragraph Builder -->
+  <div class="section-card">
+    <h2>Build Your TEEL Paragraph</h2>
+    <p>Choose a topic and write your paragraph step by step.</p>
+
+    <div class="word-bank">
+      <div class="wb-title">Choose a Topic</div>
+      <span class="word-pill" onclick="selectParaTopic(this)">The design process</span>
+      <span class="word-pill" onclick="selectParaTopic(this)">Measurement in Technology</span>
+      <span class="word-pill" onclick="selectParaTopic(this)">Elements of design</span>
+    </div>
+
+    <!-- Connectives Wall -->
+    <div class="connectives-wall scaffold-full">
+      <div class="cw-title">Connectives Wall — Useful Linking Words</div>
+      <div class="cw-group">
+        <span class="cw-group-label">Adding:</span>
+        <span class="conn-pill">Furthermore</span><span class="conn-pill">In addition</span><span class="conn-pill">Also</span><span class="conn-pill">Moreover</span>
+      </div>
+      <div class="cw-group">
+        <span class="cw-group-label">Cause/Effect:</span>
+        <span class="conn-pill">Because</span><span class="conn-pill">Therefore</span><span class="conn-pill">As a result</span><span class="conn-pill">This means</span>
+      </div>
+      <div class="cw-group">
+        <span class="cw-group-label">Example:</span>
+        <span class="conn-pill">For example</span><span class="conn-pill">Such as</span><span class="conn-pill">For instance</span>
+      </div>
+      <div class="cw-group">
+        <span class="cw-group-label">Concluding:</span>
+        <span class="conn-pill">In conclusion</span><span class="conn-pill">Overall</span><span class="conn-pill">Therefore</span>
+      </div>
+    </div>
+
+    <!-- Word bank with Tier 2/3 words -->
+    <div class="word-bank scaffold-partial">
+      <div class="wb-title">Key Vocabulary</div>
+      <span class="word-pill">design process</span><span class="word-pill">evaluate</span><span class="word-pill">investigate</span>
+      <span class="word-pill">function</span><span class="word-pill">aesthetics</span><span class="word-pill">sustainable</span>
+      <span class="word-pill">criteria</span><span class="word-pill">structure</span><span class="word-pill">prototype</span>
+    </div>
+
+    <div class="para-builder mt-2">
+      <div class="para-step step-t">
+        <label><span class="step-badge">T</span> Topic Sentence — State your main idea</label>
+        <div class="sentence-frame show-beginning">Frame: "[Topic] is important/useful because ___."</div>
+        <div class="sentence-frame show-developing">Start with: "[Topic] is..."</div>
+        <textarea id="teelT" placeholder="Write your topic sentence..." oninput="updateParaPreview(); saveResponse('teelT')"></textarea>
+      </div>
+
+      <div class="para-step step-e1">
+        <label><span class="step-badge">E</span> Evidence — Give a fact or example</label>
+        <div class="sentence-frame show-beginning">Frame: "For example, in Technology class we ___."</div>
+        <div class="sentence-frame show-developing">Start with: "For example,..."</div>
+        <textarea id="teelE1" placeholder="Write your evidence..." oninput="updateParaPreview(); saveResponse('teelE1')"></textarea>
+      </div>
+
+      <div class="para-step step-e2">
+        <label><span class="step-badge">E</span> Explain — Say why your evidence matters</label>
+        <div class="sentence-frame show-beginning">Frame: "This shows that ___ because ___."</div>
+        <div class="sentence-frame show-developing">Start with: "This shows that..."</div>
+        <textarea id="teelE2" placeholder="Write your explanation..." oninput="updateParaPreview(); saveResponse('teelE2')"></textarea>
+      </div>
+
+      <div class="para-step step-l">
+        <label><span class="step-badge">L</span> Link — Connect back to your main idea</label>
+        <div class="sentence-frame show-beginning">Frame: "Therefore, [topic] is important because ___."</div>
+        <div class="sentence-frame show-developing">Start with: "Therefore,..." or "Overall,..."</div>
+        <textarea id="teelL" placeholder="Write your linking sentence..." oninput="updateParaPreview(); saveResponse('teelL')"></textarea>
+      </div>
+    </div>
+
+    <!-- Preview -->
+    <h3>Your Paragraph Preview</h3>
+    <div class="para-preview" id="paraPreview"><em style="color:var(--grey);">Start writing above to see your paragraph here...</em></div>
+    <div class="para-stats" id="paraStats"></div>
+    <button class="btn btn-sm btn-outline mt-1" onclick="copyParagraph()">Copy to Clipboard</button>
+  </div>
+
+  <!-- Checklist -->
+  <div class="section-card">
+    <div class="checklist">
+      <h3>Module 4 Checklist</h3>
+      <div class="check-item"><input type="checkbox" id="chk4a" onchange="saveChecklist('chk4a')"><label>I understand TEEL structure</label></div>
+      <div class="check-item"><input type="checkbox" id="chk4b" onchange="saveChecklist('chk4b')"><label>I completed the TEEL Jigsaw</label></div>
+      <div class="check-item"><input type="checkbox" id="chk4c" onchange="saveChecklist('chk4c')"><label>I identified Grade A/C/E paragraphs</label></div>
+      <div class="check-item"><input type="checkbox" id="chk4d" onchange="saveChecklist('chk4d')"><label>I wrote my own TEEL paragraph</label></div>
+    </div>
+    <button class="btn btn-teal mt-2" onclick="finishModule4()">Complete Module 4 &rarr; Next</button>
+  </div>
+
+</div>
+
+<!-- ========== MODULE 5: Analyse a Design ========== -->
+<div class="module" id="mod5">
+
+  <!-- Learn: 4-Step Framework -->
+  <div class="section-card">
+    <h2>Analyse a Design — Source Analysis</h2>
+    <div class="eald-box">
+      <div class="eald-label">Language Help</div>
+      <strong>Analysing</strong> means looking at something carefully and explaining what you see. In HSIE (History and Geography), students learn to analyse <em>sources</em>. We can use the same method to analyse <em>designs</em> in Technology.
+    </div>
+
+    <div class="grid-2 mt-2">
+      <div class="analysis-card observe">
+        <h4 style="color:var(--blue);">1. Observe — "What do I see?"</h4>
+        <p style="font-size:0.85rem;">Describe what the design looks like. What shapes, colours, and parts can you see?</p>
+        <div class="sentence-frame show-scaffolded" style="font-size:0.82rem;">
+          "I can see... It has... The shape is..."
+        </div>
+      </div>
+      <div class="analysis-card identify">
+        <h4 style="color:var(--teal);">2. Identify — "What materials and features?"</h4>
+        <p style="font-size:0.85rem;">Name the materials, tools, and special features.</p>
+        <div class="sentence-frame show-scaffolded" style="font-size:0.82rem;">
+          "It is made from... The features include..."
+        </div>
+      </div>
+      <div class="analysis-card analyse">
+        <h4 style="color:var(--orange);">3. Analyse — "Why was it designed this way?"</h4>
+        <p style="font-size:0.85rem;">Explain the designer's choices and reasons.</p>
+        <div class="sentence-frame show-scaffolded" style="font-size:0.82rem;">
+          "The designer chose ___ because... This is suitable because..."
+        </div>
+      </div>
+      <div class="analysis-card evaluate">
+        <h4 style="color:var(--purple);">4. Evaluate — "How effective is it?"</h4>
+        <p style="font-size:0.85rem;">Judge the design's strengths and weaknesses.</p>
+        <div class="sentence-frame show-scaffolded" style="font-size:0.82rem;">
+          "A strength is... However, a weakness is... Overall..."
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Activity: Guided Analysis -->
+  <div class="section-card">
+    <h2>Activity — Guided Analysis</h2>
+    <p>Analyse this design using the 4-step framework.</p>
+
+    <div class="info-box">
+      <strong>Design: A phone stand made from folded cardboard</strong><br>
+      The stand is made from a single piece of cardboard folded into an A-frame shape. It is 15cm tall and 10cm wide. The phone rests at a 60-degree angle against a small lip at the front. It can fold flat for storage.
+    </div>
+
+    <div class="para-builder mt-2">
+      <div class="para-step" style="border-left-color:var(--blue);">
+        <label style="color:var(--blue);">1. Observe — What do you see?</label>
+        <div class="sentence-frame show-beginning">Frame: "I can see a phone stand that is made from ___. It has ___ and ___."</div>
+        <textarea id="anal1" placeholder="Describe what you see..." oninput="saveResponse('anal1')"></textarea>
+      </div>
+      <div class="para-step" style="border-left-color:var(--teal);">
+        <label style="color:var(--teal);">2. Identify — What materials and features?</label>
+        <div class="sentence-frame show-beginning">Frame: "It is made from ___. The key features are ___ and ___."</div>
+        <textarea id="anal2" placeholder="Name materials and features..." oninput="saveResponse('anal2')"></textarea>
+      </div>
+      <div class="para-step" style="border-left-color:var(--orange);">
+        <label style="color:var(--orange);">3. Analyse — Why was it designed this way?</label>
+        <div class="sentence-frame show-beginning">Frame: "The designer used cardboard because ___. The A-frame shape helps because ___."</div>
+        <textarea id="anal3" placeholder="Explain design choices..." oninput="saveResponse('anal3')"></textarea>
+      </div>
+      <div class="para-step" style="border-left-color:var(--purple);">
+        <label style="color:var(--purple);">4. Evaluate — How effective is it?</label>
+        <div class="sentence-frame show-beginning">Frame: "A strength of this design is ___. However, a weakness could be ___. Overall, ___."</div>
+        <textarea id="anal4" placeholder="Judge the design..." oninput="saveResponse('anal4')"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- Activity: Compare Two Designs -->
+  <div class="section-card">
+    <h2>Activity — Compare Two Designs</h2>
+    <p>Compare these two tower designs from Technology class. Use the comparison words to write a paragraph.</p>
+
+    <div class="grid-2">
+      <div style="background:var(--blue-light);padding:16px;border-radius:8px;">
+        <strong>Design A — Tall Tower</strong>
+        <ul style="font-size:0.85rem;margin-top:8px;padding-left:20px;">
+          <li>45cm tall, narrow base</li>
+          <li>Made from paper rolls and tape</li>
+          <li>Held 150g before falling</li>
+          <li>Looked impressive but unstable</li>
+        </ul>
+      </div>
+      <div style="background:var(--orange-light);padding:16px;border-radius:8px;">
+        <strong>Design B — Short Tower</strong>
+        <ul style="font-size:0.85rem;margin-top:8px;padding-left:20px;">
+          <li>25cm tall, wide base</li>
+          <li>Made from paper triangles and glue</li>
+          <li>Held 500g without falling</li>
+          <li>Simple-looking but very strong</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="word-bank mt-2">
+      <div class="wb-title">Comparison Words</div>
+      <span class="word-pill">Unlike</span><span class="word-pill">However</span>
+      <span class="word-pill">While</span><span class="word-pill">Both</span>
+      <span class="word-pill">On the other hand</span><span class="word-pill">In contrast</span>
+      <span class="word-pill">Similarly</span><span class="word-pill">Whereas</span>
+    </div>
+
+    <div class="write-area mt-2">
+      <label>Write your comparison paragraph:</label>
+      <textarea id="mod5Compare" placeholder="Compare Design A and Design B..." oninput="updateWordCount('mod5Compare','mod5CWC','mod5CKT'); saveResponse('mod5Compare')"></textarea>
+      <div class="word-count" id="mod5CWC">0 words</div>
+      <div class="key-terms-found" id="mod5CKT"></div>
+    </div>
+  </div>
+
+  <!-- Checklist -->
+  <div class="section-card">
+    <div class="checklist">
+      <h3>Module 5 Checklist</h3>
+      <div class="check-item"><input type="checkbox" id="chk5a" onchange="saveChecklist('chk5a')"><label>I learned the 4-step analysis framework</label></div>
+      <div class="check-item"><input type="checkbox" id="chk5b" onchange="saveChecklist('chk5b')"><label>I analysed the phone stand design</label></div>
+      <div class="check-item"><input type="checkbox" id="chk5c" onchange="saveChecklist('chk5c')"><label>I compared two tower designs</label></div>
+    </div>
+    <button class="btn btn-teal mt-2" onclick="finishModule5()">Complete Module 5 &rarr; Next</button>
+  </div>
+
+</div>
+
+<!-- ========== MODULE 6: Put It All Together ========== -->
+<div class="module" id="mod6">
+
+  <!-- The Challenge -->
+  <div class="section-card">
+    <h2>Put It All Together — The Challenge</h2>
+    <p>Time to use <strong>everything</strong> you have learned! Answer this practice assessment question using all the skills from Modules 1-5.</p>
+    <div class="info-box" style="font-size:1.05rem;">
+      <strong>Question:</strong> "Explain what the design process is and why it is useful when creating a product. Use examples from your work in Technology class."
+    </div>
+  </div>
+
+  <!-- Step A: Break down with VSCC -->
+  <div class="section-card">
+    <h2>Step A — Break Down the Question (VSCC)</h2>
+    <p>Identify the 4 parts of this question.</p>
+
+    <div class="grid-2 mt-2">
+      <div>
+        <label style="font-weight:600;font-size:0.85rem;color:var(--blue);">V — Verb (what to do):</label>
+        <input type="text" id="capV" style="width:100%;padding:8px;border:2px solid #ddd;border-radius:6px;font-size:0.9rem;" placeholder="Type the verb..." oninput="saveResponse('capV')">
+      </div>
+      <div>
+        <label style="font-weight:600;font-size:0.85rem;color:var(--orange);">S — Subject (the topic):</label>
+        <input type="text" id="capS" style="width:100%;padding:8px;border:2px solid #ddd;border-radius:6px;font-size:0.9rem;" placeholder="Type the subject..." oninput="saveResponse('capS')">
+      </div>
+      <div>
+        <label style="font-weight:600;font-size:0.85rem;color:var(--green);">C — Content (the details):</label>
+        <input type="text" id="capC" style="width:100%;padding:8px;border:2px solid #ddd;border-radius:6px;font-size:0.9rem;" placeholder="Type the content..." oninput="saveResponse('capC')">
+      </div>
+      <div>
+        <label style="font-weight:600;font-size:0.85rem;color:var(--purple);">C — Concept (the big idea):</label>
+        <input type="text" id="capCC" style="width:100%;padding:8px;border:2px solid #ddd;border-radius:6px;font-size:0.9rem;" placeholder="Type the concept..." oninput="saveResponse('capCC')">
+      </div>
+    </div>
+    <button class="btn btn-sm btn-outline mt-2" onclick="revealVSCCAnswer()">Show Answer</button>
+    <div class="quiz-feedback" id="capVSCCFb"></div>
+
+    <!-- ALARM level -->
+    <div class="quiz-group mt-2">
+      <div class="quiz-q">What ALARM level is this question?</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="capAlarm(this, false)">Acquire (just get facts)</button>
+        <button class="quiz-option" onclick="capAlarm(this, false)">Link (connect ideas)</button>
+        <button class="quiz-option" onclick="capAlarm(this, true)">Analyse (break down and explain why)</button>
+        <button class="quiz-option" onclick="capAlarm(this, false)">Respond (give opinion)</button>
+      </div>
+      <div class="quiz-feedback" id="capAlarmFb"></div>
+    </div>
+  </div>
+
+  <!-- Step B: Choose text type -->
+  <div class="section-card">
+    <h2>Step B — Choose Your Text Type</h2>
+    <div class="quiz-group">
+      <div class="quiz-q">Which text type is best for this question?</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="capTextType(this, false)">Procedure</button>
+        <button class="quiz-option" onclick="capTextType(this, false)">Information Report</button>
+        <button class="quiz-option" onclick="capTextType(this, true)">Explanation</button>
+        <button class="quiz-option" onclick="capTextType(this, false)">Persuasive</button>
+      </div>
+      <div class="quiz-feedback" id="capTTFb"></div>
+    </div>
+  </div>
+
+  <!-- Step C: Plan TEEL -->
+  <div class="section-card">
+    <h2>Step C — Plan Your TEEL</h2>
+    <p>Write short dot-point notes for each TEEL step.</p>
+
+    <div class="para-builder">
+      <div class="para-step step-t">
+        <label><span class="step-badge">T</span> Topic — Main idea</label>
+        <div class="sentence-frame show-beginning">Plan: "I will say that the design process is ___ because ___."</div>
+        <textarea id="capPlanT" placeholder="Quick notes..." oninput="saveResponse('capPlanT')" style="min-height:40px;"></textarea>
+      </div>
+      <div class="para-step step-e1">
+        <label><span class="step-badge">E</span> Evidence — What example will you use?</label>
+        <div class="sentence-frame show-beginning">Plan: "My example will be ___."</div>
+        <textarea id="capPlanE1" placeholder="Quick notes..." oninput="saveResponse('capPlanE1')" style="min-height:40px;"></textarea>
+      </div>
+      <div class="para-step step-e2">
+        <label><span class="step-badge">E</span> Explain — Why does your example matter?</label>
+        <div class="sentence-frame show-beginning">Plan: "This shows that ___ because ___."</div>
+        <textarea id="capPlanE2" placeholder="Quick notes..." oninput="saveResponse('capPlanE2')" style="min-height:40px;"></textarea>
+      </div>
+      <div class="para-step step-l">
+        <label><span class="step-badge">L</span> Link — How does it connect back?</label>
+        <textarea id="capPlanL" placeholder="Quick notes..." oninput="saveResponse('capPlanL')" style="min-height:40px;"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step D: Write response -->
+  <div class="section-card">
+    <h2>Step D — Write Your Response</h2>
+
+    <div class="connectives-wall scaffold-partial">
+      <div class="cw-title">Connectives Wall</div>
+      <div class="cw-group">
+        <span class="conn-pill">Because</span><span class="conn-pill">Therefore</span><span class="conn-pill">For example</span>
+        <span class="conn-pill">This shows that</span><span class="conn-pill">As a result</span><span class="conn-pill">In conclusion</span>
+        <span class="conn-pill">Furthermore</span><span class="conn-pill">Such as</span>
+      </div>
+    </div>
+
+    <div class="word-bank scaffold-partial">
+      <div class="wb-title">Key Vocabulary</div>
+      <span class="word-pill">design process</span><span class="word-pill">investigate</span><span class="word-pill">evaluate</span>
+      <span class="word-pill">criteria</span><span class="word-pill">prototype</span><span class="word-pill">iterate</span>
+      <span class="word-pill">function</span><span class="word-pill">aesthetics</span><span class="word-pill">sustainable</span>
+      <span class="word-pill">structure</span><span class="word-pill">material</span>
+    </div>
+
+    <div class="tip-box show-beginning">
+      <strong>Target:</strong> Write at least 30 words using TEEL structure.<br>
+      <strong>Remember:</strong> Use the verb "explain" — that means say WHY using "because".
+    </div>
+    <div class="tip-box show-developing">
+      <strong>Target:</strong> Write at least 50 words using TEEL structure with key vocabulary.
+    </div>
+    <div class="tip-box show-consolidating">
+      <strong>Target:</strong> Write 80+ words with full TEEL, specific examples, and academic vocabulary.
+    </div>
+
+    <div class="write-area mt-2">
+      <textarea id="capWrite" style="min-height:180px;" placeholder="Write your full response here..." oninput="updateWordCount('capWrite','capWC','capKT'); saveResponse('capWrite')"></textarea>
+      <div class="word-count" id="capWC">0 words</div>
+      <div class="key-terms-found" id="capKT"></div>
+    </div>
+  </div>
+
+  <!-- Self-Assessment -->
+  <div class="section-card">
+    <h2>Self-Assessment</h2>
+    <p>Read the descriptions below and click the grade that best matches your response.</p>
+
+    <div class="self-assess">
+      <button class="grade-option" onclick="selectGrade(this, 'A')">
+        <span class="grade-label" style="color:var(--green);">Grade A</span>
+        I used full TEEL structure, specific examples from class, academic vocabulary (Tier 2/3 words), and explained WHY clearly.
+      </button>
+      <button class="grade-option" onclick="selectGrade(this, 'B')">
+        <span class="grade-label" style="color:var(--blue);">Grade B</span>
+        I used most of TEEL, gave examples, used some academic words, and tried to explain why.
+      </button>
+      <button class="grade-option" onclick="selectGrade(this, 'C')">
+        <span class="grade-label" style="color:var(--orange);">Grade C</span>
+        I wrote a paragraph with a main idea and some evidence but my explanation could be stronger.
+      </button>
+      <button class="grade-option" onclick="selectGrade(this, 'D')">
+        <span class="grade-label" style="color:var(--purple);">Grade D</span>
+        I wrote some sentences about the topic but didn't follow the TEEL structure fully.
+      </button>
+      <button class="grade-option" onclick="selectGrade(this, 'E')">
+        <span class="grade-label" style="color:var(--red);">Grade E</span>
+        I wrote a very short answer without structure or examples.
+      </button>
+    </div>
+
+    <div class="write-area mt-2">
+      <label>I chose this grade because...</label>
+      <textarea id="capJustify" placeholder="Explain why you chose this grade..." oninput="saveResponse('capJustify')"></textarea>
+    </div>
+  </div>
+
+  <!-- WWW / EBI / YNS Reflection -->
+  <div class="section-card">
+    <h2>Reflection — WWW / EBI / YNS</h2>
+
+    <div class="reflection-step www">
+      <label>WWW — What Went Well</label>
+      <textarea id="capWWW" placeholder="Something I did well in this tool was..." oninput="saveResponse('capWWW')"></textarea>
+    </div>
+
+    <div class="reflection-step ebi">
+      <label>EBI — Even Better If</label>
+      <textarea id="capEBI" placeholder="I could improve my writing by..." oninput="saveResponse('capEBI')"></textarea>
+    </div>
+
+    <div class="reflection-step yns">
+      <label>YNS — Your Next Steps</label>
+      <textarea id="capYNS" placeholder="My goal for next term is..." oninput="saveResponse('capYNS')"></textarea>
+    </div>
+  </div>
+
+  <!-- Final Summary -->
+  <div class="section-card text-center" id="capFinalSection">
+    <button class="btn btn-green" onclick="finishModule6()">Complete Write It Right!</button>
+  </div>
+
+  <div id="capFinalResults" style="display:none;">
+    <div class="result-banner consolidating">
+      <div class="result-icon">&#127942;</div>
+      <h2>Congratulations!</h2>
+      <p>You have completed Write It Right — the Year 7 Academic Writing Toolkit.</p>
+    </div>
+
+    <div class="section-card">
+      <h3>Skills You Practised</h3>
+      <div class="checklist">
+        <div class="check-item checked"><input type="checkbox" checked disabled><label>Vocabulary Tiers (Tier 1, 2, 3)</label></div>
+        <div class="check-item checked"><input type="checkbox" checked disabled><label>Text Types (Procedure, Info Report, Explanation, Persuasive)</label></div>
+        <div class="check-item checked"><input type="checkbox" checked disabled><label>Reading Questions (ALARM + VSCC)</label></div>
+        <div class="check-item checked"><input type="checkbox" checked disabled><label>TEEL Paragraphs</label></div>
+        <div class="check-item checked"><input type="checkbox" checked disabled><label>Source Analysis (Observe, Identify, Analyse, Evaluate)</label></div>
+        <div class="check-item checked"><input type="checkbox" checked disabled><label>Full Written Response</label></div>
+      </div>
+
+      <div id="bandProgressDisplay" class="mt-2" style="text-align:center;font-size:1rem;font-weight:600;"></div>
+
+      <div class="mt-3 text-center">
+        <button class="btn btn-primary" onclick="window.print()">Print / Save as PDF</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ========== DATA STORE ========== */
+const STORAGE_KEY = 'y7wir-data';
+
+let appData = {
+  studentName: '',
+  band: null,
+  diagnosticDone: false,
+  diagnosticScore: 0,
+  moduleScores: { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 },
+  moduleCompleted: { 0: false, 1: false, 2: false, 3: false, 4: false, 5: false, 6: false },
+  fadeLevels: { 1: 'full', 2: 'full', 3: 'full', 4: 'full', 5: 'full', 6: 'full' },
+  responses: {},
+  checklists: {}
+};
+
+/* ========== PERSISTENCE ========== */
+function saveAll() {
+  appData.studentName = document.getElementById('studentName').value;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+  updatePrintFields();
+}
+
+function loadAll() {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      appData = { ...appData, ...parsed };
+    } catch (e) { console.warn('Failed to load saved data'); }
+  }
+  document.getElementById('studentName').value = appData.studentName || '';
+  if (appData.band) setBand(appData.band, false);
+  updateOverallProgress();
+  updatePrintFields();
+  Object.keys(appData.responses).forEach(key => {
+    const el = document.getElementById(key);
+    if (el) el.value = appData.responses[key];
+  });
+  Object.keys(appData.checklists).forEach(key => {
+    const el = document.getElementById(key);
+    if (el) {
+      el.checked = appData.checklists[key];
+      if (el.checked) el.closest('.check-item')?.classList.add('checked');
+    }
+  });
+}
+
+function updatePrintFields() {
+  const pn = document.getElementById('printName');
+  const pb = document.getElementById('printBand');
+  if (pn) pn.textContent = appData.studentName || '_______________';
+  if (pb) pb.textContent = appData.band ? appData.band.charAt(0).toUpperCase() + appData.band.slice(1) : '___';
+}
+
+function confirmReset() {
+  if (confirm('Are you sure you want to reset all your work? This cannot be undone.')) {
+    localStorage.removeItem(STORAGE_KEY);
+    location.reload();
+  }
+}
+
+/* ========== MODULE NAVIGATION ========== */
+function switchModule(n) {
+  document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
+  document.querySelectorAll('.tab-bar button').forEach(b => b.classList.remove('active'));
+  const mod = document.getElementById('mod' + n);
+  if (mod) mod.classList.add('active');
+  const tabs = document.querySelectorAll('.tab-bar button');
+  if (tabs[n]) tabs[n].classList.add('active');
+  if (n > 0) applyFadeLevel(n);
+}
+
+/* ========== PROGRESS TRACKING ========== */
+function updateOverallProgress() {
+  let completed = 0;
+  for (let i = 1; i <= 6; i++) {
+    if (appData.moduleCompleted[i]) completed++;
+  }
+  const pct = Math.round((completed / 6) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = 'Progress: ' + completed + ' / 6 modules';
+  const tabs = document.querySelectorAll('.tab-bar button');
+  for (let i = 1; i <= 6; i++) {
+    if (appData.moduleCompleted[i]) tabs[i]?.classList.add('completed');
+  }
+  if (appData.diagnosticDone) tabs[0]?.classList.add('completed');
+}
+
+function completeModule(n) {
+  appData.moduleCompleted[n] = true;
+  updateOverallProgress();
+  if (n < 6) calculateFade(n);
+  saveAll();
+}
+
+/* ========== BAND SYSTEM ========== */
+function setBand(band, doSave = true) {
+  appData.band = band;
+  document.body.classList.remove('band-beginning', 'band-developing', 'band-consolidating');
+  document.body.classList.add('band-' + band);
+  const badge = document.getElementById('bandBadge');
+  badge.textContent = band.charAt(0).toUpperCase() + band.slice(1);
+  badge.className = 'band-badge ' + band;
+  if (doSave) saveAll();
+}
+
+/* ========== ADAPTIVE FADE ========== */
+function calculateFade(completedModule) {
+  const score = appData.moduleScores[completedModule] || 0;
+  const maxPossible = getMaxScore(completedModule);
+  const pct = maxPossible > 0 ? score / maxPossible : 0;
+  const nextMod = completedModule + 1;
+  if (pct >= 0.8) {
+    appData.fadeLevels[nextMod] = 'none';
+  } else if (pct >= 0.5) {
+    appData.fadeLevels[nextMod] = 'partial';
+  } else {
+    appData.fadeLevels[nextMod] = 'full';
+  }
+  saveAll();
+}
+
+function getMaxScore(moduleNum) {
+  const maxScores = { 0: 12, 1: 10, 2: 10, 3: 8, 4: 10, 5: 8, 6: 10 };
+  return maxScores[moduleNum] || 10;
+}
+
+function applyFadeLevel(moduleNum) {
+  const level = appData.fadeLevels[moduleNum] || 'full';
+  document.body.classList.remove('fade-full', 'fade-partial', 'fade-none');
+  document.body.classList.add('fade-' + level);
+}
+
+/* ========== RESPONSE SAVING ========== */
+function saveResponse(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    appData.responses[id] = el.value;
+    saveAll();
+  }
+}
+
+function saveChecklist(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    appData.checklists[id] = el.checked;
+    if (el.checked) el.closest('.check-item')?.classList.add('checked');
+    else el.closest('.check-item')?.classList.remove('checked');
+    saveAll();
+  }
+}
+
+/* ========== WORD COUNT ========== */
+function updateWordCount(textareaId, countId, keyTermsId) {
+  const text = document.getElementById(textareaId)?.value || '';
+  const words = text.trim().split(/\s+/).filter(w => w.length > 0).length;
+  const countEl = document.getElementById(countId);
+  if (countEl) countEl.textContent = words + ' word' + (words !== 1 ? 's' : '');
+  if (keyTermsId) {
+    const terms = countKeyTerms(text);
+    const ktEl = document.getElementById(keyTermsId);
+    if (ktEl) ktEl.textContent = terms.count + ' key term' + (terms.count !== 1 ? 's' : '') + ' found' + (terms.found.length ? ': ' + terms.found.join(', ') : '');
+  }
+  return words;
+}
+
+/* ========== KEY TERM DETECTION ========== */
+const KEY_TERMS = [
+  'design', 'process', 'sketch', 'evaluate', 'investigate', 'function',
+  'aesthetics', 'isometric', 'perimeter', 'capacity', 'sustainable',
+  'material', 'measure', 'scale', 'structure', 'prototype',
+  'element', 'principle', 'orthogonal', 'brainstorm', 'criteria',
+  'constraint', 'stakeholder', 'iterate', 'annotate'
+];
+
+function countKeyTerms(text) {
+  const lower = text.toLowerCase();
+  const found = [];
+  KEY_TERMS.forEach(term => {
+    const regex = new RegExp('\\b' + term + '\\w*\\b', 'i');
+    if (regex.test(lower)) found.push(term);
+  });
+  return { count: found.length, found: found };
+}
+
+/* ========== MODULE 0: DIAGNOSTIC ========== */
+let matchSelected = null;
+let matchScore = 0;
+let matchedPairs = 0;
+const totalPairs = 6;
+
+function selectMatch(el) {
+  if (el.classList.contains('matched')) return;
+  const isWord = el.classList.contains('word-match');
+  const isIcon = el.classList.contains('icon-match');
+
+  if (!matchSelected) {
+    // First selection
+    document.querySelectorAll('.match-item.selected').forEach(m => m.classList.remove('selected'));
+    el.classList.add('selected');
+    matchSelected = el;
+  } else {
+    // Second selection — check if different type
+    const firstIsWord = matchSelected.classList.contains('word-match');
+    const secondIsWord = el.classList.contains('word-match');
+    if (firstIsWord === secondIsWord) {
+      // Same type — just switch selection
+      matchSelected.classList.remove('selected');
+      el.classList.add('selected');
+      matchSelected = el;
+      return;
+    }
+    // Check match
+    const word = firstIsWord ? matchSelected : el;
+    const icon = firstIsWord ? el : matchSelected;
+    if (word.dataset.match === icon.dataset.match) {
+      // Correct match
+      word.classList.remove('selected');
+      word.classList.add('matched');
+      icon.classList.add('matched');
+      matchScore++;
+      matchedPairs++;
+      if (matchedPairs === totalPairs) {
+        const resultEl = document.getElementById('matchResult');
+        resultEl.style.display = 'block';
+        resultEl.textContent = 'Great job! You matched ' + matchScore + ' out of ' + totalPairs + ' correctly!';
+        resultEl.style.color = matchScore >= 4 ? 'var(--green)' : 'var(--orange)';
+      }
+    } else {
+      // Wrong match — flash red briefly
+      word.classList.add('wrong');
+      icon.classList.add('wrong');
+      setTimeout(() => {
+        word.classList.remove('wrong', 'selected');
+        icon.classList.remove('wrong', 'selected');
+      }, 600);
+    }
+    matchSelected.classList.remove('selected');
+    matchSelected = null;
+  }
+}
+
+// MCQ scoring
+let diagMCQScores = { 1: null, 2: null, 3: null };
+
+function diagMCQ(qNum, btn, isCorrect) {
+  if (diagMCQScores[qNum] !== null) return; // already answered
+  diagMCQScores[qNum] = isCorrect ? 1 : 0;
+  const options = btn.parentElement.querySelectorAll('.quiz-option');
+  options.forEach(o => {
+    o.disabled = true;
+    o.style.pointerEvents = 'none';
+  });
+  btn.classList.add(isCorrect ? 'correct' : 'incorrect');
+  if (!isCorrect) {
+    // Show correct answer
+    options.forEach(o => {
+      if (o.onclick && o.onclick.toString().includes('true')) {
+        o.classList.add('correct');
+      }
+    });
+  }
+  const fb = document.getElementById('diagFb' + qNum);
+  fb.classList.add('show', isCorrect ? 'correct' : 'incorrect');
+  if (qNum === 1) fb.textContent = isCorrect ? 'Correct! "Designs" is plural, so we use "were".' : '"Designs" is plural, so we need "were" (not "was" or "is").';
+  if (qNum === 2) fb.textContent = isCorrect ? 'Correct! "Evaluate" is the Technology word for judging how well something works.' : '"Evaluate" is the correct Technology word for judging quality.';
+  if (qNum === 3) fb.textContent = isCorrect ? 'Correct! This sentence has specific measurements and explains WHY (triangular bracing).' : 'The best answer uses specific details like measurements and explains why.';
+}
+
+function submitDiagnostic() {
+  // Calculate scores
+  const wordScore = matchScore; // out of 6
+  let sentenceScore = 0;
+  Object.values(diagMCQScores).forEach(v => { if (v === 1) sentenceScore++; }); // out of 3
+
+  // Writing score
+  const writeText = document.getElementById('diagWrite')?.value || '';
+  const wordCount = writeText.trim().split(/\s+/).filter(w => w.length > 0).length;
+  const keyTerms = countKeyTerms(writeText);
+  let writeScore = 0;
+  if (wordCount >= 25) writeScore = 2;
+  else if (wordCount >= 10) writeScore = 1;
+  if (keyTerms.count >= 2) writeScore += 1; // bonus for key terms, max 3
+
+  const totalScore = wordScore + sentenceScore + writeScore; // max 12
+  appData.diagnosticScore = totalScore;
+  appData.moduleScores[0] = totalScore;
+
+  // Determine band
+  let band, icon, title, msg;
+  if (totalScore <= 4) {
+    band = 'beginning';
+    icon = '&#11088;'; // star
+    title = 'Beginning — Let\'s Build Together!';
+    msg = 'You\'ll get lots of help with sentence starters, word banks, and examples. Score: ' + totalScore + '/12';
+  } else if (totalScore <= 8) {
+    band = 'developing';
+    icon = '&#128640;'; // rocket
+    title = 'Developing — You\'re On Your Way!';
+    msg = 'You\'ll get some sentence starters and word banks to help you grow. Score: ' + totalScore + '/12';
+  } else {
+    band = 'consolidating';
+    icon = '&#9889;'; // lightning
+    title = 'Consolidating — Ready for Challenge!';
+    msg = 'You\'ll work more independently with less scaffolding. Score: ' + totalScore + '/12';
+  }
+
+  setBand(band);
+  appData.diagnosticDone = true;
+
+  // Show results
+  document.getElementById('diagSubmitSection').style.display = 'none';
+  const results = document.getElementById('diagResults');
+  results.style.display = 'block';
+  const banner = document.getElementById('diagResultBanner');
+  banner.className = 'result-banner ' + band;
+  document.getElementById('diagResultIcon').innerHTML = icon;
+  document.getElementById('diagResultTitle').textContent = title;
+  document.getElementById('diagResultMsg').textContent = msg;
+
+  completeModule(0);
+}
+
+/* ========== MODULE 1: WORD POWER ========== */
+const SORT_WORDS = [
+  { word: 'build', tier: 1 }, { word: 'draw', tier: 1 }, { word: 'strong', tier: 1 },
+  { word: 'heavy', tier: 1 }, { word: 'cut', tier: 1 }, { word: 'shape', tier: 1 },
+  { word: 'investigate', tier: 2 }, { word: 'evaluate', tier: 2 }, { word: 'function', tier: 2 },
+  { word: 'suitable', tier: 2 }, { word: 'identify', tier: 2 }, { word: 'consider', tier: 2 },
+  { word: 'isometric', tier: 3 }, { word: 'orthogonal', tier: 3 }, { word: 'perimeter', tier: 3 },
+  { word: 'aesthetics', tier: 3 }, { word: 'capacity', tier: 3 }, { word: 'sustainable', tier: 3 }
+];
+
+let sortSelected = null;
+let sortScore = 0;
+let sortTotal = 0;
+let sortPlaced = 0;
+
+function initWordSort() {
+  const container = document.getElementById('sortWordsContainer');
+  if (!container) return;
+  // Determine how many words based on band
+  let count = 9; // default developing
+  if (appData.band === 'beginning') count = 6;
+  else if (appData.band === 'consolidating') count = 12;
+  // Pick a mix of words
+  let words = [];
+  if (count === 6) {
+    words = SORT_WORDS.filter(w => w.tier === 1).slice(0, 2)
+      .concat(SORT_WORDS.filter(w => w.tier === 2).slice(0, 2))
+      .concat(SORT_WORDS.filter(w => w.tier === 3).slice(0, 2));
+  } else if (count === 9) {
+    words = SORT_WORDS.filter(w => w.tier === 1).slice(0, 3)
+      .concat(SORT_WORDS.filter(w => w.tier === 2).slice(0, 3))
+      .concat(SORT_WORDS.filter(w => w.tier === 3).slice(0, 3));
+  } else {
+    words = SORT_WORDS.filter(w => w.tier === 1).slice(0, 4)
+      .concat(SORT_WORDS.filter(w => w.tier === 2).slice(0, 4))
+      .concat(SORT_WORDS.filter(w => w.tier === 3).slice(0, 4));
+  }
+  // Shuffle
+  words.sort(() => Math.random() - 0.5);
+  sortTotal = words.length;
+  container.innerHTML = '';
+  words.forEach(w => {
+    const pill = document.createElement('span');
+    pill.className = 'draggable-pill';
+    pill.textContent = w.word;
+    pill.dataset.tier = w.tier;
+    pill.onclick = function() {
+      if (pill.classList.contains('placed')) return;
+      document.querySelectorAll('.draggable-pill.selected').forEach(p => p.classList.remove('selected'));
+      pill.classList.add('selected');
+      sortSelected = pill;
+    };
+    container.appendChild(pill);
+  });
+}
+
+function placeWord(zone) {
+  if (!sortSelected) return;
+  const correctTier = parseInt(sortSelected.dataset.tier);
+  const isCorrect = correctTier === zone;
+  if (isCorrect) {
+    sortSelected.classList.remove('selected');
+    sortSelected.classList.add('placed', 'correct-place');
+    document.getElementById('sortZone' + zone + 'Words').appendChild(sortSelected);
+    sortScore++;
+  } else {
+    sortSelected.classList.add('incorrect-place');
+    setTimeout(() => { sortSelected.classList.remove('selected', 'incorrect-place'); }, 600);
+  }
+  sortPlaced++;
+  sortSelected = null;
+
+  if (sortPlaced >= sortTotal || document.querySelectorAll('.draggable-pill:not(.placed)').length === 0) {
+    const resultEl = document.getElementById('sortResult');
+    resultEl.style.display = 'block';
+    resultEl.textContent = 'You sorted ' + sortScore + ' out of ' + sortTotal + ' words correctly!';
+    resultEl.style.color = sortScore >= sortTotal * 0.7 ? 'var(--green)' : 'var(--orange)';
+    document.getElementById('sortResetBtn').style.display = 'inline-block';
+  }
+}
+
+function resetWordSort() {
+  sortSelected = null; sortScore = 0; sortPlaced = 0;
+  ['sortZone1Words', 'sortZone2Words', 'sortZone3Words'].forEach(id => {
+    document.getElementById(id).innerHTML = '';
+  });
+  document.getElementById('sortResult').style.display = 'none';
+  document.getElementById('sortResetBtn').style.display = 'none';
+  initWordSort();
+}
+
+// Gap Fill
+let gapScores = { 1: null, 2: null, 3: null, 4: null };
+function gapFill(qNum, btn, isCorrect) {
+  if (gapScores[qNum] !== null) return;
+  gapScores[qNum] = isCorrect ? 1 : 0;
+  const options = btn.parentElement.querySelectorAll('.quiz-option');
+  options.forEach(o => { o.disabled = true; o.style.pointerEvents = 'none'; });
+  btn.classList.add(isCorrect ? 'correct' : 'incorrect');
+  if (!isCorrect) options.forEach(o => { if (o.onclick?.toString().includes('true')) o.classList.add('correct'); });
+  const fb = document.getElementById('gapFb' + qNum);
+  fb.classList.add('show', isCorrect ? 'correct' : 'incorrect');
+  const feedback = {
+    1: ['Correct! "Evaluate" means to judge against criteria.', '"Evaluate" is the right word for judging quality.'],
+    2: ['Correct! "Isometric" drawings show 3D views.', '"Isometric" is the word for 3D drawings at an angle.'],
+    3: ['Correct! "Investigate" means to research before designing.', '"Investigate" means to look into something carefully.'],
+    4: ['Correct! "Sustainable" means good for the environment.', '"Sustainable" means environmentally friendly long-term.']
+  };
+  fb.textContent = isCorrect ? feedback[qNum][0] : feedback[qNum][1];
+}
+
+function checkMod1Write() {
+  const text = document.getElementById('mod1Write')?.value || '';
+  const words = text.trim().split(/\s+/).filter(w => w.length > 0).length;
+  const terms = countKeyTerms(text);
+  const fb = document.getElementById('mod1WriteFb');
+  fb.classList.add('show');
+  if (words < 5) {
+    fb.className = 'quiz-feedback show incorrect';
+    fb.textContent = 'Try writing at least 5 words. Use one of the words from the word bank above.';
+  } else if (terms.count === 0) {
+    fb.className = 'quiz-feedback show incorrect';
+    fb.textContent = 'Good effort! Try to include one of the vocabulary words (evaluate, investigate, aesthetics, etc.) in your sentence.';
+  } else {
+    fb.className = 'quiz-feedback show correct';
+    fb.textContent = 'Well done! You used: ' + terms.found.join(', ') + '. Great use of vocabulary!';
+  }
+}
+
+function finishModule1() {
+  // Calculate score
+  let score = 0;
+  score += Math.round((sortScore / Math.max(sortTotal, 1)) * 4); // up to 4
+  Object.values(gapScores).forEach(v => { if (v === 1) score++; }); // up to 4
+  const text = document.getElementById('mod1Write')?.value || '';
+  const terms = countKeyTerms(text);
+  if (terms.count >= 1) score += 1;
+  if (text.trim().split(/\s+/).filter(w => w.length > 0).length >= 8) score += 1;
+  appData.moduleScores[1] = score; // max ~10
+  completeModule(1);
+  switchModule(2);
+}
+
+/* ========== MODULE 6: CAPSTONE ========== */
+function revealVSCCAnswer() {
+  const fb = document.getElementById('capVSCCFb');
+  fb.classList.add('show', 'correct');
+  fb.innerHTML = '<strong>Answer:</strong><br>' +
+    '<span class="vscc-verb">V: Explain</span> | ' +
+    '<span class="vscc-subject">S: the design process</span> | ' +
+    '<span class="vscc-content">C: what it is and why it is useful when creating a product</span> | ' +
+    '<span class="vscc-concept">C: usefulness / effectiveness</span>';
+}
+
+let capAlarmDone = false;
+function capAlarm(btn, isCorrect) {
+  if (capAlarmDone) return;
+  capAlarmDone = true;
+  const options = btn.parentElement.querySelectorAll('.quiz-option');
+  options.forEach(o => { o.disabled = true; o.style.pointerEvents = 'none'; });
+  btn.classList.add(isCorrect ? 'correct' : 'incorrect');
+  if (!isCorrect) options.forEach(o => { if (o.onclick?.toString().includes('true')) o.classList.add('correct'); });
+  const fb = document.getElementById('capAlarmFb');
+  fb.classList.add('show', isCorrect ? 'correct' : 'incorrect');
+  fb.textContent = isCorrect ? 'Correct! "Explain" is at the Analyse level — you need to break down the topic and explain why.' : 'The verb "Explain" puts this at the Analyse level — you need to break down the concept and explain why.';
+}
+
+let capTTDone = false;
+function capTextType(btn, isCorrect) {
+  if (capTTDone) return;
+  capTTDone = true;
+  const options = btn.parentElement.querySelectorAll('.quiz-option');
+  options.forEach(o => { o.disabled = true; o.style.pointerEvents = 'none'; });
+  btn.classList.add(isCorrect ? 'correct' : 'incorrect');
+  if (!isCorrect) options.forEach(o => { if (o.onclick?.toString().includes('true')) o.classList.add('correct'); });
+  const fb = document.getElementById('capTTFb');
+  fb.classList.add('show', isCorrect ? 'correct' : 'incorrect');
+  fb.textContent = isCorrect ? 'Correct! The verb "Explain" and the word "why" tell us this needs an Explanation text type.' : 'The question asks "explain why" — so the best text type is Explanation (using "because", "as a result", "therefore").';
+}
+
+function selectGrade(btn, grade) {
+  document.querySelectorAll('.grade-option').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  appData.responses.capGrade = grade;
+  saveAll();
+}
+
+function finishModule6() {
+  const text = document.getElementById('capWrite')?.value || '';
+  const words = text.trim().split(/\s+/).filter(w => w.length > 0).length;
+  const terms = countKeyTerms(text);
+  let score = 0;
+  if (capAlarmDone) score += 2;
+  if (capTTDone) score += 2;
+  if (words >= 30) score += 1;
+  if (words >= 50) score += 1;
+  if (words >= 80) score += 1;
+  if (terms.count >= 2) score += 1;
+  if (terms.count >= 4) score += 1;
+  // Reflection filled
+  if ((document.getElementById('capWWW')?.value || '').trim().length > 5) score += 1;
+
+  appData.moduleScores[6] = Math.min(score, 10);
+  completeModule(6);
+
+  // Show final results
+  document.getElementById('capFinalSection').style.display = 'none';
+  document.getElementById('capFinalResults').style.display = 'block';
+
+  const band = appData.band || 'developing';
+  const display = document.getElementById('bandProgressDisplay');
+  display.textContent = 'You started at ' + band.charAt(0).toUpperCase() + band.slice(1) + ' band. Well done on completing all 6 modules!';
+}
+
+/* ========== MODULE 5: SOURCE ANALYSIS ========== */
+function finishModule5() {
+  let score = 0;
+  // Check guided analysis (4 textareas)
+  ['anal1', 'anal2', 'anal3', 'anal4'].forEach(id => {
+    const text = document.getElementById(id)?.value || '';
+    const words = text.trim().split(/\s+/).filter(w => w.length > 0).length;
+    if (words >= 8) score += 1;
+    if (words >= 15) score += 0.5;
+  });
+  // Check comparison
+  const compare = document.getElementById('mod5Compare')?.value || '';
+  const compWords = compare.trim().split(/\s+/).filter(w => w.length > 0).length;
+  const compTerms = countKeyTerms(compare);
+  if (compWords >= 20) score += 1;
+  if (compWords >= 40) score += 1;
+  if (compTerms.count >= 2) score += 1;
+
+  appData.moduleScores[5] = Math.min(Math.round(score), 8);
+  completeModule(5);
+  switchModule(6);
+}
+
+/* ========== MODULE 4: TEEL PARAGRAPH ========== */
+const JIGSAW_SENTENCES = [
+  { text: 'The design process is a useful framework for solving problems in Technology.', role: 'T', colour: 'var(--blue)' },
+  { text: 'For example, when we built paper boats, we followed the steps of investigate, design, produce, test, and evaluate.', role: 'E', colour: 'var(--green)' },
+  { text: 'This structured approach helped us identify problems early and improve our designs before the final build.', role: 'E', colour: 'var(--orange)' },
+  { text: 'Therefore, the design process ensures that students create better products by thinking carefully at each stage.', role: 'L', colour: 'var(--purple)' }
+];
+
+let jigsawOrder = [];
+let jigsawShuffled = [];
+
+function initJigsaw() {
+  const container = document.getElementById('jigsawContainer');
+  if (!container) return;
+  jigsawOrder = [];
+  jigsawShuffled = [...JIGSAW_SENTENCES].sort(() => Math.random() - 0.5);
+  container.innerHTML = '';
+  jigsawShuffled.forEach((s, i) => {
+    const div = document.createElement('div');
+    div.style.cssText = 'background:var(--white);border:2px solid #ddd;border-radius:8px;padding:12px;margin:6px 0;cursor:pointer;transition:all 0.2s;font-size:0.9rem;';
+    if (appData.band === 'beginning') div.style.borderLeftColor = s.colour;
+    if (appData.band === 'beginning') div.style.borderLeftWidth = '4px';
+    div.textContent = s.text;
+    div.onclick = function() {
+      if (div.classList.contains('placed')) return;
+      jigsawOrder.push({ text: s.text, role: s.role, idx: i });
+      div.classList.add('placed');
+      div.style.opacity = '0.5';
+      renderJigsawOrder();
+      if (jigsawOrder.length === 4) checkJigsaw();
+    };
+    container.appendChild(div);
+  });
+}
+
+function renderJigsawOrder() {
+  const orderDiv = document.getElementById('jigsawOrder');
+  const labels = ['T', 'E', 'E', 'L'];
+  orderDiv.innerHTML = jigsawOrder.map((s, i) =>
+    '<div style="padding:8px;margin:4px 0;border-radius:6px;background:' +
+    (labels[i] === 'T' ? 'var(--blue-light)' : labels[i] === 'L' ? 'var(--purple-light)' : i === 1 ? 'var(--green-light)' : 'var(--orange-light)') +
+    ';font-size:0.85rem;"><strong>' + labels[i] + ':</strong> ' + s.text + '</div>'
+  ).join('');
+}
+
+function checkJigsaw() {
+  const correct = ['T', 'E', 'E', 'L'];
+  let score = 0;
+  jigsawOrder.forEach((s, i) => { if (s.role === correct[i]) score++; });
+  const fb = document.getElementById('jigsawFb');
+  fb.classList.add('show');
+  if (score === 4) {
+    fb.className = 'quiz-feedback show correct';
+    fb.textContent = 'Perfect! You put the TEEL paragraph in the correct order!';
+  } else {
+    fb.className = 'quiz-feedback show incorrect';
+    fb.textContent = 'You got ' + score + '/4 in the right position. Remember: T (main idea) first, E (evidence) second, E (explain why) third, L (link back) last.';
+    document.getElementById('jigsawResetBtn').style.display = 'inline-block';
+  }
+}
+
+function resetJigsaw() {
+  document.getElementById('jigsawFb').className = 'quiz-feedback';
+  document.getElementById('jigsawResetBtn').style.display = 'none';
+  initJigsaw();
+}
+
+// Spot the Level
+let spotScores = { 1: null, 2: null, 3: null };
+const spotFeedback = {
+  1: ['Correct! Only 2 short sentences, no structure, no detail = Grade E.', 'This is Grade E — very short, no TEEL structure, no specific details.'],
+  2: ['Correct! Has some structure and detail but missing depth = Grade C.', 'This is Grade C — has a topic and example but the explanation is basic.'],
+  3: ['Correct! Full TEEL, specific evidence, strong vocabulary = Grade A.', 'This is Grade A — complete TEEL, specific examples, and academic vocabulary.']
+};
+
+function spotLevel(qNum, btn, isCorrect) {
+  if (spotScores[qNum] !== null) return;
+  spotScores[qNum] = isCorrect ? 1 : 0;
+  const options = btn.parentElement.querySelectorAll('.quiz-option');
+  options.forEach(o => { o.disabled = true; o.style.pointerEvents = 'none'; });
+  btn.classList.add(isCorrect ? 'correct' : 'incorrect');
+  if (!isCorrect) options.forEach(o => { if (o.onclick?.toString().includes('true')) o.classList.add('correct'); });
+  const fb = document.getElementById('spotFb' + qNum);
+  fb.classList.add('show', isCorrect ? 'correct' : 'incorrect');
+  fb.textContent = isCorrect ? spotFeedback[qNum][0] : spotFeedback[qNum][1];
+}
+
+// Paragraph Builder
+function selectParaTopic(pill) {
+  pill.parentElement.querySelectorAll('.word-pill').forEach(p => p.classList.remove('selected'));
+  pill.classList.add('selected');
+}
+
+function updateParaPreview() {
+  const t = document.getElementById('teelT')?.value || '';
+  const e1 = document.getElementById('teelE1')?.value || '';
+  const e2 = document.getElementById('teelE2')?.value || '';
+  const l = document.getElementById('teelL')?.value || '';
+  const full = [t, e1, e2, l].filter(s => s.trim()).join(' ');
+  const preview = document.getElementById('paraPreview');
+
+  if (!full.trim()) {
+    preview.innerHTML = '<em style="color:var(--grey);">Start writing above to see your paragraph here...</em>';
+    document.getElementById('paraStats').innerHTML = '';
+    return;
+  }
+
+  // Highlight key terms
+  let highlighted = full.replace(/</g, '&lt;');
+  KEY_TERMS.forEach(term => {
+    const regex = new RegExp('\\b(' + term + '\\w*)\\b', 'gi');
+    highlighted = highlighted.replace(regex, '<span class="highlight-term">$1</span>');
+  });
+  preview.innerHTML = highlighted;
+
+  // Stats
+  const words = full.trim().split(/\s+/).filter(w => w.length > 0).length;
+  const terms = countKeyTerms(full);
+  const parts = [t, e1, e2, l].filter(s => s.trim()).length;
+  const statsEl = document.getElementById('paraStats');
+  statsEl.innerHTML =
+    '<span class="stat ' + (words >= 40 ? 'good' : '') + '">' + words + ' words' + (words >= 40 ? ' &#10003;' : '') + '</span>' +
+    '<span class="stat ' + (terms.count >= 3 ? 'good' : '') + '">' + terms.count + ' key terms' + (terms.count >= 3 ? ' &#10003;' : '') + '</span>' +
+    '<span class="stat ' + (parts === 4 ? 'good' : '') + '">' + parts + '/4 TEEL parts' + (parts === 4 ? ' &#10003;' : '') + '</span>';
+}
+
+function copyParagraph() {
+  const t = document.getElementById('teelT')?.value || '';
+  const e1 = document.getElementById('teelE1')?.value || '';
+  const e2 = document.getElementById('teelE2')?.value || '';
+  const l = document.getElementById('teelL')?.value || '';
+  const full = [t, e1, e2, l].filter(s => s.trim()).join(' ');
+  navigator.clipboard?.writeText(full).then(() => alert('Copied to clipboard!')).catch(() => {});
+}
+
+function finishModule4() {
+  const t = document.getElementById('teelT')?.value || '';
+  const e1 = document.getElementById('teelE1')?.value || '';
+  const e2 = document.getElementById('teelE2')?.value || '';
+  const l = document.getElementById('teelL')?.value || '';
+  const full = [t, e1, e2, l].filter(s => s.trim()).join(' ');
+  const words = full.trim().split(/\s+/).filter(w => w.length > 0).length;
+  const terms = countKeyTerms(full);
+  const parts = [t, e1, e2, l].filter(s => s.trim()).length;
+
+  let score = 0;
+  // Jigsaw
+  if (jigsawOrder.length === 4) {
+    const correct = ['T', 'E', 'E', 'L'];
+    jigsawOrder.forEach((s, i) => { if (s.role === correct[i]) score++; });
+  }
+  // Spot the level
+  Object.values(spotScores).forEach(v => { if (v === 1) score++; });
+  // Paragraph quality
+  if (parts === 4) score += 1;
+  if (words >= 40) score += 1;
+  if (terms.count >= 3) score += 1;
+
+  appData.moduleScores[4] = Math.min(score, 10);
+
+  // Fade logic: if strong paragraph, reduce scaffolding for Module 6
+  if (words >= 40 && terms.count >= 3 && parts === 4) {
+    appData.fadeLevels[6] = 'none';
+  }
+
+  completeModule(4);
+  switchModule(5);
+}
+
+/* ========== MODULE 3: READ THE QUESTION ========== */
+let verbScores = { 1: null, 2: null, 3: null, 4: null };
+const verbFeedback = {
+  1: ['Correct! "List" just needs short answers — least detail.', '"List" only needs short answers — least detail.'],
+  2: ['Correct! "Describe" means say what it is like — some detail.', '"Describe" means paint a picture with words — some detail.'],
+  3: ['Correct! "Explain" needs reasons (why/how) — more detail.', '"Explain" asks for reasons using "because" — more detail.'],
+  4: ['Correct! "Evaluate" needs judgement with evidence — most detail.', '"Evaluate" means judge quality with reasons — most detail.']
+};
+
+function verbQ(qNum, btn, isCorrect) {
+  if (verbScores[qNum] !== null) return;
+  verbScores[qNum] = isCorrect ? 1 : 0;
+  const options = btn.parentElement.querySelectorAll('.quiz-option');
+  options.forEach(o => { o.disabled = true; o.style.pointerEvents = 'none'; });
+  btn.classList.add(isCorrect ? 'correct' : 'incorrect');
+  if (!isCorrect) options.forEach(o => { if (o.onclick?.toString().includes('true')) o.classList.add('correct'); });
+  const fb = document.getElementById('verbFb' + qNum);
+  fb.classList.add('show', isCorrect ? 'correct' : 'incorrect');
+  fb.textContent = isCorrect ? verbFeedback[qNum][0] : verbFeedback[qNum][1];
+}
+
+// VSCC Highlighter
+let currentVSCCColour = null;
+
+function setVSCCColour(colour) {
+  currentVSCCColour = colour;
+  document.querySelectorAll('#vsccPalette button').forEach(b => b.style.outline = 'none');
+  if (colour) {
+    const colours = { verb: 0, subject: 1, content: 2, concept: 3 };
+    const btns = document.querySelectorAll('#vsccPalette button');
+    if (btns[colours[colour]]) btns[colours[colour]].style.outline = '3px solid var(--grey-dark)';
+  }
+}
+
+function toggleVSCC(el) {
+  if (currentVSCCColour === null) {
+    // Clear mode
+    el.className = 'vscc-word';
+    return;
+  }
+  el.className = 'vscc-word vscc-' + currentVSCCColour;
+}
+
+function checkVSCC() {
+  let correct = 0;
+  let total = 0;
+  document.querySelectorAll('.vscc-question .vscc-word').forEach(el => {
+    total++;
+    const expected = 'vscc-' + el.dataset.role;
+    if (el.classList.contains(expected)) correct++;
+  });
+  const fb = document.getElementById('vsccFeedback');
+  fb.classList.add('show');
+  if (correct >= total * 0.7) {
+    fb.className = 'quiz-feedback show correct';
+    fb.textContent = 'Great work! You correctly highlighted ' + correct + '/' + total + ' parts. You understand how to break down questions!';
+  } else {
+    fb.className = 'quiz-feedback show incorrect';
+    fb.textContent = 'You got ' + correct + '/' + total + '. Remember: Verb (blue) = the action word, Subject (orange) = the topic, Content (green) = the details, Concept (purple) = the big idea. Try again!';
+  }
+}
+
+function finishModule3() {
+  let score = 0;
+  Object.values(verbScores).forEach(v => { if (v === 1) score++; }); // up to 4
+  // VSCC score
+  let vsccCorrect = 0;
+  let vsccTotal = 0;
+  document.querySelectorAll('.vscc-question .vscc-word').forEach(el => {
+    vsccTotal++;
+    if (el.classList.contains('vscc-' + el.dataset.role)) vsccCorrect++;
+  });
+  score += Math.round((vsccCorrect / Math.max(vsccTotal, 1)) * 4); // up to 4
+  appData.moduleScores[3] = Math.min(score, 8);
+  completeModule(3);
+  switchModule(4);
+}
+
+/* ========== MODULE 2: TEXT TYPES ========== */
+let ttScores = { 1: null, 2: null, 3: null, 4: null };
+const ttFeedback = {
+  1: ['Correct! The words "First, Then, Next, Finally" show steps — that\'s a Procedure.', 'Look for sequence words like "First, Then, Next, Finally" — that\'s a Procedure.'],
+  2: ['Correct! "Because" and "this is due to" explain WHY — that\'s an Explanation.', 'The words "because" and "due to" explain reasons — that\'s an Explanation.'],
+  3: ['Correct! It gives facts about the design process — that\'s an Information Report.', 'It gives facts using "is" and "includes" — that\'s an Information Report.'],
+  4: ['Correct! "Should" and "it is clear that" try to convince — that\'s Persuasive.', 'Words like "should" and "it is clear" try to convince the reader — that\'s Persuasive.']
+};
+
+function textTypeQ(qNum, btn, isCorrect) {
+  if (ttScores[qNum] !== null) return;
+  ttScores[qNum] = isCorrect ? 1 : 0;
+  const options = btn.parentElement.querySelectorAll('.quiz-option');
+  options.forEach(o => { o.disabled = true; o.style.pointerEvents = 'none'; });
+  btn.classList.add(isCorrect ? 'correct' : 'incorrect');
+  if (!isCorrect) options.forEach(o => { if (o.onclick?.toString().includes('true')) o.classList.add('correct'); });
+  const fb = document.getElementById('ttFb' + qNum);
+  fb.classList.add('show', isCorrect ? 'correct' : 'incorrect');
+  fb.textContent = isCorrect ? ttFeedback[qNum][0] : ttFeedback[qNum][1];
+}
+
+function selectTopic(pill) {
+  pill.parentElement.querySelectorAll('.word-pill').forEach(p => p.classList.remove('selected'));
+  pill.classList.add('selected');
+}
+
+function finishModule2() {
+  let score = 0;
+  Object.values(ttScores).forEach(v => { if (v === 1) score++; }); // up to 4
+  const text = document.getElementById('mod2Write')?.value || '';
+  const words = text.trim().split(/\s+/).filter(w => w.length > 0).length;
+  const terms = countKeyTerms(text);
+  if (words >= 20) score += 2;
+  else if (words >= 10) score += 1;
+  if (terms.count >= 2) score += 2;
+  else if (terms.count >= 1) score += 1;
+  if (words >= 30) score += 1; // bonus for length
+  appData.moduleScores[2] = Math.min(score, 10);
+  completeModule(2);
+  switchModule(3);
+}
+
+/* ========== INIT ========== */
+document.addEventListener('DOMContentLoaded', function() {
+  loadAll();
+  // Restore diagnostic state if already completed
+  if (appData.diagnosticDone) {
+    document.getElementById('diagSubmitSection').style.display = 'none';
+    document.getElementById('diagResults').style.display = 'block';
+    const band = appData.band || 'developing';
+    const banner = document.getElementById('diagResultBanner');
+    banner.className = 'result-banner ' + band;
+    const score = appData.diagnosticScore || 0;
+    if (band === 'beginning') {
+      document.getElementById('diagResultIcon').innerHTML = '&#11088;';
+      document.getElementById('diagResultTitle').textContent = 'Beginning — Let\'s Build Together!';
+    } else if (band === 'developing') {
+      document.getElementById('diagResultIcon').innerHTML = '&#128640;';
+      document.getElementById('diagResultTitle').textContent = 'Developing — You\'re On Your Way!';
+    } else {
+      document.getElementById('diagResultIcon').innerHTML = '&#9889;';
+      document.getElementById('diagResultTitle').textContent = 'Consolidating — Ready for Challenge!';
+    }
+    document.getElementById('diagResultMsg').textContent = 'Score: ' + score + '/12 — Band: ' + band.charAt(0).toUpperCase() + band.slice(1);
+  }
+  // Init modules
+  initWordSort();
+  initJigsaw();
+});
+</script>
+</body>
+</html>
