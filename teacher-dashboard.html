@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teacher Dashboard — Y7 Worksheets</title>
+<style>
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: #f0f4f8; color: #1a1a2e; line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* ===== HEADER ===== */
+.header {
+  background: linear-gradient(135deg, #0a1628 0%, #1a2744 100%);
+  color: #fff; padding: 16px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.header h1 { font-size: 20px; font-weight: 700; }
+.header h1 span { color: #4ecdc4; }
+
+/* ===== SETUP PANEL ===== */
+.setup-panel {
+  background: #fff; border: 2px solid #e0e0e0; border-radius: 10px;
+  padding: 20px 24px; margin: 16px 24px; max-width: 600px;
+}
+.setup-panel h2 { font-size: 16px; margin-bottom: 12px; color: #1a2744; }
+.setup-panel label { font-size: 13px; font-weight: 600; display: block; margin-bottom: 4px; }
+.setup-panel input, .setup-panel select {
+  width: 100%; padding: 8px 10px; border: 1px solid #ccc; border-radius: 6px;
+  font-size: 14px; margin-bottom: 12px;
+}
+.setup-panel input:focus, .setup-panel select:focus {
+  outline: none; border-color: #4ecdc4; box-shadow: 0 0 0 2px rgba(78,205,196,0.2);
+}
+.setup-btn {
+  background: #1A8A6E; color: #fff; border: none; border-radius: 6px;
+  padding: 10px 20px; font-size: 14px; font-weight: 600; cursor: pointer;
+  transition: background 0.2s;
+}
+.setup-btn:hover { background: #16755d; }
+.setup-btn:disabled { background: #999; cursor: not-allowed; }
+.setup-note { font-size: 11px; color: #888; margin-top: 8px; }
+
+/* ===== TOOLBAR ===== */
+.toolbar {
+  display: flex; align-items: center; gap: 12px; padding: 12px 24px;
+  flex-wrap: wrap;
+}
+.toolbar select, .toolbar input {
+  padding: 6px 10px; border: 1px solid #ccc; border-radius: 6px;
+  font-size: 13px; background: #fff;
+}
+.toolbar .refresh-btn {
+  background: #4ecdc4; color: #fff; border: none; border-radius: 6px;
+  padding: 6px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
+}
+.toolbar .refresh-btn:hover { background: #3db8b0; }
+
+/* ===== STATS BAR ===== */
+.stats-bar {
+  display: flex; gap: 16px; padding: 0 24px 12px; flex-wrap: wrap;
+}
+.stat-card {
+  background: #fff; border-radius: 8px; padding: 12px 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08); min-width: 140px;
+}
+.stat-card .stat-value { font-size: 24px; font-weight: 700; color: #1A8A6E; }
+.stat-card .stat-label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* ===== TABLE ===== */
+.table-wrap {
+  padding: 0 24px 24px; overflow-x: auto;
+}
+.student-table {
+  width: 100%; border-collapse: collapse; background: #fff;
+  border-radius: 10px; overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+.student-table th {
+  background: #1a2744; color: #fff; text-align: left;
+  padding: 10px 14px; font-size: 12px; text-transform: uppercase;
+  letter-spacing: 0.5px; font-weight: 600;
+}
+.student-table td {
+  padding: 10px 14px; border-bottom: 1px solid #eee; font-size: 13px;
+  vertical-align: top;
+}
+.student-table tr:hover td { background: #f8fffe; }
+.student-table tr:last-child td { border-bottom: none; }
+
+.band-badge {
+  display: inline-block; padding: 2px 8px; border-radius: 10px;
+  font-size: 11px; font-weight: 600; text-transform: capitalize;
+}
+.band-badge.beginning { background: #fdebd0; color: #a04000; }
+.band-badge.developing { background: #d4efdf; color: #1e8449; }
+.band-badge.consolidating { background: #d6eaf8; color: #1a5276; }
+.band-badge.unknown { background: #eee; color: #888; }
+
+.progress-bar {
+  background: #eee; border-radius: 10px; height: 8px; width: 100px;
+  display: inline-block; vertical-align: middle; margin-right: 6px;
+}
+.progress-bar .fill {
+  background: #1A8A6E; border-radius: 10px; height: 100%;
+  transition: width 0.3s;
+}
+
+.fb-indicator { font-size: 11px; }
+.fb-indicator.has-feedback { color: #1A8A6E; }
+.fb-indicator.no-feedback { color: #ccc; }
+
+/* ===== ACTION BUTTONS ===== */
+.action-btn {
+  background: none; border: 1px solid #ccc; border-radius: 4px;
+  padding: 4px 8px; font-size: 11px; cursor: pointer;
+  margin-right: 4px; transition: all 0.2s;
+}
+.action-btn:hover { border-color: #4ecdc4; color: #1A8A6E; }
+.action-btn.primary { background: #1A8A6E; color: #fff; border-color: #1A8A6E; }
+.action-btn.primary:hover { background: #16755d; }
+
+/* ===== DETAIL PANEL ===== */
+.detail-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5); z-index: 100; display: none;
+  justify-content: center; align-items: flex-start; padding: 40px 20px;
+  overflow-y: auto;
+}
+.detail-overlay.visible { display: flex; }
+.detail-panel {
+  background: #fff; border-radius: 12px; padding: 24px;
+  max-width: 700px; width: 100%; position: relative;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+.detail-panel .close-btn {
+  position: absolute; top: 12px; right: 16px;
+  background: none; border: none; font-size: 20px; cursor: pointer;
+  color: #888;
+}
+.detail-panel .close-btn:hover { color: #333; }
+.detail-panel h2 { font-size: 18px; margin-bottom: 4px; }
+.detail-panel .meta { font-size: 12px; color: #888; margin-bottom: 16px; }
+
+.detail-section { margin-bottom: 16px; }
+.detail-section h3 { font-size: 14px; color: #1a2744; margin-bottom: 8px;
+  border-bottom: 2px solid #4ecdc4; padding-bottom: 4px; }
+.detail-section .score-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+}
+.detail-section .score-item {
+  background: #f8f8f8; padding: 8px; border-radius: 6px; text-align: center;
+}
+.detail-section .score-item .label { font-size: 11px; color: #888; }
+.detail-section .score-item .value { font-size: 18px; font-weight: 700; color: #1A8A6E; }
+
+.response-block { background: #f8f8f8; padding: 10px 14px; border-radius: 6px;
+  margin-bottom: 8px; font-size: 13px; }
+.response-block .q-label { font-size: 11px; color: #888; margin-bottom: 2px; }
+.response-block .q-answer { color: #333; }
+
+/* ===== FEEDBACK FORM ===== */
+.feedback-form { margin-top: 16px; }
+.feedback-form textarea {
+  width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;
+  font-size: 13px; font-family: inherit; resize: vertical; min-height: 80px;
+}
+.feedback-form textarea:focus {
+  outline: none; border-color: #4ecdc4;
+  box-shadow: 0 0 0 2px rgba(78,205,196,0.2);
+}
+.feedback-form .fb-actions {
+  display: flex; gap: 8px; margin-top: 8px; align-items: center;
+}
+.feedback-status { font-size: 12px; color: #888; }
+
+/* ===== EMPTY STATE ===== */
+.empty-state {
+  text-align: center; padding: 60px 20px; color: #888;
+}
+.empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+.empty-state p { font-size: 14px; max-width: 400px; margin: 0 auto; }
+
+/* ===== TOAST ===== */
+.dash-toast {
+  position: fixed; bottom: 20px; right: 20px; background: #1A8A6E; color: #fff;
+  padding: 12px 20px; border-radius: 8px; font-size: 13px; z-index: 200;
+  transform: translateY(100px); opacity: 0; transition: all 0.3s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.dash-toast.show { transform: translateY(0); opacity: 1; }
+.dash-toast.error { background: #c0392b; }
+
+/* ===== LOADING ===== */
+.loading-spinner {
+  display: inline-block; width: 16px; height: 16px;
+  border: 2px solid #ccc; border-top-color: #1A8A6E;
+  border-radius: 50%; animation: dash-spin 0.6s linear infinite;
+}
+@keyframes dash-spin { to { transform: rotate(360deg); } }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .header { padding: 12px 16px; }
+  .toolbar, .stats-bar, .table-wrap { padding-left: 16px; padding-right: 16px; }
+  .setup-panel { margin: 12px 16px; }
+  .stat-card { min-width: 100px; }
+}
+
+@media print {
+  .header, .toolbar, .setup-panel, .action-btn, .feedback-form { display: none !important; }
+  .student-table { box-shadow: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<div class="header">
+  <h1>📊 <span>Teacher Dashboard</span> — Y7 Worksheets</h1>
+  <div id="connectionStatus" style="font-size:12px; color:#aaa;">Not connected</div>
+</div>
+
+<!-- ===== SETUP PANEL ===== -->
+<div class="setup-panel" id="setupPanel">
+  <h2>🔧 Connect to Your Google Sheet</h2>
+  <label for="setupUrl">Apps Script URL</label>
+  <input type="url" id="setupUrl" placeholder="https://script.google.com/macros/s/XXXXX/exec"
+    value="">
+  <label for="setupKey">Teacher Key (the password you set in Script Properties)</label>
+  <input type="password" id="setupKey" placeholder="Your TEACHER_KEY value">
+  <label for="setupWorksheet">Worksheet</label>
+  <select id="setupWorksheet">
+    <option value="">All worksheets</option>
+    <option value="y7wir-data">Write It Right</option>
+  </select>
+  <button class="setup-btn" id="setupBtn" onclick="connectDashboard()">Connect</button>
+  <div class="setup-note">
+    Your credentials are stored in this browser only (localStorage). They are never sent anywhere except to your own Apps Script.
+  </div>
+</div>
+
+<!-- ===== TOOLBAR (hidden until connected) ===== -->
+<div class="toolbar" id="toolbar" style="display:none;">
+  <select id="filterClass" onchange="applyFilters()">
+    <option value="">All classes</option>
+    <option value="7ECE">7ECE</option>
+    <option value="7ECI">7ECI</option>
+    <option value="7TECJ">7TECJ</option>
+  </select>
+  <select id="filterBand" onchange="applyFilters()">
+    <option value="">All bands</option>
+    <option value="beginning">Beginning</option>
+    <option value="developing">Developing</option>
+    <option value="consolidating">Consolidating</option>
+  </select>
+  <input type="search" id="filterSearch" placeholder="Search student name..."
+    oninput="applyFilters()" style="min-width:180px;">
+  <button class="refresh-btn" onclick="loadStudents()">🔄 Refresh</button>
+  <span id="lastRefreshed" style="font-size:11px; color:#888;"></span>
+</div>
+
+<!-- ===== STATS BAR ===== -->
+<div class="stats-bar" id="statsBar" style="display:none;"></div>
+
+<!-- ===== STUDENT TABLE ===== -->
+<div class="table-wrap" id="tableWrap" style="display:none;">
+  <table class="student-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Class</th>
+        <th>Band</th>
+        <th>Progress</th>
+        <th>Submissions</th>
+        <th>Last Submitted</th>
+        <th>Feedback</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="studentTableBody"></tbody>
+  </table>
+</div>
+
+<!-- ===== EMPTY STATE ===== -->
+<div class="empty-state" id="emptyState" style="display:none;">
+  <div class="icon">📭</div>
+  <p>No submissions yet. Students will appear here once they click "Submit to Teacher" in their worksheet.</p>
+</div>
+
+<!-- ===== DETAIL OVERLAY ===== -->
+<div class="detail-overlay" id="detailOverlay" onclick="if(event.target===this)closeDetail()">
+  <div class="detail-panel">
+    <button class="close-btn" onclick="closeDetail()">&times;</button>
+    <h2 id="detailName"></h2>
+    <div class="meta" id="detailMeta"></div>
+    <div id="detailContent"></div>
+    <div class="feedback-form">
+      <h3 style="font-size:14px; margin-bottom:8px;">💬 Give Feedback</h3>
+      <textarea id="feedbackText" placeholder="Type your feedback for this student..."></textarea>
+      <div class="fb-actions">
+        <button class="action-btn primary" onclick="sendFeedback()">Send Feedback</button>
+        <span class="feedback-status" id="feedbackStatus"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ===== STATE =====
+  var APPS_SCRIPT_URL = '';
+  var TEACHER_KEY = '';
+  var WORKSHEET_FILTER = '';
+  var allStudents = [];
+  var currentDetail = null;  // { name, class, worksheetId }
+
+  // Module names for display
+  var MODULE_NAMES = [
+    'Module 0: Welcome & Diagnostic',
+    'Module 1: Visual Dictionary',
+    'Module 2: Word Bank & Connectors',
+    'Module 3: ALARM & VSCC',
+    'Module 4: TEEL Paragraphs',
+    'Module 5: Fade the Scaffolding',
+    'Module 6: Capstone Challenge',
+    'Module 7: Grammar Gym'
+  ];
+
+  // ===== INIT =====
+  // Restore saved credentials
+  try {
+    var saved = JSON.parse(localStorage.getItem('y7-dashboard-config') || '{}');
+    if (saved.url) {
+      document.getElementById('setupUrl').value = saved.url;
+      document.getElementById('setupKey').value = saved.key || '';
+      document.getElementById('setupWorksheet').value = saved.ws || '';
+    }
+  } catch (e) {}
+
+  // ===== CONNECT =====
+  window.connectDashboard = function () {
+    APPS_SCRIPT_URL = document.getElementById('setupUrl').value.trim();
+    TEACHER_KEY = document.getElementById('setupKey').value.trim();
+    WORKSHEET_FILTER = document.getElementById('setupWorksheet').value;
+
+    if (!APPS_SCRIPT_URL) {
+      showToast('Please enter your Apps Script URL.', 'error');
+      return;
+    }
+
+    // Save to localStorage
+    localStorage.setItem('y7-dashboard-config', JSON.stringify({
+      url: APPS_SCRIPT_URL, key: TEACHER_KEY, ws: WORKSHEET_FILTER
+    }));
+
+    document.getElementById('setupPanel').style.display = 'none';
+    document.getElementById('toolbar').style.display = 'flex';
+    document.getElementById('statsBar').style.display = 'flex';
+    document.getElementById('tableWrap').style.display = 'block';
+    document.getElementById('connectionStatus').textContent = '✅ Connected';
+    document.getElementById('connectionStatus').style.color = '#4ecdc4';
+
+    loadStudents();
+  };
+
+  // ===== LOAD STUDENTS =====
+  window.loadStudents = function () {
+    var url = APPS_SCRIPT_URL + '?action=students&key=' + encodeURIComponent(TEACHER_KEY);
+    if (WORKSHEET_FILTER) url += '&ws=' + encodeURIComponent(WORKSHEET_FILTER);
+
+    document.getElementById('lastRefreshed').innerHTML = '<span class="loading-spinner"></span> Loading...';
+
+    fetch(url)
+      .then(function (r) { return r.json(); })
+      .then(function (result) {
+        if (result.status !== 'ok') {
+          showToast('Error: ' + (result.message || 'Unknown error'), 'error');
+          return;
+        }
+        allStudents = result.students || [];
+        document.getElementById('lastRefreshed').textContent =
+          'Updated: ' + new Date().toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit' });
+        applyFilters();
+      })
+      .catch(function (err) {
+        showToast('Connection failed. Check your URL and internet.', 'error');
+        document.getElementById('lastRefreshed').textContent = 'Failed to connect';
+        console.error(err);
+      });
+  };
+
+  // ===== FILTERS =====
+  window.applyFilters = function () {
+    var classFilter = document.getElementById('filterClass').value;
+    var bandFilter = document.getElementById('filterBand').value;
+    var searchFilter = document.getElementById('filterSearch').value.toLowerCase().trim();
+
+    var filtered = allStudents.filter(function (s) {
+      if (classFilter && s.class !== classFilter) return false;
+      if (bandFilter && s.band !== bandFilter) return false;
+      if (searchFilter && s.name.toLowerCase().indexOf(searchFilter) === -1) return false;
+      return true;
+    });
+
+    renderStats(filtered);
+    renderTable(filtered);
+  };
+
+  // ===== RENDER STATS =====
+  function renderStats(students) {
+    var total = students.length;
+    var completed = students.filter(function (s) { return s.modulesCompleted >= 8; }).length;
+    var withFeedback = students.filter(function (s) { return s.hasFeedback; }).length;
+    var noSubmission = students.filter(function (s) { return s.submissionCount === 0; }).length;
+
+    // Band distribution
+    var bands = { beginning: 0, developing: 0, consolidating: 0, unknown: 0 };
+    students.forEach(function (s) { bands[s.band] = (bands[s.band] || 0) + 1; });
+
+    var avgModules = total > 0
+      ? (students.reduce(function (sum, s) { return sum + s.modulesCompleted; }, 0) / total).toFixed(1)
+      : '0';
+
+    document.getElementById('statsBar').innerHTML =
+      statCard(total, 'Total Students') +
+      statCard(avgModules + '/8', 'Avg Modules Done') +
+      statCard(bands.beginning, 'Beginning') +
+      statCard(bands.developing, 'Developing') +
+      statCard(bands.consolidating, 'Consolidating') +
+      statCard(withFeedback + '/' + total, 'Feedback Given');
+  }
+
+  function statCard(value, label) {
+    return '<div class="stat-card"><div class="stat-value">' + value +
+      '</div><div class="stat-label">' + label + '</div></div>';
+  }
+
+  // ===== RENDER TABLE =====
+  function renderTable(students) {
+    var tbody = document.getElementById('studentTableBody');
+    var empty = document.getElementById('emptyState');
+
+    if (students.length === 0) {
+      tbody.innerHTML = '';
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+
+    // Sort: most recent first
+    students.sort(function (a, b) {
+      return new Date(b.lastSubmitted) - new Date(a.lastSubmitted);
+    });
+
+    tbody.innerHTML = students.map(function (s) {
+      var pct = Math.round((s.modulesCompleted / s.totalModules) * 100);
+      var fbIcon = s.hasFeedback
+        ? '<span class="fb-indicator has-feedback">✅ Given</span>'
+        : '<span class="fb-indicator no-feedback">— None</span>';
+
+      return '<tr>' +
+        '<td><strong>' + esc(s.name) + '</strong></td>' +
+        '<td>' + esc(s.class) + '</td>' +
+        '<td><span class="band-badge ' + esc(s.band) + '">' + esc(s.band) + '</span></td>' +
+        '<td><div class="progress-bar"><div class="fill" style="width:' + pct + '%"></div></div> ' +
+          s.modulesCompleted + '/' + s.totalModules + '</td>' +
+        '<td>' + s.submissionCount + '</td>' +
+        '<td>' + formatDate(s.lastSubmitted) + '</td>' +
+        '<td>' + fbIcon + '</td>' +
+        '<td>' +
+          '<button class="action-btn" onclick="viewDetail(\'' + escAttr(s.name) + '\',\'' +
+            escAttr(s.class) + '\',\'' + escAttr(s.worksheetId) + '\')">📋 View</button>' +
+          '<button class="action-btn" onclick="quickFeedback(\'' + escAttr(s.name) + '\',\'' +
+            escAttr(s.class) + '\',\'' + escAttr(s.worksheetId) + '\')">💬 Feedback</button>' +
+        '</td></tr>';
+    }).join('');
+  }
+
+  // ===== VIEW DETAIL =====
+  window.viewDetail = function (name, cls, wsId) {
+    currentDetail = { name: name, class: cls, worksheetId: wsId };
+
+    var url = APPS_SCRIPT_URL + '?action=detail&key=' + encodeURIComponent(TEACHER_KEY) +
+      '&name=' + encodeURIComponent(name) +
+      '&class=' + encodeURIComponent(cls) +
+      '&ws=' + encodeURIComponent(wsId);
+
+    document.getElementById('detailName').textContent = name;
+    document.getElementById('detailMeta').textContent = 'Loading...';
+    document.getElementById('detailContent').innerHTML = '<span class="loading-spinner"></span>';
+    document.getElementById('feedbackText').value = '';
+    document.getElementById('feedbackStatus').textContent = '';
+    document.getElementById('detailOverlay').classList.add('visible');
+
+    fetch(url)
+      .then(function (r) { return r.json(); })
+      .then(function (result) {
+        if (result.status !== 'ok') {
+          document.getElementById('detailContent').textContent = 'Error: ' + result.message;
+          return;
+        }
+        renderDetail(result);
+      })
+      .catch(function (err) {
+        document.getElementById('detailContent').textContent = 'Failed to load. ' + err;
+      });
+  };
+
+  function renderDetail(result) {
+    var d = result.data || {};
+    document.getElementById('detailMeta').textContent =
+      result.class + ' · Band: ' + (d.band || 'unknown') +
+      ' · Diagnostic: ' + (d.diagnosticScore || 0) + '/10' +
+      ' · Submissions: ' + result.submissionCount +
+      ' · Last: ' + formatDate(result.lastSubmitted);
+
+    // Pre-fill existing feedback
+    if (result.feedbackText) {
+      document.getElementById('feedbackText').value = result.feedbackText;
+      document.getElementById('feedbackStatus').textContent =
+        'Previous feedback: ' + formatDate(result.feedbackDate);
+    }
+
+    var html = '';
+
+    // Module scores
+    html += '<div class="detail-section"><h3>Module Scores</h3><div class="score-grid">';
+    for (var i = 0; i < 8; i++) {
+      var score = (d.moduleScores && d.moduleScores[i]) || 0;
+      var done = (d.moduleCompleted && d.moduleCompleted[i]) ? '✅' : '⬜';
+      html += '<div class="score-item">' +
+        '<div class="label">' + done + ' M' + i + '</div>' +
+        '<div class="value">' + score + '</div></div>';
+    }
+    html += '</div></div>';
+
+    // Quiz state summary
+    if (d.quizState) {
+      html += '<div class="detail-section"><h3>Quiz Results</h3>';
+      var qs = d.quizState;
+      var quizItems = [];
+      if (qs.sortScore !== null && qs.sortScore !== undefined) {
+        quizItems.push('Word Sort: ' + qs.sortScore + '/' + (qs.sortTotal || '?'));
+      }
+      if (qs.jigsawCompleted) {
+        quizItems.push('TEEL Jigsaw: ' + (qs.jigsawScore || 0));
+      }
+      // Gap fill scores
+      if (qs.gapScores) {
+        for (var gk in qs.gapScores) {
+          quizItems.push('Gap Fill ' + gk + ': ' + qs.gapScores[gk]);
+        }
+      }
+      // Verb scores
+      if (qs.verbScores) {
+        for (var vk in qs.verbScores) {
+          quizItems.push('Verb ' + vk + ': ' + qs.verbScores[vk]);
+        }
+      }
+      // Tense scores
+      if (qs.tenseScores) {
+        for (var tk in qs.tenseScores) {
+          quizItems.push('Tense ' + tk + ': ' + qs.tenseScores[tk]);
+        }
+      }
+      if (quizItems.length > 0) {
+        html += '<ul style="font-size:13px; padding-left:18px;">';
+        quizItems.forEach(function (item) { html += '<li>' + esc(item) + '</li>'; });
+        html += '</ul>';
+      } else {
+        html += '<p style="font-size:13px; color:#888;">No quiz data yet.</p>';
+      }
+      html += '</div>';
+    }
+
+    // Text responses
+    if (d.responses && Object.keys(d.responses).length > 0) {
+      html += '<div class="detail-section"><h3>Written Responses</h3>';
+      for (var rk in d.responses) {
+        var val = d.responses[rk];
+        if (val && typeof val === 'string' && val.trim()) {
+          html += '<div class="response-block">' +
+            '<div class="q-label">' + esc(rk) + '</div>' +
+            '<div class="q-answer">' + esc(val) + '</div></div>';
+        }
+      }
+      html += '</div>';
+    }
+
+    // Checklists
+    if (d.checklists && Object.keys(d.checklists).length > 0) {
+      html += '<div class="detail-section"><h3>Self-Assessment Checklists</h3>';
+      for (var ck in d.checklists) {
+        var items = d.checklists[ck];
+        if (typeof items === 'object') {
+          html += '<div class="response-block"><div class="q-label">' + esc(ck) + '</div>';
+          for (var ci in items) {
+            html += '<div class="q-answer">' + (items[ci] ? '✅' : '⬜') + ' ' + esc(ci) + '</div>';
+          }
+          html += '</div>';
+        }
+      }
+      html += '</div>';
+    }
+
+    document.getElementById('detailContent').innerHTML = html;
+  }
+
+  // ===== QUICK FEEDBACK =====
+  window.quickFeedback = function (name, cls, wsId) {
+    viewDetail(name, cls, wsId);
+    // Focus the textarea after a short delay
+    setTimeout(function () {
+      document.getElementById('feedbackText').focus();
+    }, 500);
+  };
+
+  // ===== SEND FEEDBACK =====
+  window.sendFeedback = function () {
+    if (!currentDetail) return;
+    var text = document.getElementById('feedbackText').value.trim();
+    if (!text) {
+      showToast('Please type some feedback first.', 'error');
+      return;
+    }
+
+    document.getElementById('feedbackStatus').innerHTML = '<span class="loading-spinner"></span> Sending...';
+
+    fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({
+        action: 'giveFeedback',
+        key: TEACHER_KEY,
+        studentName: currentDetail.name,
+        studentClass: currentDetail.class,
+        worksheetId: currentDetail.worksheetId,
+        feedbackText: text
+      })
+    })
+    .then(function (r) { return r.json(); })
+    .then(function (result) {
+      if (result.status === 'ok') {
+        document.getElementById('feedbackStatus').textContent = '✅ Sent at ' +
+          new Date().toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit' });
+        showToast('Feedback sent to ' + currentDetail.name + '!');
+        // Refresh table to update feedback column
+        loadStudents();
+      } else {
+        document.getElementById('feedbackStatus').textContent = '❌ ' + result.message;
+        showToast('Failed: ' + result.message, 'error');
+      }
+    })
+    .catch(function (err) {
+      document.getElementById('feedbackStatus').textContent = '❌ Connection error';
+      showToast('Connection failed. Check your internet.', 'error');
+    });
+  };
+
+  // ===== CLOSE DETAIL =====
+  window.closeDetail = function () {
+    document.getElementById('detailOverlay').classList.remove('visible');
+    currentDetail = null;
+  };
+
+  // ===== HELPERS =====
+  function formatDate(iso) {
+    if (!iso) return '—';
+    try {
+      var d = new Date(iso);
+      return d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' }) +
+        ', ' + d.toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit' });
+    } catch (e) { return iso; }
+  }
+
+  function esc(str) {
+    if (!str) return '';
+    var div = document.createElement('div');
+    div.textContent = String(str);
+    return div.innerHTML;
+  }
+
+  function escAttr(str) {
+    return String(str || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+  }
+
+  function showToast(msg, type) {
+    var old = document.querySelector('.dash-toast');
+    if (old) old.remove();
+    var toast = document.createElement('div');
+    toast.className = 'dash-toast' + (type === 'error' ? ' error' : '');
+    toast.textContent = msg;
+    document.body.appendChild(toast);
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { toast.classList.add('show'); });
+    });
+    setTimeout(function () {
+      toast.classList.remove('show');
+      setTimeout(function () { toast.remove(); }, 300);
+    }, 4000);
+  }
+
+  // Escape key closes detail
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && currentDetail) closeDetail();
+  });
+
+})();
+</script>
+</body>
+</html>

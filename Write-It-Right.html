@@ -753,6 +753,18 @@ body.fade-none .scaffold-partial { display: none; }
   .print-header { display: block !important; text-align: center; padding: 20px 0; border-bottom: 2px solid #333; margin-bottom: 20px; }
 }
 .print-header { display: none; }
+
+/* Glossary tooltips */
+.glossary { border-bottom: 1.5px dotted #1A8A6E; cursor: help; position: relative; }
+.glossary-tip { position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%);
+  background: #1a2a3a; color: #fff; font-size: 0.78rem; line-height: 1.4; padding: 6px 10px;
+  border-radius: 6px; white-space: nowrap; max-width: 260px; white-space: normal;
+  z-index: 100; pointer-events: none; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  opacity: 0; transition: opacity 0.15s; }
+.glossary-tip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+  border: 5px solid transparent; border-top-color: #1a2a3a; }
+.glossary:hover .glossary-tip, .glossary.active .glossary-tip { opacity: 1; }
+@media (max-width: 500px) { .glossary-tip { left: 0; transform: none; } .glossary-tip::after { left: 16px; transform: none; } }
 </style>
 </head>
 <body>
@@ -768,6 +780,12 @@ body.fade-none .scaffold-partial { display: none; }
   <span class="badge">Year 7</span>
   <h1>Write It Right</h1>
   <input type="text" id="studentName" placeholder="Your name..." oninput="saveAll()">
+  <select id="studentClass" onchange="saveAll()" title="Select your class" style="padding:4px 8px; border-radius:4px; border:1px solid rgba(255,255,255,0.3); background:rgba(255,255,255,0.15); color:#fff; font-size:13px; cursor:pointer;">
+    <option value="" style="color:#333;">Class...</option>
+    <option value="7ECE" style="color:#333;">7ECE</option>
+    <option value="7ECI" style="color:#333;">7ECI</option>
+    <option value="7TECJ" style="color:#333;">7TECJ</option>
+  </select>
   <span class="band-badge" id="bandBadge">Not assessed yet</span>
   <button onclick="openSaveModal()" title="Save or load your work across devices" style="background:rgba(26,138,125,0.5); border-color:rgba(26,138,125,0.7);">&#128190; Save / Load</button>
   <button onclick="window.print()" title="Print / Save as PDF">Print</button>
@@ -1332,6 +1350,17 @@ body.fade-none .scaffold-partial { display: none; }
         <strong style="color:var(--red);">M</strong>ake<br><small>Create new</small>
       </div>
     </div>
+
+    <div class="info-box mt-2" style="border-left:4px solid var(--teal);">
+      <strong>ALARM → Verb Demand:</strong> Each ALARM level uses different verbs:
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:6px;margin-top:8px;font-size:0.82rem;">
+        <div style="background:var(--green-light);padding:6px 8px;border-radius:4px;"><strong>Acquire</strong> → List, Name, State</div>
+        <div style="background:var(--blue-light);padding:6px 8px;border-radius:4px;"><strong>Link</strong> → Describe, Outline</div>
+        <div style="background:var(--orange-light);padding:6px 8px;border-radius:4px;"><strong>Analyse</strong> → Explain, Compare</div>
+        <div style="background:var(--purple-light);padding:6px 8px;border-radius:4px;"><strong>Respond</strong> → Evaluate, Justify</div>
+        <div style="background:var(--red-light);padding:6px 8px;border-radius:4px;"><strong>Make</strong> → Design, Create</div>
+      </div>
+    </div>
   </div>
 
   <!-- Activity: Verb Detail Quiz -->
@@ -1390,6 +1419,11 @@ body.fade-none .scaffold-partial { display: none; }
       <span class="vscc-subject"><strong>S</strong> = Subject</span> (the topic) |
       <span class="vscc-content"><strong>C</strong> = Content</span> (the details) |
       <span class="vscc-concept"><strong>C</strong> = Concept</span> (the big idea)
+    </div>
+
+    <div class="info-box mt-2" style="border-left:4px solid var(--purple);background:rgba(142,68,173,0.08);">
+      <strong style="color:var(--purple);">💡 What is the "Concept"?</strong><br>
+      The <strong>Concept</strong> is the big idea or reason behind the question. Look for words like <em>"why"</em>, <em>"how effective"</em>, or <em>"strengths and weaknesses"</em>. Not every question has a Concept — simpler questions (like "List" or "Describe") often skip it.
     </div>
 
     <div class="info-box mt-2">
@@ -1550,6 +1584,20 @@ body.fade-none .scaffold-partial { display: none; }
       <button class="quiz-option" onclick="spotLevel(3, this, false)">Grade E</button>
     </div>
     <div class="quiz-feedback" id="spotFb3"></div>
+
+    <!-- Grade A Model Paragraph (revealed after quiz) -->
+    <div id="spotModelParagraph" style="display:none; margin-top:16px; background:linear-gradient(135deg, #f0faf7 0%, #e8f4f1 100%); border:2px solid var(--teal); border-radius:10px; padding:16px;">
+      <strong style="color:var(--teal);">📝 Study the Grade A Paragraph — Notice These Features:</strong>
+      <div style="margin-top:10px; font-size:0.9rem; line-height:1.7; color:#333;">
+        <span style="background:var(--blue-light);padding:2px 4px;border-radius:3px;"><strong>T:</strong> "The design process is an essential tool for creating effective products because it provides a structured framework for problem-solving."</span><br>
+        <span style="background:var(--green-light);padding:2px 4px;border-radius:3px;"><strong>E:</strong> "For example, when we designed our paper boats in class, we followed the five stages: investigate, design, produce, test, and evaluate."</span><br>
+        <span style="background:var(--orange-light);padding:2px 4px;border-radius:3px;"><strong>E:</strong> "This systematic approach ensured that we considered the constraints of materials and capacity before building."</span><br>
+        <span style="background:var(--purple-light);padding:2px 4px;border-radius:3px;"><strong>L:</strong> "As a result, students who followed the design process produced boats that held more weight, demonstrating that structured planning leads to better design outcomes."</span>
+      </div>
+      <div style="margin-top:10px; font-size:0.82rem; color:#888;">
+        <strong>Why is this Grade A?</strong> It uses TEEL structure, specific examples, explains <em>why</em> (not just <em>what</em>), uses connectives ("because", "for example", "as a result"), and links back to the question.
+      </div>
+    </div>
   </div>
 
   <!-- Paragraph Builder -->
@@ -1588,9 +1636,9 @@ body.fade-none .scaffold-partial { display: none; }
     <!-- Word bank with Tier 2/3 words -->
     <div class="word-bank scaffold-partial">
       <div class="wb-title">Key Vocabulary</div>
-      <span class="word-pill">design process</span><span class="word-pill">evaluate</span><span class="word-pill">investigate</span>
-      <span class="word-pill">function</span><span class="word-pill">aesthetics</span><span class="word-pill">sustainable</span>
-      <span class="word-pill">criteria</span><span class="word-pill">structure</span><span class="word-pill">prototype</span>
+      <span class="word-pill"><span class="glossary" data-def="A series of steps engineers follow to solve a problem: Investigate → Design → Produce → Evaluate">design process</span></span><span class="word-pill"><span class="glossary" data-def="To judge how good something is by checking it against criteria">evaluate</span></span><span class="word-pill"><span class="glossary" data-def="To research and gather information before designing">investigate</span></span>
+      <span class="word-pill"><span class="glossary" data-def="What a product is supposed to do — its purpose or job">function</span></span><span class="word-pill"><span class="glossary" data-def="How something looks and feels — its visual appeal and beauty">aesthetics</span></span><span class="word-pill"><span class="glossary" data-def="Using resources wisely so they last for the future">sustainable</span></span>
+      <span class="word-pill"><span class="glossary" data-def="The rules or standards your design must meet">criteria</span></span><span class="word-pill"><span class="glossary" data-def="How parts are arranged to hold something up — the skeleton of a design">structure</span></span><span class="word-pill"><span class="glossary" data-def="A first working model of your design, used for testing">prototype</span></span>
     </div>
 
     <div class="para-builder mt-2">
@@ -1694,7 +1742,7 @@ body.fade-none .scaffold-partial { display: none; }
 
     <div class="info-box">
       <strong>Design: A phone stand made from folded cardboard</strong><br>
-      The stand is made from a single piece of cardboard folded into an A-frame shape. It is 15cm tall and 10cm wide. The phone rests at a 60-degree angle against a small lip at the front. It can fold flat for storage.
+      The stand is made from a single piece of cardboard folded into an <span class="glossary" data-def="A triangle-shaped support structure — like the letter A — that is very strong">A-frame</span> shape. It is 15cm tall and 10cm wide. The phone rests at a 60-degree angle against a small <span class="glossary" data-def="A raised edge that stops something from sliding off">lip</span> at the front. It can fold flat for storage.
     </div>
 
     <div class="para-builder mt-2">
@@ -1865,6 +1913,7 @@ body.fade-none .scaffold-partial { display: none; }
       </div>
       <div class="para-step step-l">
         <label><span class="step-badge">L</span> Link — How does it connect back?</label>
+        <div class="sentence-frame show-beginning">Plan: "Overall, the design process is important because ___."</div>
         <textarea id="capPlanL" placeholder="Quick notes..." oninput="saveResponse('capPlanL')" style="min-height:40px;"></textarea>
       </div>
     </div>
@@ -1885,10 +1934,10 @@ body.fade-none .scaffold-partial { display: none; }
 
     <div class="word-bank scaffold-partial">
       <div class="wb-title">Key Vocabulary</div>
-      <span class="word-pill">design process</span><span class="word-pill">investigate</span><span class="word-pill">evaluate</span>
-      <span class="word-pill">criteria</span><span class="word-pill">prototype</span><span class="word-pill">iterate</span>
-      <span class="word-pill">function</span><span class="word-pill">aesthetics</span><span class="word-pill">sustainable</span>
-      <span class="word-pill">structure</span><span class="word-pill">material</span>
+      <span class="word-pill"><span class="glossary" data-def="A series of steps engineers follow: Investigate → Design → Produce → Evaluate">design process</span></span><span class="word-pill"><span class="glossary" data-def="To research and gather information before designing">investigate</span></span><span class="word-pill"><span class="glossary" data-def="To judge how good something is against criteria">evaluate</span></span>
+      <span class="word-pill"><span class="glossary" data-def="The rules or standards your design must meet">criteria</span></span><span class="word-pill"><span class="glossary" data-def="A first working model of your design, used for testing">prototype</span></span><span class="word-pill"><span class="glossary" data-def="To repeat and improve — go through the design process again">iterate</span></span>
+      <span class="word-pill"><span class="glossary" data-def="What a product is supposed to do — its purpose">function</span></span><span class="word-pill"><span class="glossary" data-def="How something looks and feels — its visual appeal">aesthetics</span></span><span class="word-pill"><span class="glossary" data-def="Using resources wisely so they last for the future">sustainable</span></span>
+      <span class="word-pill"><span class="glossary" data-def="How parts are arranged to hold something up">structure</span></span><span class="word-pill"><span class="glossary" data-def="What something is made from (e.g. cardboard, wood, plastic)">material</span></span>
     </div>
 
     <div class="tip-box show-beginning">
@@ -1902,10 +1951,57 @@ body.fade-none .scaffold-partial { display: none; }
       <strong>Target:</strong> Write 80+ words with full TEEL, specific examples, and academic vocabulary.
     </div>
 
-    <div class="write-area mt-2">
-      <textarea id="capWrite" style="min-height:180px;" placeholder="Write your full response here..." oninput="updateWordCount('capWrite','capWC','capKT'); saveResponse('capWrite')"></textarea>
-      <div class="word-count" id="capWC">0 words</div>
-      <div class="key-terms-found" id="capKT"></div>
+    <!-- Beginning band: scaffolded T/E/E/L textareas -->
+    <div class="show-beginning" id="capScaffoldedWrite">
+      <div class="para-builder mt-2">
+        <div class="para-step step-t">
+          <label><span class="step-badge">T</span> Topic Sentence</label>
+          <div class="sentence-frame">Frame: "The design process is ___ because ___."</div>
+          <textarea id="capWriteT" placeholder="Write your topic sentence..." oninput="combineCapstone(); saveResponse('capWriteT')"></textarea>
+        </div>
+        <div class="para-step step-e1">
+          <label><span class="step-badge">E</span> Evidence / Example</label>
+          <div class="sentence-frame">Frame: "For example, when we ___, we ___."</div>
+          <textarea id="capWriteE1" placeholder="Write your evidence..." oninput="combineCapstone(); saveResponse('capWriteE1')"></textarea>
+        </div>
+        <div class="para-step step-e2">
+          <label><span class="step-badge">E</span> Explain Why</label>
+          <div class="sentence-frame">Frame: "This helped us ___ because ___."</div>
+          <textarea id="capWriteE2" placeholder="Explain why this matters..." oninput="combineCapstone(); saveResponse('capWriteE2')"></textarea>
+        </div>
+        <div class="para-step step-l">
+          <label><span class="step-badge">L</span> Link Back</label>
+          <div class="sentence-frame">Frame: "Overall, the design process is important because ___."</div>
+          <textarea id="capWriteL" placeholder="Link back to the main idea..." oninput="combineCapstone(); saveResponse('capWriteL')"></textarea>
+        </div>
+      </div>
+      <div style="background:var(--grey-light);padding:12px;border-radius:8px;margin-top:10px;">
+        <strong>Your combined paragraph:</strong>
+        <div id="capCombinedPreview" style="margin-top:6px;font-size:0.9rem;line-height:1.6;color:#333;"><em style="color:#999;">Start writing above to see your paragraph here...</em></div>
+      </div>
+      <div class="word-count" id="capWCScaffolded">0 words</div>
+      <div class="key-terms-found" id="capKTScaffolded"></div>
+    </div>
+
+    <!-- Developing/Consolidating: single textarea -->
+    <div class="show-developing show-consolidating" id="capFreeWrite">
+      <div class="write-area mt-2">
+        <textarea id="capWrite" style="min-height:180px;" placeholder="Write your full response here..." oninput="updateWordCount('capWrite','capWC','capKT'); saveResponse('capWrite')"></textarea>
+        <div class="word-count" id="capWC">0 words</div>
+        <div class="key-terms-found" id="capKT"></div>
+      </div>
+    </div>
+
+    <!-- Show Model Answer button -->
+    <button class="btn btn-sm btn-outline mt-2" onclick="showCapstoneModel()" id="capModelBtn">📝 Show Model Answer (after you try first!)</button>
+    <div id="capModelAnswer" style="display:none; margin-top:12px; background:linear-gradient(135deg,#f0faf7,#e8f4f1); border:2px solid var(--teal); border-radius:10px; padding:16px;">
+      <strong style="color:var(--teal);">Grade C Model Response (~50 words):</strong>
+      <p style="margin-top:8px; font-size:0.9rem; line-height:1.7; color:#333;">
+        The design process is useful because it helps you plan before you build. For example, when we designed paper boats, we followed the steps of investigate, design, produce, test and evaluate. This helped us find problems early. Overall, the design process helps students make better products.
+      </p>
+      <div style="margin-top:8px; font-size:0.82rem; color:#888;">
+        <strong>Notice:</strong> This is a Grade C response — it uses TEEL and gives an example. To reach Grade A, add more detail, use academic vocabulary, and explain <em>why</em> more deeply.
+      </div>
     </div>
   </div>
 
@@ -2061,7 +2157,7 @@ body.fade-none .scaffold-partial { display: none; }
     </div>
 
     <div class="quiz-group">
-      <div class="quiz-q">3. "We will redesign the prototype next lesson."</div>
+      <div class="quiz-q">3. "We will redesign the <span class="glossary" data-def="A first working model of your design, used for testing">prototype</span> next lesson."</div>
       <div class="quiz-options">
         <button class="quiz-option" onclick="tenseQ(3, this, false)">Past</button>
         <button class="quiz-option" onclick="tenseQ(3, this, false)">Present</button>
@@ -2116,6 +2212,25 @@ body.fade-none .scaffold-partial { display: none; }
       Future: "We <strong>will test</strong> the bridge."
     </div>
 
+    <div class="show-beginning" style="background:#fff8e1;border:2px solid #f9a825;border-radius:8px;padding:12px 16px;margin-top:12px;">
+      <strong style="color:#f57f17;">💡 Future Tense — Two Forms</strong>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px;font-size:0.85rem;">
+        <div style="background:white;padding:10px;border-radius:6px;">
+          <strong>"will + verb"</strong><br>
+          <em>Formal / written</em><br>
+          "We <strong>will test</strong> the bridge."
+        </div>
+        <div style="background:white;padding:10px;border-radius:6px;">
+          <strong>"going to + verb"</strong><br>
+          <em>Spoken / planned</em><br>
+          "We <strong>are going to test</strong> the bridge."
+        </div>
+      </div>
+      <p style="font-size:0.8rem;color:#666;margin-top:8px;margin-bottom:0;">
+        In technology writing, use <strong>"will + verb"</strong> — it sounds more professional. Save "going to" for speaking in class.
+      </p>
+    </div>
+
     <div style="margin-top:16px;">
       <p><strong>1.</strong> Change to <span style="color:var(--green);font-weight:600;">Present tense</span>: "The team <strong>designed</strong> a phone stand."</p>
       <textarea id="tenseT1" placeholder="Write the present tense version..." oninput="saveResponse('tenseT1')" style="width:100%;min-height:50px;padding:10px;border:2px solid #ddd;border-radius:8px;font-size:0.9rem;"></textarea>
@@ -2138,7 +2253,7 @@ body.fade-none .scaffold-partial { display: none; }
     </div>
 
     <div style="margin-top:16px;">
-      <p><strong>4.</strong> Change to <span style="color:var(--green);font-weight:600;">Present tense</span>: "The engineer <strong>will evaluate</strong> the prototype."</p>
+      <p><strong>4.</strong> Change to <span style="color:var(--green);font-weight:600;">Present tense</span>: "The engineer <strong>will evaluate</strong> the <span class="glossary" data-def="A first working model of your design, used for testing">prototype</span>."</p>
       <textarea id="tenseT4" placeholder="Write the present tense version..." oninput="saveResponse('tenseT4')" style="width:100%;min-height:50px;padding:10px;border:2px solid #ddd;border-radius:8px;font-size:0.9rem;"></textarea>
       <button class="btn btn-sm btn-outline mt-1" onclick="revealTense(4)">Show Model Answer</button>
       <div class="quiz-feedback" id="tenseTFb4"></div>
@@ -2218,7 +2333,7 @@ body.fade-none .scaffold-partial { display: none; }
     </div>
 
     <div class="quiz-group">
-      <div class="quiz-q">4. "The prototype worked well because we followed the design process."</div>
+      <div class="quiz-q">4. "The <span class="glossary" data-def="A first working model of your design, used for testing">prototype</span> worked well because we followed the design process."</div>
       <div class="quiz-options">
         <button class="quiz-option" onclick="sentenceTypeQ(4, this, false)">Simple</button>
         <button class="quiz-option" onclick="sentenceTypeQ(4, this, false)">Compound</button>
@@ -2258,6 +2373,11 @@ body.fade-none .scaffold-partial { display: none; }
 
     <div style="margin-top:16px;">
       <p><strong>1. Start:</strong> "The bridge held the weight."</p>
+      <div class="sentence-frame show-beginning" style="background:#e8f4fd;padding:10px 14px;border-radius:8px;margin-bottom:8px;font-size:0.85rem;">
+        <strong>Sentence frames to help you:</strong><br>
+        Compound: <em>"The bridge held the weight, <strong>[and / but / so]</strong> __________."</em><br>
+        Complex: <em>"The bridge held the weight <strong>because</strong> __________."</em>
+      </div>
       <p style="color:var(--blue);font-weight:600;">Make it compound (use and, but, or so):</p>
       <textarea id="sb1compound" placeholder="The bridge held the weight, but..." oninput="saveResponse('sb1compound')" style="width:100%;min-height:50px;padding:10px;border:2px solid #ddd;border-radius:8px;font-size:0.9rem;"></textarea>
       <p style="color:var(--orange);font-weight:600;margin-top:8px;">Make it complex (use because, although, or when):</p>
@@ -2266,6 +2386,11 @@ body.fade-none .scaffold-partial { display: none; }
 
     <div style="margin-top:20px;">
       <p><strong>2. Start:</strong> "We chose cardboard as our material."</p>
+      <div class="sentence-frame show-beginning" style="background:#e8f4fd;padding:10px 14px;border-radius:8px;margin-bottom:8px;font-size:0.85rem;">
+        <strong>Sentence frames to help you:</strong><br>
+        Compound: <em>"We chose cardboard as our material, <strong>[and / but / so]</strong> __________."</em><br>
+        Complex: <em>"We chose cardboard as our material <strong>because</strong> __________."</em>
+      </div>
       <p style="color:var(--blue);font-weight:600;">Make it compound:</p>
       <textarea id="sb2compound" placeholder="We chose cardboard as our material, and..." oninput="saveResponse('sb2compound')" style="width:100%;min-height:50px;padding:10px;border:2px solid #ddd;border-radius:8px;font-size:0.9rem;"></textarea>
       <p style="color:var(--orange);font-weight:600;margin-top:8px;">Make it complex:</p>
@@ -2274,6 +2399,11 @@ body.fade-none .scaffold-partial { display: none; }
 
     <div style="margin-top:20px;">
       <p><strong>3. Start:</strong> "The design failed the test."</p>
+      <div class="sentence-frame show-beginning" style="background:#e8f4fd;padding:10px 14px;border-radius:8px;margin-bottom:8px;font-size:0.85rem;">
+        <strong>Sentence frames to help you:</strong><br>
+        Compound: <em>"The design failed the test, <strong>[and / but / so]</strong> __________."</em><br>
+        Complex: <em>"<strong>Although</strong> __________, the design failed the test."</em>
+      </div>
       <p style="color:var(--blue);font-weight:600;">Make it compound:</p>
       <textarea id="sb3compound" placeholder="The design failed the test, so..." oninput="saveResponse('sb3compound')" style="width:100%;min-height:50px;padding:10px;border:2px solid #ddd;border-radius:8px;font-size:0.9rem;"></textarea>
       <p style="color:var(--orange);font-weight:600;margin-top:8px;">Make it complex:</p>
@@ -2336,6 +2466,7 @@ const STORAGE_KEY = 'y7wir-data';
 
 let appData = {
   studentName: '',
+  studentClass: '',
   band: null,
   diagnosticDone: false,
   diagnosticScore: 0,
@@ -2362,6 +2493,7 @@ let appData = {
 /* ========== PERSISTENCE ========== */
 function saveAll() {
   appData.studentName = document.getElementById('studentName').value;
+  appData.studentClass = document.getElementById('studentClass').value;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
   updatePrintFields();
 }
@@ -2375,6 +2507,7 @@ function loadAll() {
     } catch (e) { console.warn('Failed to load saved data'); }
   }
   document.getElementById('studentName').value = appData.studentName || '';
+  document.getElementById('studentClass').value = appData.studentClass || '';
   if (appData.band) setBand(appData.band, false);
   updateOverallProgress();
   updatePrintFields();
@@ -3078,8 +3211,52 @@ function selectGrade(btn, grade) {
   saveAll();
 }
 
+// Combine scaffolded T/E/E/L textareas into preview (beginning band)
+function combineCapstone() {
+  const t = document.getElementById('capWriteT')?.value || '';
+  const e1 = document.getElementById('capWriteE1')?.value || '';
+  const e2 = document.getElementById('capWriteE2')?.value || '';
+  const l = document.getElementById('capWriteL')?.value || '';
+  const full = [t, e1, e2, l].filter(s => s.trim()).join(' ');
+  const preview = document.getElementById('capCombinedPreview');
+  if (preview) {
+    if (full.trim()) {
+      preview.textContent = full;
+    } else {
+      preview.innerHTML = '<em style="color:#999;">Start writing above to see your paragraph here...</em>';
+    }
+  }
+  // Update word count
+  const words = full.trim().split(/\s+/).filter(w => w.length > 0).length;
+  const wcEl = document.getElementById('capWCScaffolded');
+  if (wcEl) wcEl.textContent = words + ' word' + (words !== 1 ? 's' : '');
+  // Update key terms
+  const terms = countKeyTerms(full);
+  const ktEl = document.getElementById('capKTScaffolded');
+  if (ktEl && terms.count > 0) {
+    ktEl.textContent = 'Key terms used: ' + terms.found.join(', ');
+  }
+}
+
+function showCapstoneModel() {
+  const el = document.getElementById('capModelAnswer');
+  if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+
+// Get capstone text from either scaffolded or free-write mode
+function getCapstoneText() {
+  if (appData.band === 'beginning') {
+    const t = document.getElementById('capWriteT')?.value || '';
+    const e1 = document.getElementById('capWriteE1')?.value || '';
+    const e2 = document.getElementById('capWriteE2')?.value || '';
+    const l = document.getElementById('capWriteL')?.value || '';
+    return [t, e1, e2, l].filter(s => s.trim()).join(' ');
+  }
+  return document.getElementById('capWrite')?.value || '';
+}
+
 function finishModule6() {
-  const text = document.getElementById('capWrite')?.value || '';
+  const text = getCapstoneText();
   const words = text.trim().split(/\s+/).filter(w => w.length > 0).length;
   const terms = countKeyTerms(text);
   let score = 0;
@@ -3129,12 +3306,20 @@ function finishModule5() {
 }
 
 /* ========== MODULE 4: TEEL PARAGRAPH ========== */
-const JIGSAW_SENTENCES = [
+const JIGSAW_SENTENCES_FULL = [
   { text: 'The design process is a useful framework for solving problems in Technology.', role: 'T', colour: 'var(--blue)' },
   { text: 'For example, when we built paper boats, we followed the steps of investigate, design, produce, test, and evaluate.', role: 'E', colour: 'var(--green)' },
   { text: 'This structured approach helped us identify problems early and improve our designs before the final build.', role: 'E', colour: 'var(--orange)' },
   { text: 'Therefore, the design process ensures that students create better products by thinking carefully at each stage.', role: 'L', colour: 'var(--purple)' }
 ];
+const JIGSAW_SENTENCES_BEGINNING = [
+  { text: 'The design process helps us solve problems.', role: 'T', colour: 'var(--blue)' },
+  { text: 'For example, we used it to design paper boats.', role: 'E', colour: 'var(--green)' },
+  { text: 'This helped us find problems early and improve our designs.', role: 'E', colour: 'var(--orange)' },
+  { text: 'So the design process helps us make better products.', role: 'L', colour: 'var(--purple)' }
+];
+// Choose sentences based on band
+const JIGSAW_SENTENCES = (appData.band === 'beginning') ? JIGSAW_SENTENCES_BEGINNING : JIGSAW_SENTENCES_FULL;
 
 let jigsawOrder = [];
 let jigsawShuffled = [];
@@ -3218,6 +3403,11 @@ function spotLevel(qNum, btn, isCorrect) {
   const fb = document.getElementById('spotFb' + qNum);
   fb.classList.add('show', isCorrect ? 'correct' : 'incorrect');
   fb.textContent = isCorrect ? spotFeedback[qNum][0] : spotFeedback[qNum][1];
+  // Reveal model paragraph when all 3 Spot the Level questions are answered
+  if (spotScores[1] !== null && spotScores[2] !== null && spotScores[3] !== null) {
+    const model = document.getElementById('spotModelParagraph');
+    if (model) model.style.display = 'block';
+  }
 }
 
 // Paragraph Builder
@@ -3359,11 +3549,51 @@ function checkVSCC() {
   fb.classList.add('show');
   if (correct >= total * 0.7) {
     fb.className = 'quiz-feedback show correct';
-    fb.textContent = 'Great work! You correctly highlighted ' + correct + '/' + total + ' parts. You understand how to break down questions!';
+    fb.innerHTML = '✅ Great work! You correctly highlighted ' + correct + '/' + total + ' parts. You understand how to break down questions!';
   } else {
     fb.className = 'quiz-feedback show incorrect';
-    fb.textContent = 'You got ' + correct + '/' + total + '. Remember: Verb (blue) = the action word, Subject (orange) = the topic, Content (green) = the details, Concept (purple) = the big idea. Try again!';
+    fb.innerHTML = 'You got ' + correct + '/' + total + '. Try again, or check the correct answers below.';
   }
+  // Always reveal the model answers after checking
+  showVSCCModelAnswers();
+}
+
+function showVSCCModelAnswers() {
+  let modelDiv = document.getElementById('vsccModelAnswers');
+  if (modelDiv) { modelDiv.style.display = 'block'; return; }
+  const answers = [
+    { q: 'Question 1:', parts: [
+      { text: 'Describe', role: 'verb' },
+      { text: 'the design process', role: 'subject' },
+      { text: 'and its five stages.', role: 'content' }
+    ]},
+    { q: 'Question 2:', parts: [
+      { text: 'Explain', role: 'verb' },
+      { text: 'why', role: 'concept' },
+      { text: 'measurement', role: 'subject' },
+      { text: 'is important when building a model.', role: 'content' }
+    ]},
+    { q: 'Question 3:', parts: [
+      { text: 'Evaluate', role: 'verb' },
+      { text: 'your tower design', role: 'subject' },
+      { text: 'against the criteria', role: 'content' },
+      { text: 'of strength and stability.', role: 'concept' }
+    ]}
+  ];
+  modelDiv = document.createElement('div');
+  modelDiv.id = 'vsccModelAnswers';
+  modelDiv.style.cssText = 'background:#f0faf7;border:2px solid var(--teal);border-radius:8px;padding:14px;margin-top:12px;';
+  let html = '<strong style="color:var(--teal);">📋 Correct Answers:</strong>';
+  answers.forEach(a => {
+    html += '<div style="margin:10px 0 4px;font-weight:600;font-size:0.85rem;">' + a.q + '</div>';
+    html += '<div style="line-height:2;">';
+    a.parts.forEach(p => {
+      html += '<span class="vscc-word vscc-' + p.role + '" style="pointer-events:none;">' + p.text + '</span> ';
+    });
+    html += '</div>';
+  });
+  modelDiv.innerHTML = html;
+  document.getElementById('vsccFeedback').after(modelDiv);
 }
 
 function finishModule3() {
@@ -3458,10 +3688,19 @@ const tenseModelAnswers = {
   4: 'The engineer evaluates the prototype.'
 };
 
+const tenseExplanations = {
+  1: 'We changed <strong>"designed"</strong> → <strong>"designs"</strong> because present tense drops the <em>-ed</em> ending and adds <em>-s</em> for he/she/it subjects (the team = it).',
+  2: 'We changed <strong>"measure"</strong> → <strong>"will measure"</strong> because we add <em>"will"</em> before the base verb to make future tense.',
+  3: 'We changed <strong>"will hold"</strong> → <strong>"held"</strong> because past tense of "hold" is the irregular form "held" (not "holded"). Remove "will" and change the verb.',
+  4: 'We changed <strong>"will evaluate"</strong> → <strong>"evaluates"</strong> because present tense removes "will" and adds <em>-s</em> for he/she/it subjects (the engineer = he/she).'
+};
+
 function revealTense(qNum) {
   const fb = document.getElementById('tenseTFb' + qNum);
   fb.classList.add('show', 'correct');
-  fb.textContent = 'Model answer: ' + tenseModelAnswers[qNum];
+  fb.innerHTML = '<strong>Model answer:</strong> ' + tenseModelAnswers[qNum] +
+    '<div style="margin-top:8px;padding:8px 12px;background:#f0f7ff;border-left:3px solid var(--blue);border-radius:0 6px 6px 0;font-size:0.82rem;line-height:1.5;">' +
+    '💡 <strong>Why?</strong> ' + tenseExplanations[qNum] + '</div>';
 }
 
 let sentenceTypeScores = { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null };
@@ -3528,10 +3767,49 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     document.getElementById('diagResultMsg').textContent = 'Score: ' + score + '/12 — Band: ' + band.charAt(0).toUpperCase() + band.slice(1);
   }
+  // Glossary tooltips — touch-friendly
+  document.querySelectorAll('.glossary').forEach(el => {
+    const tip = document.createElement('span');
+    tip.className = 'glossary-tip';
+    tip.textContent = el.dataset.def;
+    el.appendChild(tip);
+    el.addEventListener('click', function(e) {
+      e.preventDefault();
+      document.querySelectorAll('.glossary.active').forEach(g => { if (g !== el) g.classList.remove('active'); });
+      el.classList.toggle('active');
+    });
+  });
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.glossary')) {
+      document.querySelectorAll('.glossary.active').forEach(g => g.classList.remove('active'));
+    }
+  });
+
   // Init modules
   initWordSort();
   initJigsaw();
   restoreQuizStates();
+});
+</script>
+
+<!-- Submission System -->
+<script src="submission.js"></script>
+<script>
+initSubmission({
+  storageKey: 'y7wir-data',
+  worksheetTitle: 'Write It Right',
+  getStudentName: function() {
+    return (document.getElementById('studentName').value || '').trim();
+  },
+  getStudentClass: function() {
+    return (document.getElementById('studentClass').value || '').trim();
+  },
+  getData: function() {
+    try { return JSON.parse(localStorage.getItem('y7wir-data')); }
+    catch(e) { return null; }
+  },
+  containerSelector: '.topbar',
+  insertMode: 'after'
 });
 </script>
 </body>
