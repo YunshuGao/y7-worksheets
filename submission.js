@@ -132,7 +132,7 @@
     var btn = document.createElement('button');
     btn.className = 'sub-btn';
     btn.id = 'subSubmitBtn';
-    btn.title = 'Submit your work to Yunshu Gao';
+    btn.title = 'Submit your work to Yunshu Gao(Ms Gao)';
     btn.innerHTML = '<span class="btn-label">\uD83D\uDCE4 Submit to Teacher</span><span class="spinner"></span>';
     btn.onclick = handleSubmit;
 
@@ -355,7 +355,7 @@
 
     if (isOnline) {
       btn.disabled = false;
-      btn.title = 'Submit your work to Yunshu Gao';
+      btn.title = 'Submit your work to Yunshu Gao(Ms Gao)';
     } else {
       btn.disabled = true;
       btn.title = 'You are offline \u2014 your work is saved locally';
