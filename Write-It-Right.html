@@ -791,6 +791,7 @@ body.fade-none .scaffold-partial { display: none; }
   <button onclick="switchModule(4)">4. Build a Paragraph</button>
   <button onclick="switchModule(5)">5. Analyse a Design</button>
   <button onclick="switchModule(6)">6. Put It All Together</button>
+  <button onclick="switchModule(7)">7. Grammar Gym</button>
 </div>
 
 <!-- ========== MODULE 0: Diagnostic ========== -->
@@ -1995,6 +1996,305 @@ body.fade-none .scaffold-partial { display: none; }
 
 </div>
 
+<!-- ========== MODULE 7: Grammar Gym ========== -->
+<div class="module" id="mod7">
+
+  <!-- Section A: Verb Tenses -->
+  <div class="section-card">
+    <h2>Grammar Gym — Verb Tenses</h2>
+    <div class="eald-box">
+      <div class="eald-label">Language Help</div>
+      <strong>Verb tenses</strong> tell us <em>when</em> something happens. In Technology, you use different tenses when you write about what you did, what is happening now, and what you plan to do.
+    </div>
+
+    <div class="grid-3 mt-2">
+      <div style="background:var(--blue-light);padding:14px;border-radius:8px;text-align:center;">
+        <div style="font-size:1.5rem;">&#9194;</div>
+        <strong style="color:var(--blue);">Past Tense</strong>
+        <p style="font-size:0.82rem;margin-top:4px;">Already happened<br><em>designed, tested, measured</em></p>
+        <div style="background:white;padding:8px;border-radius:6px;margin-top:8px;font-size:0.8rem;">
+          "We <strong>tested</strong> our bridge and it <strong>collapsed</strong>."
+        </div>
+      </div>
+      <div style="background:var(--green-light);padding:14px;border-radius:8px;text-align:center;">
+        <div style="font-size:1.5rem;">&#9654;</div>
+        <strong style="color:var(--green);">Present Tense</strong>
+        <p style="font-size:0.82rem;margin-top:4px;">Happening now / always true<br><em>designs, supports, measures</em></p>
+        <div style="background:white;padding:8px;border-radius:6px;margin-top:8px;font-size:0.8rem;">
+          "The beam <strong>supports</strong> the weight."
+        </div>
+      </div>
+      <div style="background:var(--orange-light);padding:14px;border-radius:8px;text-align:center;">
+        <div style="font-size:1.5rem;">&#9193;</div>
+        <strong style="color:var(--orange);">Future Tense</strong>
+        <p style="font-size:0.82rem;margin-top:4px;">Will happen later<br><em>will design, is going to test</em></p>
+        <div style="background:white;padding:8px;border-radius:6px;margin-top:8px;font-size:0.8rem;">
+          "We <strong>will redesign</strong> the prototype."
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Activity 1: Tense Spotter Quiz -->
+  <div class="section-card">
+    <h2>Activity 1 — Tense Spotter</h2>
+    <p>Read each sentence. Is it <strong>Past</strong>, <strong>Present</strong>, or <strong>Future</strong> tense?</p>
+
+    <div class="quiz-group">
+      <div class="quiz-q">1. "The bridge collapsed during testing."</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="tenseQ(1, this, true)">Past</button>
+        <button class="quiz-option" onclick="tenseQ(1, this, false)">Present</button>
+        <button class="quiz-option" onclick="tenseQ(1, this, false)">Future</button>
+      </div>
+      <div class="quiz-feedback" id="tenseFb1"></div>
+    </div>
+
+    <div class="quiz-group">
+      <div class="quiz-q">2. "The structure supports 500 grams of weight."</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="tenseQ(2, this, false)">Past</button>
+        <button class="quiz-option" onclick="tenseQ(2, this, true)">Present</button>
+        <button class="quiz-option" onclick="tenseQ(2, this, false)">Future</button>
+      </div>
+      <div class="quiz-feedback" id="tenseFb2"></div>
+    </div>
+
+    <div class="quiz-group">
+      <div class="quiz-q">3. "We will redesign the prototype next lesson."</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="tenseQ(3, this, false)">Past</button>
+        <button class="quiz-option" onclick="tenseQ(3, this, false)">Present</button>
+        <button class="quiz-option" onclick="tenseQ(3, this, true)">Future</button>
+      </div>
+      <div class="quiz-feedback" id="tenseFb3"></div>
+    </div>
+
+    <div class="quiz-group">
+      <div class="quiz-q">4. "The students measured the length of each beam."</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="tenseQ(4, this, true)">Past</button>
+        <button class="quiz-option" onclick="tenseQ(4, this, false)">Present</button>
+        <button class="quiz-option" onclick="tenseQ(4, this, false)">Future</button>
+      </div>
+      <div class="quiz-feedback" id="tenseFb4"></div>
+    </div>
+
+    <div class="quiz-group">
+      <div class="quiz-q">5. "Triangles distribute force evenly across a structure."</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="tenseQ(5, this, false)">Past</button>
+        <button class="quiz-option" onclick="tenseQ(5, this, true)">Present</button>
+        <button class="quiz-option" onclick="tenseQ(5, this, false)">Future</button>
+      </div>
+      <div class="quiz-feedback" id="tenseFb5"></div>
+    </div>
+
+    <div class="quiz-group">
+      <div class="quiz-q">6. "Next term, we are going to build a model house."</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="tenseQ(6, this, false)">Past</button>
+        <button class="quiz-option" onclick="tenseQ(6, this, false)">Present</button>
+        <button class="quiz-option" onclick="tenseQ(6, this, true)">Future</button>
+      </div>
+      <div class="quiz-feedback" id="tenseFb6"></div>
+    </div>
+  </div>
+
+  <!-- Activity 2: Tense Transformer -->
+  <div class="section-card">
+    <h2>Activity 2 — Tense Transformer</h2>
+    <div class="eald-box">
+      <div class="eald-label">Language Help</div>
+      Change a sentence from one tense to another. Watch how the <strong>verb</strong> changes but the meaning stays the same.
+    </div>
+
+    <div class="info-box mt-2">
+      <strong>Example:</strong><br>
+      Past: "We <strong>tested</strong> the bridge."<br>
+      Present: "We <strong>test</strong> the bridge."<br>
+      Future: "We <strong>will test</strong> the bridge."
+    </div>
+
+    <div style="margin-top:16px;">
+      <p><strong>1.</strong> Change to <span style="color:var(--green);font-weight:600;">Present tense</span>: "The team <strong>designed</strong> a phone stand."</p>
+      <textarea id="tenseT1" placeholder="Write the present tense version..." oninput="saveResponse('tenseT1')" style="width:100%;min-height:50px;padding:10px;border:2px solid #ddd;border-radius:8px;font-size:0.9rem;"></textarea>
+      <button class="btn btn-sm btn-outline mt-1" onclick="revealTense(1)">Show Model Answer</button>
+      <div class="quiz-feedback" id="tenseTFb1"></div>
+    </div>
+
+    <div style="margin-top:16px;">
+      <p><strong>2.</strong> Change to <span style="color:var(--orange);font-weight:600;">Future tense</span>: "The students <strong>measure</strong> the materials."</p>
+      <textarea id="tenseT2" placeholder="Write the future tense version..." oninput="saveResponse('tenseT2')" style="width:100%;min-height:50px;padding:10px;border:2px solid #ddd;border-radius:8px;font-size:0.9rem;"></textarea>
+      <button class="btn btn-sm btn-outline mt-1" onclick="revealTense(2)">Show Model Answer</button>
+      <div class="quiz-feedback" id="tenseTFb2"></div>
+    </div>
+
+    <div style="margin-top:16px;">
+      <p><strong>3.</strong> Change to <span style="color:var(--blue);font-weight:600;">Past tense</span>: "The glue <strong>will hold</strong> the pieces together."</p>
+      <textarea id="tenseT3" placeholder="Write the past tense version..." oninput="saveResponse('tenseT3')" style="width:100%;min-height:50px;padding:10px;border:2px solid #ddd;border-radius:8px;font-size:0.9rem;"></textarea>
+      <button class="btn btn-sm btn-outline mt-1" onclick="revealTense(3)">Show Model Answer</button>
+      <div class="quiz-feedback" id="tenseTFb3"></div>
+    </div>
+
+    <div style="margin-top:16px;">
+      <p><strong>4.</strong> Change to <span style="color:var(--green);font-weight:600;">Present tense</span>: "The engineer <strong>will evaluate</strong> the prototype."</p>
+      <textarea id="tenseT4" placeholder="Write the present tense version..." oninput="saveResponse('tenseT4')" style="width:100%;min-height:50px;padding:10px;border:2px solid #ddd;border-radius:8px;font-size:0.9rem;"></textarea>
+      <button class="btn btn-sm btn-outline mt-1" onclick="revealTense(4)">Show Model Answer</button>
+      <div class="quiz-feedback" id="tenseTFb4"></div>
+    </div>
+  </div>
+
+  <!-- Section B: Sentence Structure -->
+  <div class="section-card">
+    <h2>Sentence Structure — Simple, Compound, Complex</h2>
+    <div class="eald-box">
+      <div class="eald-label">Language Help</div>
+      Good writers use a <strong>mix</strong> of sentence types. This makes your writing more interesting and easier to read.
+    </div>
+
+    <div class="grid-3 mt-2">
+      <div style="background:var(--green-light);padding:14px;border-radius:8px;">
+        <strong style="color:var(--green);">Simple</strong>
+        <p style="font-size:0.82rem;margin-top:4px;"><strong>One idea.</strong></p>
+        <div style="background:white;padding:8px;border-radius:6px;margin-top:8px;font-size:0.8rem;">
+          "The bridge held the weight."
+        </div>
+      </div>
+      <div style="background:var(--blue-light);padding:14px;border-radius:8px;">
+        <strong style="color:var(--blue);">Compound</strong>
+        <p style="font-size:0.82rem;margin-top:4px;"><strong>Two ideas</strong> joined by <em>and, but, so, or</em></p>
+        <div style="background:white;padding:8px;border-radius:6px;margin-top:8px;font-size:0.8rem;">
+          "The bridge held the weight, <strong>but</strong> the tower collapsed."
+        </div>
+      </div>
+      <div style="background:var(--orange-light);padding:14px;border-radius:8px;">
+        <strong style="color:var(--orange);">Complex</strong>
+        <p style="font-size:0.82rem;margin-top:4px;"><strong>Main idea + reason/condition</strong> using <em>because, although, when, if</em></p>
+        <div style="background:white;padding:8px;border-radius:6px;margin-top:8px;font-size:0.8rem;">
+          "The bridge held the weight <strong>because</strong> we used triangles."
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box mt-2">
+      <strong>Tip for Year 7:</strong> Try to write at least <strong>one compound</strong> and <strong>one complex</strong> sentence in every paragraph. This is a quick way to improve your writing grade!
+    </div>
+  </div>
+
+  <!-- Activity 3: Sentence Type Sorter -->
+  <div class="section-card">
+    <h2>Activity 3 — Sentence Type Sorter</h2>
+    <p>Read each sentence. Is it <strong>Simple</strong>, <strong>Compound</strong>, or <strong>Complex</strong>?</p>
+
+    <div class="quiz-group">
+      <div class="quiz-q">1. "The tower is 30 centimetres tall."</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="sentenceTypeQ(1, this, true)">Simple</button>
+        <button class="quiz-option" onclick="sentenceTypeQ(1, this, false)">Compound</button>
+        <button class="quiz-option" onclick="sentenceTypeQ(1, this, false)">Complex</button>
+      </div>
+      <div class="quiz-feedback" id="stFb1"></div>
+    </div>
+
+    <div class="quiz-group">
+      <div class="quiz-q">2. "We used cardboard for the base, but we chose balsa wood for the frame."</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="sentenceTypeQ(2, this, false)">Simple</button>
+        <button class="quiz-option" onclick="sentenceTypeQ(2, this, true)">Compound</button>
+        <button class="quiz-option" onclick="sentenceTypeQ(2, this, false)">Complex</button>
+      </div>
+      <div class="quiz-feedback" id="stFb2"></div>
+    </div>
+
+    <div class="quiz-group">
+      <div class="quiz-q">3. "Although the design looked strong, it failed the weight test."</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="sentenceTypeQ(3, this, false)">Simple</button>
+        <button class="quiz-option" onclick="sentenceTypeQ(3, this, false)">Compound</button>
+        <button class="quiz-option" onclick="sentenceTypeQ(3, this, true)">Complex</button>
+      </div>
+      <div class="quiz-feedback" id="stFb3"></div>
+    </div>
+
+    <div class="quiz-group">
+      <div class="quiz-q">4. "The prototype worked well because we followed the design process."</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="sentenceTypeQ(4, this, false)">Simple</button>
+        <button class="quiz-option" onclick="sentenceTypeQ(4, this, false)">Compound</button>
+        <button class="quiz-option" onclick="sentenceTypeQ(4, this, true)">Complex</button>
+      </div>
+      <div class="quiz-feedback" id="stFb4"></div>
+    </div>
+
+    <div class="quiz-group">
+      <div class="quiz-q">5. "We tested the bridge and it held 2 kilograms."</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="sentenceTypeQ(5, this, false)">Simple</button>
+        <button class="quiz-option" onclick="sentenceTypeQ(5, this, true)">Compound</button>
+        <button class="quiz-option" onclick="sentenceTypeQ(5, this, false)">Complex</button>
+      </div>
+      <div class="quiz-feedback" id="stFb5"></div>
+    </div>
+
+    <div class="quiz-group">
+      <div class="quiz-q">6. "Sustainable materials reduce waste."</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="sentenceTypeQ(6, this, true)">Simple</button>
+        <button class="quiz-option" onclick="sentenceTypeQ(6, this, false)">Compound</button>
+        <button class="quiz-option" onclick="sentenceTypeQ(6, this, false)">Complex</button>
+      </div>
+      <div class="quiz-feedback" id="stFb6"></div>
+    </div>
+  </div>
+
+  <!-- Activity 4: Sentence Builder -->
+  <div class="section-card">
+    <h2>Activity 4 — Sentence Builder</h2>
+    <div class="eald-box">
+      <div class="eald-label">Language Help</div>
+      Start with a <strong>simple</strong> sentence. Then make it <strong>compound</strong> (add <em>and/but/so</em>). Then make it <strong>complex</strong> (add <em>because/although/when</em>).
+    </div>
+
+    <div style="margin-top:16px;">
+      <p><strong>1. Start:</strong> "The bridge held the weight."</p>
+      <p style="color:var(--blue);font-weight:600;">Make it compound (use and, but, or so):</p>
+      <textarea id="sb1compound" placeholder="The bridge held the weight, but..." oninput="saveResponse('sb1compound')" style="width:100%;min-height:50px;padding:10px;border:2px solid #ddd;border-radius:8px;font-size:0.9rem;"></textarea>
+      <p style="color:var(--orange);font-weight:600;margin-top:8px;">Make it complex (use because, although, or when):</p>
+      <textarea id="sb1complex" placeholder="The bridge held the weight because..." oninput="saveResponse('sb1complex')" style="width:100%;min-height:50px;padding:10px;border:2px solid #ddd;border-radius:8px;font-size:0.9rem;"></textarea>
+    </div>
+
+    <div style="margin-top:20px;">
+      <p><strong>2. Start:</strong> "We chose cardboard as our material."</p>
+      <p style="color:var(--blue);font-weight:600;">Make it compound:</p>
+      <textarea id="sb2compound" placeholder="We chose cardboard as our material, and..." oninput="saveResponse('sb2compound')" style="width:100%;min-height:50px;padding:10px;border:2px solid #ddd;border-radius:8px;font-size:0.9rem;"></textarea>
+      <p style="color:var(--orange);font-weight:600;margin-top:8px;">Make it complex:</p>
+      <textarea id="sb2complex" placeholder="We chose cardboard as our material because..." oninput="saveResponse('sb2complex')" style="width:100%;min-height:50px;padding:10px;border:2px solid #ddd;border-radius:8px;font-size:0.9rem;"></textarea>
+    </div>
+
+    <div style="margin-top:20px;">
+      <p><strong>3. Start:</strong> "The design failed the test."</p>
+      <p style="color:var(--blue);font-weight:600;">Make it compound:</p>
+      <textarea id="sb3compound" placeholder="The design failed the test, so..." oninput="saveResponse('sb3compound')" style="width:100%;min-height:50px;padding:10px;border:2px solid #ddd;border-radius:8px;font-size:0.9rem;"></textarea>
+      <p style="color:var(--orange);font-weight:600;margin-top:8px;">Make it complex:</p>
+      <textarea id="sb3complex" placeholder="Although the design looked good, it failed the test because..." oninput="saveResponse('sb3complex')" style="width:100%;min-height:50px;padding:10px;border:2px solid #ddd;border-radius:8px;font-size:0.9rem;"></textarea>
+    </div>
+  </div>
+
+  <!-- Checklist -->
+  <div class="section-card">
+    <div class="checklist">
+      <h3>Module 7 Checklist</h3>
+      <div class="check-item"><input type="checkbox" id="chk7a" onchange="saveChecklist('chk7a')"><label>I can identify past, present, and future tense</label></div>
+      <div class="check-item"><input type="checkbox" id="chk7b" onchange="saveChecklist('chk7b')"><label>I practised changing sentences between tenses</label></div>
+      <div class="check-item"><input type="checkbox" id="chk7c" onchange="saveChecklist('chk7c')"><label>I can identify simple, compound, and complex sentences</label></div>
+      <div class="check-item"><input type="checkbox" id="chk7d" onchange="saveChecklist('chk7d')"><label>I built compound and complex sentences</label></div>
+    </div>
+    <button class="btn btn-teal mt-2" onclick="finishModule7()">Complete Module 7 &#127881;</button>
+  </div>
+
+</div>
+
 <!-- Save/Load Modal -->
 <div class="save-overlay" id="saveOverlay" onclick="if(event.target===this)closeSaveModal()">
   <div class="save-modal">
@@ -2039,11 +2339,24 @@ let appData = {
   band: null,
   diagnosticDone: false,
   diagnosticScore: 0,
-  moduleScores: { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 },
-  moduleCompleted: { 0: false, 1: false, 2: false, 3: false, 4: false, 5: false, 6: false },
+  currentModule: 0,
+  moduleScores: { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0 },
+  moduleCompleted: { 0: false, 1: false, 2: false, 3: false, 4: false, 5: false, 6: false, 7: false },
   fadeLevels: { 1: 'full', 2: 'full', 3: 'full', 4: 'full', 5: 'full', 6: 'full' },
   responses: {},
-  checklists: {}
+  checklists: {},
+  quizState: {
+    sortScore: null,
+    sortTotal: null,
+    gapScores: {},
+    verbScores: {},
+    ttScores: {},
+    spotScores: {},
+    jigsawCompleted: false,
+    jigsawScore: null,
+    tenseScores: {},
+    sentenceTypeScores: {}
+  }
 };
 
 /* ========== PERSISTENCE ========== */
@@ -2076,6 +2389,150 @@ function loadAll() {
       if (el.checked) el.closest('.check-item')?.classList.add('checked');
     }
   });
+}
+
+function restoreQuizStates() {
+  const qs = appData.quizState || {};
+
+  // Restore active module tab
+  if (appData.currentModule) switchModule(appData.currentModule);
+
+  // Restore gap fill quiz (Module 1)
+  if (qs.gapScores) {
+    Object.keys(qs.gapScores).forEach(qNum => {
+      gapScores[qNum] = qs.gapScores[qNum];
+      const fb = document.getElementById('gapFb' + qNum);
+      const container = fb?.previousElementSibling;
+      if (container) {
+        const options = container.querySelectorAll('.quiz-option');
+        options.forEach(o => { o.disabled = true; o.style.pointerEvents = 'none'; });
+      }
+      if (fb) {
+        fb.classList.add('show', qs.gapScores[qNum] ? 'correct' : 'incorrect');
+        fb.textContent = qs.gapScores[qNum] ? 'Correct!' : 'Review the answer above.';
+      }
+    });
+  }
+
+  // Restore verb quiz (Module 3)
+  if (qs.verbScores) {
+    Object.keys(qs.verbScores).forEach(qNum => {
+      verbScores[qNum] = qs.verbScores[qNum];
+      const fb = document.getElementById('verbFb' + qNum);
+      const container = fb?.previousElementSibling;
+      if (container) {
+        const options = container.querySelectorAll('.quiz-option');
+        options.forEach(o => { o.disabled = true; o.style.pointerEvents = 'none'; });
+      }
+      if (fb) {
+        fb.classList.add('show', qs.verbScores[qNum] ? 'correct' : 'incorrect');
+        fb.textContent = qs.verbScores[qNum] ? 'Correct!' : 'Review the answer above.';
+      }
+    });
+  }
+
+  // Restore text type quiz (Module 2)
+  if (qs.ttScores) {
+    Object.keys(qs.ttScores).forEach(qNum => {
+      ttScores[qNum] = qs.ttScores[qNum];
+      const fb = document.getElementById('ttFb' + qNum);
+      const container = fb?.previousElementSibling;
+      if (container) {
+        const options = container.querySelectorAll('.quiz-option');
+        options.forEach(o => { o.disabled = true; o.style.pointerEvents = 'none'; });
+      }
+      if (fb) {
+        fb.classList.add('show', qs.ttScores[qNum] ? 'correct' : 'incorrect');
+        fb.textContent = qs.ttScores[qNum] ? 'Correct!' : 'Review the answer above.';
+      }
+    });
+  }
+
+  // Restore spot the level quiz (Module 4)
+  if (qs.spotScores) {
+    Object.keys(qs.spotScores).forEach(qNum => {
+      spotScores[qNum] = qs.spotScores[qNum];
+      const fb = document.getElementById('spotFb' + qNum);
+      const container = fb?.previousElementSibling;
+      if (container) {
+        const options = container.querySelectorAll('.quiz-option');
+        options.forEach(o => { o.disabled = true; o.style.pointerEvents = 'none'; });
+      }
+      if (fb) {
+        fb.classList.add('show', qs.spotScores[qNum] ? 'correct' : 'incorrect');
+        fb.textContent = qs.spotScores[qNum] ? 'Correct!' : 'Review the answer above.';
+      }
+    });
+  }
+
+  // Restore word sort (Module 1) — show completed message
+  if (qs.sortScore !== null && qs.sortTotal !== null) {
+    sortScore = qs.sortScore;
+    sortTotal = qs.sortTotal;
+    const resultEl = document.getElementById('sortResult');
+    if (resultEl) {
+      resultEl.style.display = 'block';
+      resultEl.textContent = 'You sorted ' + sortScore + ' out of ' + sortTotal + ' words correctly! (Restored from save)';
+      resultEl.style.color = sortScore >= sortTotal * 0.7 ? 'var(--green)' : 'var(--orange)';
+    }
+    // Hide the interactive sort area since it's complete
+    const container = document.getElementById('sortWordsContainer');
+    if (container) container.style.display = 'none';
+    document.getElementById('sortResetBtn').style.display = 'inline-block';
+  }
+
+  // Restore jigsaw (Module 4) — show completed message
+  if (qs.jigsawCompleted) {
+    const fb = document.getElementById('jigsawFb');
+    if (fb) {
+      fb.classList.add('show');
+      if (qs.jigsawScore === 4) {
+        fb.className = 'quiz-feedback show correct';
+        fb.textContent = 'Perfect! You put the TEEL paragraph in the correct order! (Restored from save)';
+      } else {
+        fb.className = 'quiz-feedback show incorrect';
+        fb.textContent = 'You got ' + qs.jigsawScore + '/4 in the right position. (Restored from save)';
+        document.getElementById('jigsawResetBtn').style.display = 'inline-block';
+      }
+    }
+    // Hide the interactive jigsaw since it's complete
+    const container = document.getElementById('jigsawContainer');
+    if (container) container.style.display = 'none';
+  }
+
+  // Restore tense quiz (Module 7)
+  if (qs.tenseScores) {
+    Object.keys(qs.tenseScores).forEach(qNum => {
+      if (typeof tenseScores !== 'undefined') tenseScores[qNum] = qs.tenseScores[qNum];
+      const fb = document.getElementById('tenseFb' + qNum);
+      const container = fb?.previousElementSibling;
+      if (container) {
+        const options = container.querySelectorAll('.quiz-option');
+        options.forEach(o => { o.disabled = true; o.style.pointerEvents = 'none'; });
+      }
+      if (fb) {
+        fb.classList.add('show', qs.tenseScores[qNum] ? 'correct' : 'incorrect');
+        fb.textContent = qs.tenseScores[qNum] ? 'Correct!' : 'Review the answer above.';
+      }
+    });
+  }
+
+  // Restore sentence type quiz (Module 7)
+  if (qs.sentenceTypeScores) {
+    Object.keys(qs.sentenceTypeScores).forEach(qNum => {
+      if (typeof sentenceTypeScores !== 'undefined') sentenceTypeScores[qNum] = qs.sentenceTypeScores[qNum];
+      const fb = document.getElementById('stFb' + qNum);
+      const container = fb?.previousElementSibling;
+      if (container) {
+        const options = container.querySelectorAll('.quiz-option');
+        options.forEach(o => { o.disabled = true; o.style.pointerEvents = 'none'; });
+      }
+      if (fb) {
+        fb.classList.add('show', qs.sentenceTypeScores[qNum] ? 'correct' : 'incorrect');
+        fb.textContent = qs.sentenceTypeScores[qNum] ? 'Correct!' : 'Review the answer above.';
+      }
+    });
+  }
 }
 
 function updatePrintFields() {
@@ -2147,9 +2604,15 @@ function loadFromCode() {
       throw new Error('Invalid data');
     }
     appData = { ...appData, ...parsed };
+    // Ensure quizState exists for older save codes
+    if (!appData.quizState) appData.quizState = {};
+    if (!appData.currentModule) appData.currentModule = 0;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
-    showSaveMsg('loadMsg', 'Loaded! Welcome back, ' + (appData.studentName || 'Student') + '! Refreshing...', 'success');
-    setTimeout(() => location.reload(), 1200);
+    // Restore in-place without reloading
+    loadAll();
+    restoreQuizStates();
+    showSaveMsg('loadMsg', 'Loaded! Welcome back, ' + (appData.studentName || 'Student') + '!', 'success');
+    setTimeout(() => closeSaveModal(), 1500);
   } catch (e) {
     showSaveMsg('loadMsg', 'That code didn\'t work. Check you copied the whole thing with no extra spaces.', 'error');
   }
@@ -2169,19 +2632,20 @@ function switchModule(n) {
   const tabs = document.querySelectorAll('.tab-bar button');
   if (tabs[n]) tabs[n].classList.add('active');
   if (n > 0) applyFadeLevel(n);
+  appData.currentModule = n; saveAll();
 }
 
 /* ========== PROGRESS TRACKING ========== */
 function updateOverallProgress() {
   let completed = 0;
-  for (let i = 1; i <= 6; i++) {
+  for (let i = 1; i <= 7; i++) {
     if (appData.moduleCompleted[i]) completed++;
   }
-  const pct = Math.round((completed / 6) * 100);
+  const pct = Math.round((completed / 7) * 100);
   document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('progressLabel').textContent = 'Progress: ' + completed + ' / 6 modules';
+  document.getElementById('progressLabel').textContent = 'Progress: ' + completed + ' / 7 modules';
   const tabs = document.querySelectorAll('.tab-bar button');
-  for (let i = 1; i <= 6; i++) {
+  for (let i = 1; i <= 7; i++) {
     if (appData.moduleCompleted[i]) tabs[i]?.classList.add('completed');
   }
   if (appData.diagnosticDone) tabs[0]?.classList.add('completed');
@@ -2500,6 +2964,9 @@ function placeWord(zone) {
     resultEl.textContent = 'You sorted ' + sortScore + ' out of ' + sortTotal + ' words correctly!';
     resultEl.style.color = sortScore >= sortTotal * 0.7 ? 'var(--green)' : 'var(--orange)';
     document.getElementById('sortResetBtn').style.display = 'inline-block';
+    appData.quizState.sortScore = sortScore;
+    appData.quizState.sortTotal = sortTotal;
+    saveAll();
   }
 }
 
@@ -2518,6 +2985,8 @@ let gapScores = { 1: null, 2: null, 3: null, 4: null };
 function gapFill(qNum, btn, isCorrect) {
   if (gapScores[qNum] !== null) return;
   gapScores[qNum] = isCorrect ? 1 : 0;
+  appData.quizState.gapScores[qNum] = isCorrect ? 1 : 0;
+  saveAll();
   const options = btn.parentElement.querySelectorAll('.quiz-option');
   options.forEach(o => { o.disabled = true; o.style.pointerEvents = 'none'; });
   btn.classList.add(isCorrect ? 'correct' : 'incorrect');
@@ -2708,6 +3177,9 @@ function checkJigsaw() {
   const correct = ['T', 'E', 'E', 'L'];
   let score = 0;
   jigsawOrder.forEach((s, i) => { if (s.role === correct[i]) score++; });
+  appData.quizState.jigsawCompleted = true;
+  appData.quizState.jigsawScore = score;
+  saveAll();
   const fb = document.getElementById('jigsawFb');
   fb.classList.add('show');
   if (score === 4) {
@@ -2737,6 +3209,8 @@ const spotFeedback = {
 function spotLevel(qNum, btn, isCorrect) {
   if (spotScores[qNum] !== null) return;
   spotScores[qNum] = isCorrect ? 1 : 0;
+  appData.quizState.spotScores[qNum] = isCorrect ? 1 : 0;
+  saveAll();
   const options = btn.parentElement.querySelectorAll('.quiz-option');
   options.forEach(o => { o.disabled = true; o.style.pointerEvents = 'none'; });
   btn.classList.add(isCorrect ? 'correct' : 'incorrect');
@@ -2840,6 +3314,8 @@ const verbFeedback = {
 function verbQ(qNum, btn, isCorrect) {
   if (verbScores[qNum] !== null) return;
   verbScores[qNum] = isCorrect ? 1 : 0;
+  appData.quizState.verbScores[qNum] = isCorrect ? 1 : 0;
+  saveAll();
   const options = btn.parentElement.querySelectorAll('.quiz-option');
   options.forEach(o => { o.disabled = true; o.style.pointerEvents = 'none'; });
   btn.classList.add(isCorrect ? 'correct' : 'incorrect');
@@ -2918,6 +3394,8 @@ const ttFeedback = {
 function textTypeQ(qNum, btn, isCorrect) {
   if (ttScores[qNum] !== null) return;
   ttScores[qNum] = isCorrect ? 1 : 0;
+  appData.quizState.ttScores[qNum] = isCorrect ? 1 : 0;
+  saveAll();
   const options = btn.parentElement.querySelectorAll('.quiz-option');
   options.forEach(o => { o.disabled = true; o.style.pointerEvents = 'none'; });
   btn.classList.add(isCorrect ? 'correct' : 'incorrect');
@@ -2948,6 +3426,85 @@ function finishModule2() {
   switchModule(3);
 }
 
+/* ========== MODULE 7: GRAMMAR GYM ========== */
+let tenseScores = { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null };
+const tenseFeedback = {
+  1: ['Correct! "Collapsed" is past tense — it already happened.', '"Collapsed" is past tense — the -ed ending tells you it already happened.'],
+  2: ['Correct! "Supports" is present tense — it is true right now.', '"Supports" is present tense — the -s ending means it happens now.'],
+  3: ['Correct! "Will redesign" is future tense — it hasn\'t happened yet.', '"Will redesign" is future tense — "will" tells you it is coming next.'],
+  4: ['Correct! "Measured" is past tense — the students already did it.', '"Measured" ends in -ed, so it is past tense — already done.'],
+  5: ['Correct! "Distribute" is present tense — this is always true about triangles.', '"Distribute" is present tense — this describes a fact that is always true.'],
+  6: ['Correct! "Are going to build" is future tense — it will happen next term.', '"Are going to build" is future tense — "going to" means it will happen later.']
+};
+
+function tenseQ(qNum, btn, isCorrect) {
+  if (tenseScores[qNum] !== null) return;
+  tenseScores[qNum] = isCorrect ? 1 : 0;
+  appData.quizState.tenseScores[qNum] = isCorrect ? 1 : 0;
+  const options = btn.parentElement.querySelectorAll('.quiz-option');
+  options.forEach(o => { o.disabled = true; o.style.pointerEvents = 'none'; });
+  btn.classList.add(isCorrect ? 'correct' : 'incorrect');
+  if (!isCorrect) options.forEach(o => { if (o.onclick?.toString().includes('true')) o.classList.add('correct'); });
+  const fb = document.getElementById('tenseFb' + qNum);
+  fb.classList.add('show', isCorrect ? 'correct' : 'incorrect');
+  fb.textContent = isCorrect ? tenseFeedback[qNum][0] : tenseFeedback[qNum][1];
+  saveAll();
+}
+
+const tenseModelAnswers = {
+  1: 'The team designs a phone stand.',
+  2: 'The students will measure the materials.',
+  3: 'The glue held the pieces together.',
+  4: 'The engineer evaluates the prototype.'
+};
+
+function revealTense(qNum) {
+  const fb = document.getElementById('tenseTFb' + qNum);
+  fb.classList.add('show', 'correct');
+  fb.textContent = 'Model answer: ' + tenseModelAnswers[qNum];
+}
+
+let sentenceTypeScores = { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null };
+const stFeedback = {
+  1: ['Correct! One subject + one verb = simple sentence.', 'This is a simple sentence — just one idea: "The tower is 30cm tall."'],
+  2: ['Correct! Two ideas joined by "but" = compound sentence.', 'Look for the joining word "but" — it connects two ideas, making this compound.'],
+  3: ['Correct! "Although" makes this a complex sentence with a condition.', '"Although" introduces a condition — this makes it a complex sentence.'],
+  4: ['Correct! "Because" gives a reason — that makes it complex.', '"Because" gives a reason for the main idea — this is a complex sentence.'],
+  5: ['Correct! Two ideas joined by "and" = compound sentence.', '"And" connects two ideas ("tested" + "held") — this is a compound sentence.'],
+  6: ['Correct! One idea, no joining words = simple sentence.', 'Just one subject ("materials") and one verb ("reduce") — this is simple.']
+};
+
+function sentenceTypeQ(qNum, btn, isCorrect) {
+  if (sentenceTypeScores[qNum] !== null) return;
+  sentenceTypeScores[qNum] = isCorrect ? 1 : 0;
+  appData.quizState.sentenceTypeScores[qNum] = isCorrect ? 1 : 0;
+  const options = btn.parentElement.querySelectorAll('.quiz-option');
+  options.forEach(o => { o.disabled = true; o.style.pointerEvents = 'none'; });
+  btn.classList.add(isCorrect ? 'correct' : 'incorrect');
+  if (!isCorrect) options.forEach(o => { if (o.onclick?.toString().includes('true')) o.classList.add('correct'); });
+  const fb = document.getElementById('stFb' + qNum);
+  fb.classList.add('show', isCorrect ? 'correct' : 'incorrect');
+  fb.textContent = isCorrect ? stFeedback[qNum][0] : stFeedback[qNum][1];
+  saveAll();
+}
+
+function finishModule7() {
+  let score = 0;
+  Object.values(tenseScores).forEach(v => { if (v === 1) score++; }); // up to 6
+  Object.values(sentenceTypeScores).forEach(v => { if (v === 1) score++; }); // up to 6
+  // Check if sentence builder textareas have content
+  const builders = ['sb1compound', 'sb1complex', 'sb2compound', 'sb2complex', 'sb3compound', 'sb3complex'];
+  let filled = 0;
+  builders.forEach(id => {
+    const val = document.getElementById(id)?.value?.trim() || '';
+    if (val.split(/\s+/).length >= 4) filled++;
+  });
+  if (filled >= 3) score += 2;
+  if (filled >= 5) score += 1;
+  appData.moduleScores[7] = Math.min(score, 15);
+  completeModule(7);
+}
+
 /* ========== INIT ========== */
 document.addEventListener('DOMContentLoaded', function() {
   loadAll();
@@ -2974,6 +3531,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Init modules
   initWordSort();
   initJigsaw();
+  restoreQuizStates();
 });
 </script>
 </body>
