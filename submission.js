@@ -19,7 +19,7 @@
 
   // ===== CONFIGURATION =====
   // Teacher: replace this URL after deploying Google Apps Script
-  const APPS_SCRIPT_URL = '';  // e.g. 'https://script.google.com/macros/s/XXXXX/exec'
+  const APPS_SCRIPT_URL = 'https://script.google.com/a/macros/education.nsw.gov.au/s/AKfycbwRbQiS-wPe-47JSGtCoccEaaeMFqS94dBKMyWcOFxeCCPiA2TKGd7wiKqyX7SK0HX-YQ/exec';
 
   // ===== MODULE STATE =====
   let config = {};
