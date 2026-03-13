@@ -610,26 +610,6 @@ body.fade-none .scaffold-partial { display: none; }
 .analysis-card.evaluate { border-left-color: var(--purple); }
 .analysis-card h4 { font-size: 0.9rem; margin-bottom: 6px; }
 
-/* ========== Submit Button ========== */
-.submit-section { margin-top: 16px; text-align: center; }
-.btn-submit {
-  background: linear-gradient(135deg, #1a8a7d, #22c55e);
-  color: #fff; border: none; padding: 14px 32px;
-  font-size: 1.05rem; font-weight: 700; border-radius: 10px;
-  cursor: pointer; transition: opacity 0.2s, transform 0.1s;
-  box-shadow: 0 4px 12px rgba(26,138,125,0.3);
-}
-.btn-submit:hover { opacity: 0.9; transform: translateY(-1px); }
-.btn-submit:active { transform: translateY(0); }
-.btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-.submit-status {
-  margin-top: 10px; padding: 10px 16px; border-radius: 8px;
-  font-size: 0.9rem; font-weight: 600; display: none;
-}
-.submit-status.success { display: block; background: #e6f9e6; color: #1a7a3a; }
-.submit-status.error { display: block; background: #fde8e8; color: #c0392b; }
-.submit-status.sending { display: block; background: #e8f0fe; color: #1a56db; }
-
 /* ========== Save/Load Modal ========== */
 .save-overlay {
   display: none;
@@ -2108,10 +2088,6 @@ body.fade-none .scaffold-partial { display: none; }
         <button class="btn btn-primary" onclick="window.print()">Print / Save as PDF</button>
       </div>
 
-      <div class="submit-section">
-        <button class="btn-submit" id="submitBtn" onclick="submitToTeacher()">&#128228; Submit to Teacher</button>
-        <div class="submit-status" id="submitStatus"></div>
-      </div>
     </div>
   </div>
 
@@ -2488,7 +2464,6 @@ body.fade-none .scaffold-partial { display: none; }
 <script>
 /* ========== DATA STORE ========== */
 const STORAGE_KEY = 'y7wir-data';
-const SUBMIT_URL = '';  // Paste your Google Apps Script web app URL here
 
 let appData = {
   studentName: '',
@@ -2780,51 +2755,6 @@ function showSaveMsg(id, text, type) {
   const el = document.getElementById(id);
   el.textContent = text;
   el.className = 'save-msg ' + type;
-}
-
-/* ========== SUBMIT TO TEACHER ========== */
-function submitToTeacher() {
-  if (!SUBMIT_URL) {
-    showSubmitStatus('Submission is not set up yet. Ask your teacher.', 'error');
-    return;
-  }
-  if (!appData.studentName.trim()) {
-    showSubmitStatus('Please enter your name at the top of the page first.', 'error');
-    return;
-  }
-  saveAll();
-  const btn = document.getElementById('submitBtn');
-  btn.disabled = true;
-  btn.textContent = 'Sending...';
-  showSubmitStatus('Submitting your work...', 'sending');
-
-  fetch(SUBMIT_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'text/plain' },
-    body: JSON.stringify({
-      studentName: appData.studentName,
-      band: appData.band,
-      diagnosticScore: appData.diagnosticScore,
-      moduleScores: appData.moduleScores,
-      moduleCompleted: appData.moduleCompleted,
-      responses: appData.responses
-    })
-  }).then(() => {
-    showSubmitStatus('Submitted! Your teacher has received your work.', 'success');
-    btn.textContent = '✓ Submitted';
-    setTimeout(() => { btn.disabled = false; btn.textContent = '📨 Submit to Teacher'; }, 5000);
-  }).catch(() => {
-    showSubmitStatus('Something went wrong. Try again in a moment.', 'error');
-    btn.disabled = false;
-    btn.textContent = '📨 Submit to Teacher';
-  });
-}
-
-function showSubmitStatus(text, type) {
-  const el = document.getElementById('submitStatus');
-  el.textContent = text;
-  el.className = 'submit-status ' + type;
 }
 
 /* ========== MODULE NAVIGATION ========== */
