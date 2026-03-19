@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Teacher Dashboard — Y7 Worksheets</title>
+<title>Teacher Dashboard — Write It Right</title>
 <style>
 /* ===== RESET & BASE ===== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -16,83 +16,124 @@ body {
 /* ===== HEADER ===== */
 .header {
   background: linear-gradient(135deg, #0a1628 0%, #1a2744 100%);
-  color: #fff; padding: 16px 24px;
+  color: #fff; padding: 14px 24px;
   display: flex; align-items: center; justify-content: space-between;
-  flex-wrap: wrap; gap: 12px;
+  flex-wrap: wrap; gap: 10px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
-.header h1 { font-size: 20px; font-weight: 700; }
+.header h1 { font-size: 18px; font-weight: 700; }
 .header h1 span { color: #4ecdc4; }
+.header-right { display: flex; align-items: center; gap: 12px; font-size: 13px; }
+.header-right .teacher-name { color: #4ecdc4; font-weight: 600; }
+.header-right .logout-btn {
+  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+  color: #ccc; padding: 4px 10px; border-radius: 4px; font-size: 12px;
+  cursor: pointer;
+}
+.header-right .logout-btn:hover { background: rgba(255,255,255,0.2); color: #fff; }
 
-/* ===== SETUP PANEL ===== */
-.setup-panel {
-  background: #fff; border: 2px solid #e0e0e0; border-radius: 10px;
-  padding: 20px 24px; margin: 16px 24px; max-width: 600px;
+/* ===== LOGIN SCREEN ===== */
+.login-screen {
+  display: flex; justify-content: center; align-items: center;
+  min-height: calc(100vh - 60px); padding: 20px;
 }
-.setup-panel h2 { font-size: 16px; margin-bottom: 12px; color: #1a2744; }
-.setup-panel label { font-size: 13px; font-weight: 600; display: block; margin-bottom: 4px; }
-.setup-panel input, .setup-panel select {
-  width: 100%; padding: 8px 10px; border: 1px solid #ccc; border-radius: 6px;
-  font-size: 14px; margin-bottom: 12px;
+.login-card {
+  background: #fff; border-radius: 12px; padding: 32px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1); max-width: 380px; width: 100%;
+  text-align: center;
 }
-.setup-panel input:focus, .setup-panel select:focus {
-  outline: none; border-color: #4ecdc4; box-shadow: 0 0 0 2px rgba(78,205,196,0.2);
+.login-card h2 { font-size: 20px; margin-bottom: 4px; color: #1a2744; }
+.login-card .subtitle { font-size: 13px; color: #888; margin-bottom: 20px; }
+.login-card input {
+  width: 100%; padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 8px;
+  font-size: 16px; text-align: center; letter-spacing: 2px; font-weight: 600;
+  margin-bottom: 12px;
 }
-.setup-btn {
-  background: #1A8A6E; color: #fff; border: none; border-radius: 6px;
-  padding: 10px 20px; font-size: 14px; font-weight: 600; cursor: pointer;
+.login-card input:focus {
+  outline: none; border-color: #4ecdc4; box-shadow: 0 0 0 3px rgba(78,205,196,0.15);
+}
+.login-card .login-btn {
+  width: 100%; background: #1A8A6E; color: #fff; border: none; border-radius: 8px;
+  padding: 12px; font-size: 15px; font-weight: 600; cursor: pointer;
   transition: background 0.2s;
 }
-.setup-btn:hover { background: #16755d; }
-.setup-btn:disabled { background: #999; cursor: not-allowed; }
-.setup-note { font-size: 11px; color: #888; margin-top: 8px; }
+.login-card .login-btn:hover { background: #16755d; }
+.login-card .login-btn:disabled { background: #999; cursor: not-allowed; }
+.login-card .login-error {
+  color: #c0392b; font-size: 13px; margin-top: 8px; display: none;
+}
+.login-card .login-note {
+  font-size: 11px; color: #aaa; margin-top: 16px; line-height: 1.4;
+}
+
+/* ===== MAIN APP (hidden until login) ===== */
+.app { display: none; }
+
+/* ===== TABS ===== */
+.tab-bar {
+  display: flex; gap: 0; background: #fff;
+  border-bottom: 2px solid #e0e0e0; padding: 0 24px;
+}
+.tab-btn {
+  background: none; border: none; padding: 10px 18px; font-size: 13px;
+  font-weight: 600; cursor: pointer; color: #888;
+  border-bottom: 3px solid transparent; transition: all 0.2s;
+}
+.tab-btn:hover { color: #1a2744; }
+.tab-btn.active { color: #1A8A6E; border-bottom-color: #1A8A6E; }
 
 /* ===== TOOLBAR ===== */
 .toolbar {
-  display: flex; align-items: center; gap: 12px; padding: 12px 24px;
+  display: flex; align-items: center; gap: 10px; padding: 12px 24px;
   flex-wrap: wrap;
 }
-.toolbar select, .toolbar input {
+.toolbar select, .toolbar input[type="search"] {
   padding: 6px 10px; border: 1px solid #ccc; border-radius: 6px;
   font-size: 13px; background: #fff;
 }
-.toolbar .refresh-btn {
-  background: #4ecdc4; color: #fff; border: none; border-radius: 6px;
-  padding: 6px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
+.toolbar input[type="search"] { min-width: 180px; }
+.toolbar .btn {
+  padding: 6px 14px; border: none; border-radius: 6px;
+  font-size: 13px; font-weight: 600; cursor: pointer;
 }
-.toolbar .refresh-btn:hover { background: #3db8b0; }
+.toolbar .btn-refresh { background: #4ecdc4; color: #fff; }
+.toolbar .btn-refresh:hover { background: #3db8b0; }
+.toolbar .btn-export { background: #e0e0e0; color: #333; }
+.toolbar .btn-export:hover { background: #ccc; }
+.toolbar .btn-batch { background: #2980b9; color: #fff; display: none; }
+.toolbar .btn-batch.visible { display: inline-block; }
+.toolbar .spacer { flex: 1; }
+.toolbar .last-updated { font-size: 11px; color: #888; }
 
 /* ===== STATS BAR ===== */
 .stats-bar {
-  display: flex; gap: 16px; padding: 0 24px 12px; flex-wrap: wrap;
+  display: flex; gap: 12px; padding: 0 24px 12px; flex-wrap: wrap;
 }
 .stat-card {
-  background: #fff; border-radius: 8px; padding: 12px 16px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08); min-width: 140px;
+  background: #fff; border-radius: 8px; padding: 10px 14px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06); min-width: 110px;
 }
-.stat-card .stat-value { font-size: 24px; font-weight: 700; color: #1A8A6E; }
-.stat-card .stat-label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+.stat-card .stat-value { font-size: 22px; font-weight: 700; color: #1A8A6E; }
+.stat-card .stat-label { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
 
-/* ===== TABLE ===== */
-.table-wrap {
-  padding: 0 24px 24px; overflow-x: auto;
-}
+/* ===== STUDENT TABLE ===== */
+.table-wrap { padding: 0 24px 24px; overflow-x: auto; }
 .student-table {
   width: 100%; border-collapse: collapse; background: #fff;
-  border-radius: 10px; overflow: hidden;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  border-radius: 10px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
 }
 .student-table th {
   background: #1a2744; color: #fff; text-align: left;
-  padding: 10px 14px; font-size: 12px; text-transform: uppercase;
-  letter-spacing: 0.5px; font-weight: 600;
+  padding: 8px 12px; font-size: 11px; text-transform: uppercase;
+  letter-spacing: 0.5px; font-weight: 600; white-space: nowrap;
 }
+.student-table th.check-col { width: 32px; text-align: center; }
 .student-table td {
-  padding: 10px 14px; border-bottom: 1px solid #eee; font-size: 13px;
-  vertical-align: top;
+  padding: 8px 12px; border-bottom: 1px solid #eee; font-size: 13px;
+  vertical-align: middle;
 }
 .student-table tr:hover td { background: #f8fffe; }
-.student-table tr:last-child td { border-bottom: none; }
+.student-table tr.selected td { background: #e0f5f2; }
 
 .band-badge {
   display: inline-block; padding: 2px 8px; border-radius: 10px;
@@ -104,119 +145,196 @@ body {
 .band-badge.unknown { background: #eee; color: #888; }
 
 .progress-bar {
-  background: #eee; border-radius: 10px; height: 8px; width: 100px;
-  display: inline-block; vertical-align: middle; margin-right: 6px;
+  background: #eee; border-radius: 10px; height: 6px; width: 80px;
+  display: inline-block; vertical-align: middle; margin-right: 4px;
 }
-.progress-bar .fill {
-  background: #1A8A6E; border-radius: 10px; height: 100%;
-  transition: width 0.3s;
+.progress-bar .fill { background: #1A8A6E; border-radius: 10px; height: 100%; }
+
+.fb-dot {
+  width: 8px; height: 8px; border-radius: 50%; display: inline-block;
+  margin-right: 4px; vertical-align: middle;
 }
+.fb-dot.yes { background: #27ae60; }
+.fb-dot.no { background: #ddd; }
 
-.fb-indicator { font-size: 11px; }
-.fb-indicator.has-feedback { color: #1A8A6E; }
-.fb-indicator.no-feedback { color: #ccc; }
-
-/* ===== ACTION BUTTONS ===== */
 .action-btn {
   background: none; border: 1px solid #ccc; border-radius: 4px;
-  padding: 4px 8px; font-size: 11px; cursor: pointer;
-  margin-right: 4px; transition: all 0.2s;
+  padding: 3px 8px; font-size: 11px; cursor: pointer; margin-right: 2px;
 }
 .action-btn:hover { border-color: #4ecdc4; color: #1A8A6E; }
-.action-btn.primary { background: #1A8A6E; color: #fff; border-color: #1A8A6E; }
-.action-btn.primary:hover { background: #16755d; }
 
-/* ===== DETAIL PANEL ===== */
+/* ===== DETAIL OVERLAY ===== */
 .detail-overlay {
   position: fixed; top: 0; left: 0; right: 0; bottom: 0;
   background: rgba(0,0,0,0.5); z-index: 100; display: none;
-  justify-content: center; align-items: flex-start; padding: 40px 20px;
+  justify-content: center; align-items: flex-start; padding: 30px 16px;
   overflow-y: auto;
 }
 .detail-overlay.visible { display: flex; }
 .detail-panel {
-  background: #fff; border-radius: 12px; padding: 24px;
-  max-width: 700px; width: 100%; position: relative;
+  background: #fff; border-radius: 12px;
+  max-width: 800px; width: 100%; position: relative;
   box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  display: flex; max-height: calc(100vh - 60px);
 }
-.detail-panel .close-btn {
-  position: absolute; top: 12px; right: 16px;
-  background: none; border: none; font-size: 20px; cursor: pointer;
-  color: #888;
+.detail-main { flex: 1; padding: 24px; overflow-y: auto; min-width: 0; }
+.detail-sidebar {
+  width: 260px; border-left: 1px solid #eee; padding: 16px;
+  overflow-y: auto; flex-shrink: 0; background: #fafafa;
+  border-radius: 0 12px 12px 0;
 }
-.detail-panel .close-btn:hover { color: #333; }
-.detail-panel h2 { font-size: 18px; margin-bottom: 4px; }
-.detail-panel .meta { font-size: 12px; color: #888; margin-bottom: 16px; }
+.close-btn {
+  position: absolute; top: 10px; right: 14px;
+  background: none; border: none; font-size: 22px; cursor: pointer; color: #888; z-index: 1;
+}
+.close-btn:hover { color: #333; }
+
+.detail-main h2 { font-size: 18px; margin-bottom: 2px; padding-right: 30px; }
+.detail-main .meta { font-size: 12px; color: #888; margin-bottom: 14px; }
 
 .detail-section { margin-bottom: 16px; }
-.detail-section h3 { font-size: 14px; color: #1a2744; margin-bottom: 8px;
-  border-bottom: 2px solid #4ecdc4; padding-bottom: 4px; }
-.detail-section .score-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 8px;
+.detail-section h3 {
+  font-size: 13px; color: #1a2744; margin-bottom: 6px;
+  border-bottom: 2px solid #4ecdc4; padding-bottom: 3px;
+  text-transform: uppercase; letter-spacing: 0.3px;
 }
-.detail-section .score-item {
-  background: #f8f8f8; padding: 8px; border-radius: 6px; text-align: center;
+.score-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 6px;
 }
-.detail-section .score-item .label { font-size: 11px; color: #888; }
-.detail-section .score-item .value { font-size: 18px; font-weight: 700; color: #1A8A6E; }
+.score-item {
+  background: #f5f5f5; padding: 6px 8px; border-radius: 6px; text-align: center;
+}
+.score-item .label { font-size: 10px; color: #888; }
+.score-item .value { font-size: 16px; font-weight: 700; color: #1A8A6E; }
 
-.response-block { background: #f8f8f8; padding: 10px 14px; border-radius: 6px;
-  margin-bottom: 8px; font-size: 13px; }
-.response-block .q-label { font-size: 11px; color: #888; margin-bottom: 2px; }
-.response-block .q-answer { color: #333; }
+.writing-block {
+  background: #f8f8f8; padding: 10px 12px; border-radius: 6px;
+  margin-bottom: 6px; border-left: 3px solid #4ecdc4;
+}
+.writing-block .w-label { font-size: 11px; color: #888; margin-bottom: 2px; font-weight: 600; }
+.writing-block .w-text { font-size: 13px; color: #333; white-space: pre-wrap; }
+.writing-block .w-meta { font-size: 10px; color: #aaa; margin-top: 2px; }
 
-/* ===== FEEDBACK FORM ===== */
-.feedback-form { margin-top: 16px; }
+/* TEEL colour coding */
+.writing-block.teel-t { border-left-color: #2980b9; }
+.writing-block.teel-e1 { border-left-color: #27ae60; }
+.writing-block.teel-e2 { border-left-color: #e67e22; }
+.writing-block.teel-l { border-left-color: #8e44ad; }
+
+/* ===== COMMENT BANK SIDEBAR ===== */
+.sidebar-title { font-size: 13px; font-weight: 700; color: #1a2744; margin-bottom: 8px; }
+.comment-category { margin-bottom: 10px; }
+.comment-category .cat-label {
+  font-size: 11px; font-weight: 600; color: #888; text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.comment-chip {
+  display: block; width: 100%; text-align: left;
+  background: #fff; border: 1px solid #e0e0e0; border-radius: 6px;
+  padding: 6px 10px; font-size: 12px; cursor: pointer;
+  margin-bottom: 4px; transition: all 0.15s; line-height: 1.4;
+}
+.comment-chip:hover { border-color: #4ecdc4; background: #f0faf7; }
+
+.feedback-form { margin-top: 12px; border-top: 1px solid #eee; padding-top: 12px; }
+.feedback-form .fb-label { font-size: 12px; font-weight: 600; margin-bottom: 4px; color: #1a2744; }
 .feedback-form textarea {
-  width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;
-  font-size: 13px; font-family: inherit; resize: vertical; min-height: 80px;
+  width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 6px;
+  font-size: 12px; font-family: inherit; resize: vertical; min-height: 70px;
 }
-.feedback-form textarea:focus {
-  outline: none; border-color: #4ecdc4;
-  box-shadow: 0 0 0 2px rgba(78,205,196,0.2);
+.feedback-form textarea:focus { outline: none; border-color: #4ecdc4; }
+.feedback-form .fb-actions { display: flex; gap: 6px; margin-top: 6px; align-items: center; }
+.feedback-form .send-btn {
+  background: #1A8A6E; color: #fff; border: none; border-radius: 6px;
+  padding: 6px 14px; font-size: 12px; font-weight: 600; cursor: pointer;
 }
-.feedback-form .fb-actions {
-  display: flex; gap: 8px; margin-top: 8px; align-items: center;
-}
-.feedback-status { font-size: 12px; color: #888; }
+.feedback-form .send-btn:hover { background: #16755d; }
+.feedback-status { font-size: 11px; color: #888; }
 
-/* ===== EMPTY STATE ===== */
-.empty-state {
-  text-align: center; padding: 60px 20px; color: #888;
+/* ===== HEATMAP VIEW ===== */
+.heatmap-wrap { padding: 0 24px 24px; overflow-x: auto; }
+.heatmap-table {
+  border-collapse: collapse; background: #fff; border-radius: 10px;
+  overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
 }
-.empty-state .icon { font-size: 48px; margin-bottom: 12px; }
-.empty-state p { font-size: 14px; max-width: 400px; margin: 0 auto; }
-
-/* ===== TOAST ===== */
-.dash-toast {
-  position: fixed; bottom: 20px; right: 20px; background: #1A8A6E; color: #fff;
-  padding: 12px 20px; border-radius: 8px; font-size: 13px; z-index: 200;
-  transform: translateY(100px); opacity: 0; transition: all 0.3s;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+.heatmap-table th {
+  background: #1a2744; color: #fff; padding: 8px 14px;
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;
 }
-.dash-toast.show { transform: translateY(0); opacity: 1; }
-.dash-toast.error { background: #c0392b; }
+.heatmap-table td { padding: 8px 14px; border-bottom: 1px solid #eee; font-size: 13px; text-align: center; }
+.heatmap-table td.name-cell { text-align: left; font-weight: 600; }
+.heatmap-cell { display: inline-block; width: 28px; height: 28px; border-radius: 6px; line-height: 28px;
+  font-size: 12px; font-weight: 700; color: #fff; }
+.hm-0 { background: #ddd; color: #999; }
+.hm-1 { background: #e74c3c; }
+.hm-2 { background: #f39c12; }
+.hm-3 { background: #27ae60; }
 
-/* ===== LOADING ===== */
+.heatmap-legend {
+  display: flex; gap: 14px; padding: 8px 0; font-size: 12px; color: #666;
+}
+.heatmap-legend span { display: flex; align-items: center; gap: 4px; }
+.heatmap-legend .dot { width: 12px; height: 12px; border-radius: 3px; }
+
+/* ===== BATCH FEEDBACK BAR ===== */
+.batch-bar {
+  position: fixed; bottom: 0; left: 0; right: 0; background: #1a2744;
+  color: #fff; padding: 12px 24px; display: none; align-items: center;
+  gap: 12px; z-index: 50; box-shadow: 0 -2px 12px rgba(0,0,0,0.2);
+}
+.batch-bar.visible { display: flex; }
+.batch-bar .batch-count { font-size: 14px; font-weight: 600; }
+.batch-bar textarea {
+  flex: 1; padding: 6px 10px; border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 6px; font-size: 13px; font-family: inherit;
+  background: rgba(255,255,255,0.1); color: #fff; resize: none; height: 36px;
+}
+.batch-bar textarea::placeholder { color: rgba(255,255,255,0.5); }
+.batch-bar .batch-send {
+  background: #1A8A6E; color: #fff; border: none; border-radius: 6px;
+  padding: 8px 16px; font-weight: 600; cursor: pointer;
+}
+.batch-bar .batch-cancel {
+  background: none; border: 1px solid rgba(255,255,255,0.3); color: #ccc;
+  border-radius: 6px; padding: 8px 12px; cursor: pointer; font-size: 12px;
+}
+
+/* ===== EMPTY / LOADING ===== */
+.empty-state { text-align: center; padding: 60px 20px; color: #888; }
+.empty-state .icon { font-size: 40px; margin-bottom: 8px; }
+.empty-state p { font-size: 13px; max-width: 400px; margin: 0 auto; }
 .loading-spinner {
-  display: inline-block; width: 16px; height: 16px;
+  display: inline-block; width: 14px; height: 14px;
   border: 2px solid #ccc; border-top-color: #1A8A6E;
   border-radius: 50%; animation: dash-spin 0.6s linear infinite;
 }
 @keyframes dash-spin { to { transform: rotate(360deg); } }
 
+/* ===== TOAST ===== */
+.dash-toast {
+  position: fixed; bottom: 20px; right: 20px; background: #1A8A6E; color: #fff;
+  padding: 10px 18px; border-radius: 8px; font-size: 13px; z-index: 200;
+  transform: translateY(80px); opacity: 0; transition: all 0.3s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.dash-toast.show { transform: translateY(0); opacity: 1; }
+.dash-toast.error { background: #c0392b; }
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
-  .header { padding: 12px 16px; }
-  .toolbar, .stats-bar, .table-wrap { padding-left: 16px; padding-right: 16px; }
-  .setup-panel { margin: 12px 16px; }
-  .stat-card { min-width: 100px; }
+  .header { padding: 10px 16px; }
+  .toolbar, .stats-bar, .table-wrap, .heatmap-wrap { padding-left: 12px; padding-right: 12px; }
+  .tab-bar { padding: 0 12px; }
+  .detail-panel { flex-direction: column; }
+  .detail-sidebar { width: 100%; border-left: none; border-top: 1px solid #eee; border-radius: 0 0 12px 12px; }
+  .stat-card { min-width: 80px; }
+  .stat-card .stat-value { font-size: 18px; }
 }
 
 @media print {
-  .header, .toolbar, .setup-panel, .action-btn, .feedback-form { display: none !important; }
-  .student-table { box-shadow: none; }
+  .header, .tab-bar, .toolbar, .batch-bar, .action-btn, .feedback-form,
+  .detail-sidebar, .login-screen { display: none !important; }
+  .student-table, .heatmap-table { box-shadow: none; }
 }
 </style>
 </head>
@@ -224,191 +342,273 @@ body {
 
 <!-- ===== HEADER ===== -->
 <div class="header">
-  <h1>📊 <span>Teacher Dashboard</span> — Y7 Worksheets</h1>
-  <div id="connectionStatus" style="font-size:12px; color:#aaa;">Not connected</div>
-</div>
-
-<!-- ===== SETUP PANEL ===== -->
-<div class="setup-panel" id="setupPanel">
-  <h2>🔧 Connect to Your Google Sheet</h2>
-  <label for="setupUrl">Apps Script URL</label>
-  <input type="url" id="setupUrl" placeholder="https://script.google.com/macros/s/XXXXX/exec"
-    value="">
-  <label for="setupKey">Teacher Key (the password you set in Script Properties)</label>
-  <input type="password" id="setupKey" placeholder="Your TEACHER_KEY value">
-  <label for="setupWorksheet">Worksheet</label>
-  <select id="setupWorksheet">
-    <option value="">All worksheets</option>
-    <option value="y7wir-data">Write It Right</option>
-  </select>
-  <button class="setup-btn" id="setupBtn" onclick="connectDashboard()">Connect</button>
-  <div class="setup-note">
-    Your credentials are stored in this browser only (localStorage). They are never sent anywhere except to your own Apps Script.
+  <h1><span>Teacher Dashboard</span> — Write It Right</h1>
+  <div class="header-right" id="headerRight" style="display:none;">
+    <span class="teacher-name" id="teacherNameBadge"></span>
+    <button class="logout-btn" onclick="doLogout()">Log out</button>
   </div>
 </div>
 
-<!-- ===== TOOLBAR (hidden until connected) ===== -->
-<div class="toolbar" id="toolbar" style="display:none;">
-  <select id="filterClass" onchange="applyFilters()">
-    <option value="">All classes</option>
-    <option value="7TECE">7TECE</option>
-    <option value="7TECI">7TECI</option>
-    <option value="7TECJ">7TECJ</option>
-  </select>
-  <select id="filterBand" onchange="applyFilters()">
-    <option value="">All bands</option>
-    <option value="beginning">Beginning</option>
-    <option value="developing">Developing</option>
-    <option value="consolidating">Consolidating</option>
-  </select>
-  <input type="search" id="filterSearch" placeholder="Search student name..."
-    oninput="applyFilters()" style="min-width:180px;">
-  <button class="refresh-btn" onclick="loadStudents()">🔄 Refresh</button>
-  <span id="lastRefreshed" style="font-size:11px; color:#888;"></span>
+<!-- ===== LOGIN SCREEN ===== -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <h2>Teacher Login</h2>
+    <div class="subtitle">Enter your passcode to view student work</div>
+    <input type="password" id="passcodeInput" placeholder="Passcode"
+      maxlength="30" autocomplete="off"
+      onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" id="loginBtn" onclick="doLogin()">Log In</button>
+    <div class="login-error" id="loginError">Incorrect passcode. Ask Ms Gao for help.</div>
+    <div class="login-note">
+      Your passcode is set by the dashboard admin.<br>
+      Your data stays in the school's Google Sheet — nothing is stored here.
+    </div>
+  </div>
 </div>
 
-<!-- ===== STATS BAR ===== -->
-<div class="stats-bar" id="statsBar" style="display:none;"></div>
+<!-- ===== MAIN APP ===== -->
+<div class="app" id="app">
 
-<!-- ===== STUDENT TABLE ===== -->
-<div class="table-wrap" id="tableWrap" style="display:none;">
-  <table class="student-table">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Class</th>
-        <th>Band</th>
-        <th>Progress</th>
-        <th>Submissions</th>
-        <th>Last Submitted</th>
-        <th>Feedback</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody id="studentTableBody"></tbody>
-  </table>
-</div>
+  <!-- Tab bar -->
+  <div class="tab-bar">
+    <button class="tab-btn active" data-tab="students" onclick="switchTab('students')">Students</button>
+    <button class="tab-btn" data-tab="heatmap" onclick="switchTab('heatmap')">Heatmap</button>
+  </div>
 
-<!-- ===== EMPTY STATE ===== -->
-<div class="empty-state" id="emptyState" style="display:none;">
-  <div class="icon">📭</div>
-  <p>No submissions yet. Students will appear here once they click "Submit to Teacher" in their worksheet.</p>
+  <!-- Toolbar -->
+  <div class="toolbar" id="toolbar">
+    <select id="filterClass" onchange="applyFilters()"></select>
+    <select id="filterBand" onchange="applyFilters()">
+      <option value="">All bands</option>
+      <option value="beginning">Beginning</option>
+      <option value="developing">Developing</option>
+      <option value="consolidating">Consolidating</option>
+    </select>
+    <input type="search" id="filterSearch" placeholder="Search name..." oninput="applyFilters()">
+    <div class="spacer"></div>
+    <button class="btn btn-batch" id="batchBtn" onclick="openBatchBar()">Batch Feedback (<span id="batchCount">0</span>)</button>
+    <button class="btn btn-export" onclick="doExport()">Export CSV</button>
+    <button class="btn btn-refresh" onclick="loadStudents()">Refresh</button>
+    <span class="last-updated" id="lastUpdated"></span>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-bar" id="statsBar"></div>
+
+  <!-- Students view -->
+  <div id="viewStudents">
+    <div class="table-wrap">
+      <table class="student-table">
+        <thead><tr>
+          <th class="check-col"><input type="checkbox" id="selectAll" onchange="toggleSelectAll()" title="Select all"></th>
+          <th>Name</th><th>Class</th><th>Band</th><th>Progress</th>
+          <th>Words</th><th>Submissions</th><th>Feedback</th><th>Actions</th>
+        </tr></thead>
+        <tbody id="studentTableBody"></tbody>
+      </table>
+    </div>
+    <div class="empty-state" id="emptyState" style="display:none;">
+      <div class="icon">📭</div>
+      <p>No submissions yet. Students will appear here once they submit their work.</p>
+    </div>
+  </div>
+
+  <!-- Heatmap view -->
+  <div id="viewHeatmap" style="display:none;">
+    <div class="heatmap-wrap">
+      <div class="heatmap-legend">
+        <span><div class="dot hm-0"></div> Not attempted</span>
+        <span><div class="dot hm-1"></div> Emerging</span>
+        <span><div class="dot hm-2"></div> Developing</span>
+        <span><div class="dot hm-3"></div> Proficient</span>
+      </div>
+      <table class="heatmap-table" id="heatmapTable">
+        <thead><tr><th>Student</th><th>Vocabulary</th><th>TEEL</th><th>Grammar</th><th>Evidence</th></tr></thead>
+        <tbody id="heatmapBody"></tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
 <!-- ===== DETAIL OVERLAY ===== -->
 <div class="detail-overlay" id="detailOverlay" onclick="if(event.target===this)closeDetail()">
   <div class="detail-panel">
     <button class="close-btn" onclick="closeDetail()">&times;</button>
-    <h2 id="detailName"></h2>
-    <div class="meta" id="detailMeta"></div>
-    <div id="detailContent"></div>
-    <div class="feedback-form">
-      <h3 style="font-size:14px; margin-bottom:8px;">💬 Give Feedback</h3>
-      <textarea id="feedbackText" placeholder="Type your feedback for this student..."></textarea>
-      <div class="fb-actions">
-        <button class="action-btn primary" onclick="sendFeedback()">Send Feedback</button>
-        <span class="feedback-status" id="feedbackStatus"></span>
+    <div class="detail-main" id="detailMain">
+      <h2 id="detailName"></h2>
+      <div class="meta" id="detailMeta"></div>
+      <div id="detailContent"><span class="loading-spinner"></span></div>
+    </div>
+    <div class="detail-sidebar" id="detailSidebar">
+      <div class="sidebar-title">Comment Bank</div>
+      <div id="commentBankList"></div>
+      <div class="feedback-form">
+        <div class="fb-label">Your Feedback</div>
+        <textarea id="feedbackText" placeholder="Type or click a comment above..."></textarea>
+        <div class="fb-actions">
+          <button class="send-btn" onclick="sendFeedback()">Send</button>
+          <span class="feedback-status" id="feedbackStatus"></span>
+        </div>
       </div>
     </div>
   </div>
+</div>
+
+<!-- ===== BATCH FEEDBACK BAR ===== -->
+<div class="batch-bar" id="batchBar">
+  <span class="batch-count" id="batchBarCount">0 selected</span>
+  <textarea id="batchText" placeholder="Type feedback for all selected students..."></textarea>
+  <button class="batch-send" onclick="sendBatchFeedback()">Send to All</button>
+  <button class="batch-cancel" onclick="closeBatchBar()">Cancel</button>
 </div>
 
 <script>
 (function () {
   'use strict';
 
+  // ===== CONFIG =====
+  // Hardcoded Apps Script URL — all teachers use the same backend.
+  // Admin (Ms Gao) updates this after redeploying Code.gs.
+  var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwq7dx3INqCCVukx2Xvufi8ak_d-WwwExG-R1zlGO2-JE2bTFGX66w2LaGVskAuF6_K6g/exec';
+
   // ===== STATE =====
-  var APPS_SCRIPT_URL = '';
-  var TEACHER_KEY = '';
-  var WORKSHEET_FILTER = '';
-  var allStudents = [];
-  var currentDetail = null;  // { name, class, worksheetId }
+  var PASSCODE = '';
+  var TEACHER_NAME = '';
+  var TEACHER_CLASSES = [];   // from login response; empty = see all
+  var ALL_STUDENTS = [];
+  var COMMENT_BANK = [];
+  var SELECTED = new Set();   // student keys for batch selection
+  var CURRENT_DETAIL = null;  // { name, class, worksheetId }
+  var CURRENT_TAB = 'students';
 
-  // Module names for display
-  var MODULE_NAMES = [
-    'Module 0: Welcome & Diagnostic',
-    'Module 1: Visual Dictionary',
-    'Module 2: Word Bank & Connectors',
-    'Module 3: ALARM & VSCC',
-    'Module 4: TEEL Paragraphs',
-    'Module 5: Fade the Scaffolding',
-    'Module 6: Capstone Challenge',
-    'Module 7: Grammar Gym'
-  ];
+  // ===== LOGIN =====
+  window.doLogin = function () {
+    var input = document.getElementById('passcodeInput');
+    var passcode = input.value.trim();
+    if (!passcode) return;
 
-  // ===== INIT =====
-  // Restore saved credentials
-  try {
-    var saved = JSON.parse(localStorage.getItem('y7-dashboard-config') || '{}');
-    if (saved.url) {
-      document.getElementById('setupUrl').value = saved.url;
-      document.getElementById('setupKey').value = saved.key || '';
-      document.getElementById('setupWorksheet').value = saved.ws || '';
-    }
-  } catch (e) {}
+    var btn = document.getElementById('loginBtn');
+    btn.disabled = true;
+    btn.textContent = 'Logging in...';
+    document.getElementById('loginError').style.display = 'none';
 
-  // ===== CONNECT =====
-  window.connectDashboard = function () {
-    APPS_SCRIPT_URL = document.getElementById('setupUrl').value.trim();
-    TEACHER_KEY = document.getElementById('setupKey').value.trim();
-    WORKSHEET_FILTER = document.getElementById('setupWorksheet').value;
+    fetch(APPS_SCRIPT_URL + '?action=login&passcode=' + encodeURIComponent(passcode))
+      .then(function (r) { return r.json(); })
+      .then(function (result) {
+        btn.disabled = false;
+        btn.textContent = 'Log In';
+        if (result.status !== 'ok') {
+          document.getElementById('loginError').style.display = 'block';
+          input.select();
+          return;
+        }
+        PASSCODE = passcode;
+        TEACHER_NAME = result.name || 'Teacher';
+        TEACHER_CLASSES = result.classes || [];
+        sessionStorage.setItem('wir-passcode', passcode);
+        showApp();
+      })
+      .catch(function () {
+        btn.disabled = false;
+        btn.textContent = 'Log In';
+        document.getElementById('loginError').textContent = 'Connection failed. Check your internet.';
+        document.getElementById('loginError').style.display = 'block';
+      });
+  };
 
-    if (!APPS_SCRIPT_URL) {
-      showToast('Please enter your Apps Script URL.', 'error');
-      return;
-    }
+  window.doLogout = function () {
+    sessionStorage.removeItem('wir-passcode');
+    PASSCODE = '';
+    location.reload();
+  };
 
-    // Save to localStorage
-    localStorage.setItem('y7-dashboard-config', JSON.stringify({
-      url: APPS_SCRIPT_URL, key: TEACHER_KEY, ws: WORKSHEET_FILTER
-    }));
+  // Auto-login from session
+  var savedPasscode = sessionStorage.getItem('wir-passcode');
+  if (savedPasscode) {
+    document.getElementById('passcodeInput').value = savedPasscode;
+    doLogin();
+  }
 
-    document.getElementById('setupPanel').style.display = 'none';
-    document.getElementById('toolbar').style.display = 'flex';
-    document.getElementById('statsBar').style.display = 'flex';
-    document.getElementById('tableWrap').style.display = 'block';
-    document.getElementById('connectionStatus').textContent = '✅ Connected';
-    document.getElementById('connectionStatus').style.color = '#4ecdc4';
-
+  function showApp() {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    document.getElementById('headerRight').style.display = 'flex';
+    document.getElementById('teacherNameBadge').textContent = TEACHER_NAME;
+    populateClassFilter();
     loadStudents();
+    loadCommentBank();
+  }
+
+  function populateClassFilter() {
+    var sel = document.getElementById('filterClass');
+    sel.innerHTML = '<option value="">All classes</option>';
+    var classes = TEACHER_CLASSES.length > 0 ? TEACHER_CLASSES : [];
+    // If no class restriction, we'll populate from data after loading
+    classes.forEach(function (c) {
+      sel.innerHTML += '<option value="' + esc(c) + '">' + esc(c) + '</option>';
+    });
+  }
+
+  // ===== TABS =====
+  window.switchTab = function (tab) {
+    CURRENT_TAB = tab;
+    document.querySelectorAll('.tab-btn').forEach(function (b) {
+      b.classList.toggle('active', b.dataset.tab === tab);
+    });
+    document.getElementById('viewStudents').style.display = tab === 'students' ? '' : 'none';
+    document.getElementById('viewHeatmap').style.display = tab === 'heatmap' ? '' : 'none';
+
+    if (tab === 'heatmap') loadHeatmap();
   };
 
   // ===== LOAD STUDENTS =====
   window.loadStudents = function () {
-    var url = APPS_SCRIPT_URL + '?action=students&key=' + encodeURIComponent(TEACHER_KEY);
-    if (WORKSHEET_FILTER) url += '&ws=' + encodeURIComponent(WORKSHEET_FILTER);
-
-    document.getElementById('lastRefreshed').innerHTML = '<span class="loading-spinner"></span> Loading...';
+    var url = APPS_SCRIPT_URL + '?action=students&passcode=' + encodeURIComponent(PASSCODE);
+    document.getElementById('lastUpdated').innerHTML = '<span class="loading-spinner"></span>';
 
     fetch(url)
       .then(function (r) { return r.json(); })
       .then(function (result) {
         if (result.status !== 'ok') {
-          showToast('Error: ' + (result.message || 'Unknown error'), 'error');
+          showToast('Error: ' + (result.message || 'Unknown'), 'error');
           return;
         }
-        allStudents = result.students || [];
-        document.getElementById('lastRefreshed').textContent =
-          'Updated: ' + new Date().toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit' });
+        ALL_STUDENTS = result.students || [];
+        document.getElementById('lastUpdated').textContent =
+          new Date().toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit' });
+
+        // Populate class filter if teacher has no class restriction
+        if (TEACHER_CLASSES.length === 0 && ALL_STUDENTS.length > 0) {
+          var classes = [];
+          ALL_STUDENTS.forEach(function (s) {
+            if (classes.indexOf(s.class) === -1) classes.push(s.class);
+          });
+          classes.sort();
+          var sel = document.getElementById('filterClass');
+          sel.innerHTML = '<option value="">All classes</option>';
+          classes.forEach(function (c) {
+            sel.innerHTML += '<option value="' + esc(c) + '">' + esc(c) + '</option>';
+          });
+        }
+
         applyFilters();
       })
       .catch(function (err) {
-        showToast('Connection failed. Check your URL and internet.', 'error');
-        document.getElementById('lastRefreshed').textContent = 'Failed to connect';
-        console.error(err);
+        showToast('Connection failed.', 'error');
+        document.getElementById('lastUpdated').textContent = 'Failed';
       });
   };
 
   // ===== FILTERS =====
   window.applyFilters = function () {
-    var classFilter = document.getElementById('filterClass').value;
-    var bandFilter = document.getElementById('filterBand').value;
-    var searchFilter = document.getElementById('filterSearch').value.toLowerCase().trim();
+    var cls = document.getElementById('filterClass').value;
+    var band = document.getElementById('filterBand').value;
+    var search = document.getElementById('filterSearch').value.toLowerCase().trim();
 
-    var filtered = allStudents.filter(function (s) {
-      if (classFilter && s.class !== classFilter) return false;
-      if (bandFilter && s.band !== bandFilter) return false;
-      if (searchFilter && s.name.toLowerCase().indexOf(searchFilter) === -1) return false;
+    var filtered = ALL_STUDENTS.filter(function (s) {
+      if (cls && s.class !== cls) return false;
+      if (band && s.band !== band) return false;
+      if (search && s.name.toLowerCase().indexOf(search) === -1) return false;
       return true;
     });
 
@@ -416,85 +616,130 @@ body {
     renderTable(filtered);
   };
 
-  // ===== RENDER STATS =====
+  // ===== STATS =====
   function renderStats(students) {
-    var total = students.length;
-    var completed = students.filter(function (s) { return s.modulesCompleted >= 8; }).length;
-    var withFeedback = students.filter(function (s) { return s.hasFeedback; }).length;
-    var noSubmission = students.filter(function (s) { return s.submissionCount === 0; }).length;
-
-    // Band distribution
-    var bands = { beginning: 0, developing: 0, consolidating: 0, unknown: 0 };
-    students.forEach(function (s) { bands[s.band] = (bands[s.band] || 0) + 1; });
-
-    var avgModules = total > 0
-      ? (students.reduce(function (sum, s) { return sum + s.modulesCompleted; }, 0) / total).toFixed(1)
-      : '0';
+    var n = students.length;
+    var bands = { beginning: 0, developing: 0, consolidating: 0 };
+    var totalMods = 0, feedbackCount = 0;
+    students.forEach(function (s) {
+      bands[s.band] = (bands[s.band] || 0) + 1;
+      totalMods += s.modulesCompleted || 0;
+      if (s.hasFeedback) feedbackCount++;
+    });
+    var avg = n > 0 ? (totalMods / n).toFixed(1) : '0';
 
     document.getElementById('statsBar').innerHTML =
-      statCard(total, 'Total Students') +
-      statCard(avgModules + '/8', 'Avg Modules Done') +
-      statCard(bands.beginning, 'Beginning') +
-      statCard(bands.developing, 'Developing') +
-      statCard(bands.consolidating, 'Consolidating') +
-      statCard(withFeedback + '/' + total, 'Feedback Given');
+      sc(n, 'Students') + sc(avg + '/8', 'Avg Modules') +
+      sc(bands.beginning || 0, 'Beginning') +
+      sc(bands.developing || 0, 'Developing') +
+      sc(bands.consolidating || 0, 'Consolidating') +
+      sc(feedbackCount + '/' + n, 'Feedback Given');
+  }
+  function sc(v, l) {
+    return '<div class="stat-card"><div class="stat-value">' + v + '</div><div class="stat-label">' + l + '</div></div>';
   }
 
-  function statCard(value, label) {
-    return '<div class="stat-card"><div class="stat-value">' + value +
-      '</div><div class="stat-label">' + label + '</div></div>';
-  }
-
-  // ===== RENDER TABLE =====
+  // ===== TABLE =====
   function renderTable(students) {
     var tbody = document.getElementById('studentTableBody');
     var empty = document.getElementById('emptyState');
 
-    if (students.length === 0) {
-      tbody.innerHTML = '';
-      empty.style.display = 'block';
-      return;
-    }
+    if (students.length === 0) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
     empty.style.display = 'none';
 
-    // Sort: most recent first
-    students.sort(function (a, b) {
-      return new Date(b.lastSubmitted) - new Date(a.lastSubmitted);
-    });
+    students.sort(function (a, b) { return new Date(b.lastSubmitted) - new Date(a.lastSubmitted); });
 
     tbody.innerHTML = students.map(function (s) {
-      var pct = Math.round((s.modulesCompleted / s.totalModules) * 100);
-      var fbIcon = s.hasFeedback
-        ? '<span class="fb-indicator has-feedback">✅ Given</span>'
-        : '<span class="fb-indicator no-feedback">— None</span>';
+      var key = s.name + '|' + s.class + '|' + s.worksheetId;
+      var checked = SELECTED.has(key) ? ' checked' : '';
+      var rowCls = SELECTED.has(key) ? ' class="selected"' : '';
+      var pct = s.totalModules > 0 ? Math.round((s.modulesCompleted / s.totalModules) * 100) : 0;
+      var fbDot = s.hasFeedback
+        ? '<span class="fb-dot yes"></span>Given'
+        : '<span class="fb-dot no"></span>None';
 
-      return '<tr>' +
+      return '<tr' + rowCls + '>' +
+        '<td style="text-align:center"><input type="checkbox" data-key="' + escA(key) + '"' + checked + ' onchange="toggleSelect(this)"></td>' +
         '<td><strong>' + esc(s.name) + '</strong></td>' +
         '<td>' + esc(s.class) + '</td>' +
         '<td><span class="band-badge ' + esc(s.band) + '">' + esc(s.band) + '</span></td>' +
         '<td><div class="progress-bar"><div class="fill" style="width:' + pct + '%"></div></div> ' +
           s.modulesCompleted + '/' + s.totalModules + '</td>' +
+        '<td>' + (s.wordCount || 0) + '</td>' +
         '<td>' + s.submissionCount + '</td>' +
-        '<td>' + formatDate(s.lastSubmitted) + '</td>' +
-        '<td>' + fbIcon + '</td>' +
-        '<td>' +
-          '<button class="action-btn" onclick="viewDetail(\'' + escAttr(s.name) + '\',\'' +
-            escAttr(s.class) + '\',\'' + escAttr(s.worksheetId) + '\')">📋 View</button>' +
-          '<button class="action-btn" onclick="quickFeedback(\'' + escAttr(s.name) + '\',\'' +
-            escAttr(s.class) + '\',\'' + escAttr(s.worksheetId) + '\')">💬 Feedback</button>' +
-        '</td></tr>';
+        '<td style="font-size:11px;">' + fbDot + '</td>' +
+        '<td><button class="action-btn" onclick="viewDetail(\'' + escA(s.name) + '\',\'' + escA(s.class) + '\',\'' + escA(s.worksheetId) + '\')">View</button></td>' +
+        '</tr>';
     }).join('');
   }
 
+  // ===== SELECT / BATCH =====
+  window.toggleSelect = function (cb) {
+    var key = cb.dataset.key;
+    if (cb.checked) SELECTED.add(key); else SELECTED.delete(key);
+    cb.closest('tr').classList.toggle('selected', cb.checked);
+    updateBatchBtn();
+  };
+
+  window.toggleSelectAll = function () {
+    var all = document.getElementById('selectAll').checked;
+    document.querySelectorAll('#studentTableBody input[type="checkbox"]').forEach(function (cb) {
+      cb.checked = all;
+      var key = cb.dataset.key;
+      if (all) SELECTED.add(key); else SELECTED.delete(key);
+      cb.closest('tr').classList.toggle('selected', all);
+    });
+    updateBatchBtn();
+  };
+
+  function updateBatchBtn() {
+    var n = SELECTED.size;
+    document.getElementById('batchCount').textContent = n;
+    document.getElementById('batchBtn').classList.toggle('visible', n > 0);
+  }
+
+  window.openBatchBar = function () {
+    document.getElementById('batchBarCount').textContent = SELECTED.size + ' selected';
+    document.getElementById('batchBar').classList.add('visible');
+    document.getElementById('batchText').focus();
+  };
+
+  window.closeBatchBar = function () {
+    document.getElementById('batchBar').classList.remove('visible');
+  };
+
+  window.sendBatchFeedback = function () {
+    var text = document.getElementById('batchText').value.trim();
+    if (!text) { showToast('Type feedback first.', 'error'); return; }
+
+    var targets = [];
+    SELECTED.forEach(function (key) {
+      var parts = key.split('|');
+      targets.push({ name: parts[0], class: parts[1], worksheetId: parts[2] });
+    });
+
+    fetch(APPS_SCRIPT_URL, {
+      method: 'POST', headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'batchFeedback', passcode: PASSCODE, feedbackText: text, students: targets })
+    })
+    .then(function (r) { return r.json(); })
+    .then(function (result) {
+      if (result.status === 'ok') {
+        showToast(result.message);
+        closeBatchBar();
+        SELECTED.clear();
+        updateBatchBtn();
+        loadStudents();
+      } else {
+        showToast('Error: ' + result.message, 'error');
+      }
+    })
+    .catch(function () { showToast('Connection failed.', 'error'); });
+  };
+
   // ===== VIEW DETAIL =====
   window.viewDetail = function (name, cls, wsId) {
-    currentDetail = { name: name, class: cls, worksheetId: wsId };
-
-    var url = APPS_SCRIPT_URL + '?action=detail&key=' + encodeURIComponent(TEACHER_KEY) +
-      '&name=' + encodeURIComponent(name) +
-      '&class=' + encodeURIComponent(cls) +
-      '&ws=' + encodeURIComponent(wsId);
-
+    CURRENT_DETAIL = { name: name, class: cls, worksheetId: wsId };
     document.getElementById('detailName').textContent = name;
     document.getElementById('detailMeta').textContent = 'Loading...';
     document.getElementById('detailContent').innerHTML = '<span class="loading-spinner"></span>';
@@ -502,180 +747,239 @@ body {
     document.getElementById('feedbackStatus').textContent = '';
     document.getElementById('detailOverlay').classList.add('visible');
 
-    fetch(url)
-      .then(function (r) { return r.json(); })
-      .then(function (result) {
-        if (result.status !== 'ok') {
-          document.getElementById('detailContent').textContent = 'Error: ' + result.message;
-          return;
-        }
-        renderDetail(result);
-      })
-      .catch(function (err) {
-        document.getElementById('detailContent').textContent = 'Failed to load. ' + err;
-      });
+    var url = APPS_SCRIPT_URL + '?action=detail&passcode=' + encodeURIComponent(PASSCODE) +
+      '&name=' + encodeURIComponent(name) + '&class=' + encodeURIComponent(cls) +
+      '&ws=' + encodeURIComponent(wsId);
+
+    fetch(url).then(function (r) { return r.json(); }).then(function (result) {
+      if (result.status !== 'ok') { document.getElementById('detailContent').textContent = result.message; return; }
+      renderDetail(result);
+    }).catch(function (e) { document.getElementById('detailContent').textContent = 'Failed: ' + e; });
   };
 
   function renderDetail(result) {
-    var d = result.data || {};
+    var s = result.summary || {};
     document.getElementById('detailMeta').textContent =
-      result.class + ' · Band: ' + (d.band || 'unknown') +
-      ' · Diagnostic: ' + (d.diagnosticScore || 0) + '/10' +
-      ' · Submissions: ' + result.submissionCount +
-      ' · Last: ' + formatDate(result.lastSubmitted);
+      result.class + ' \u00b7 Band: ' + (s.band || 'unknown') +
+      ' \u00b7 Modules: ' + (s.modulesCompleted || 0) + '/' + (s.totalModules || 8) +
+      ' \u00b7 Words: ' + (s.totalWordCount || 0) +
+      ' \u00b7 Submissions: ' + result.submissionCount;
 
-    // Pre-fill existing feedback
     if (result.feedbackText) {
       document.getElementById('feedbackText').value = result.feedbackText;
-      document.getElementById('feedbackStatus').textContent =
-        'Previous feedback: ' + formatDate(result.feedbackDate);
+      document.getElementById('feedbackStatus').textContent = 'Last feedback: ' + fmtDate(result.feedbackDate);
     }
 
     var html = '';
 
-    // Module scores
-    html += '<div class="detail-section"><h3>Module Scores</h3><div class="score-grid">';
-    for (var i = 0; i < 8; i++) {
-      var score = (d.moduleScores && d.moduleScores[i]) || 0;
-      var done = (d.moduleCompleted && d.moduleCompleted[i]) ? '✅' : '⬜';
-      html += '<div class="score-item">' +
-        '<div class="label">' + done + ' M' + i + '</div>' +
-        '<div class="value">' + score + '</div></div>';
+    // Scores grid
+    var scores = result.scores || [];
+    if (scores.length > 0) {
+      html += '<div class="detail-section"><h3>Scores</h3><div class="score-grid">';
+      scores.forEach(function (sc) {
+        html += '<div class="score-item"><div class="label">' + esc(sc.label.replace(/Module \d+ — /, '')) +
+          '</div><div class="value">' + sc.score + '/' + sc.maxScore + '</div></div>';
+      });
+      html += '</div></div>';
     }
+
+    // Writings
+    var writings = result.writings || [];
+    if (writings.length > 0) {
+      html += '<div class="detail-section"><h3>Student Writing</h3>';
+      writings.forEach(function (w) {
+        var cls = '';
+        if (w.key === 'teelT') cls = ' teel-t';
+        else if (w.key === 'teelE1') cls = ' teel-e1';
+        else if (w.key === 'teelE2') cls = ' teel-e2';
+        else if (w.key === 'teelL') cls = ' teel-l';
+
+        html += '<div class="writing-block' + cls + '">' +
+          '<div class="w-label">' + esc(w.label) + '</div>' +
+          '<div class="w-text">' + esc(w.text) + '</div>' +
+          '<div class="w-meta">' + w.wordCount + ' words</div></div>';
+      });
+      html += '</div>';
+    }
+
+    // Criterion summary
+    html += '<div class="detail-section"><h3>Criterion Summary</h3><div class="score-grid">';
+    ['vocabulary', 'teel', 'grammar', 'evidence'].forEach(function (c) {
+      var val = s[c + 'Score'] || 0;
+      var label = c.charAt(0).toUpperCase() + c.slice(1);
+      var colour = val === 0 ? '#ddd' : val === 1 ? '#e74c3c' : val === 2 ? '#f39c12' : '#27ae60';
+      html += '<div class="score-item"><div class="label">' + label +
+        '</div><div class="value" style="color:' + colour + '">' +
+        ['—', 'Emerging', 'Developing', 'Proficient'][val] + '</div></div>';
+    });
     html += '</div></div>';
-
-    // Quiz state summary
-    if (d.quizState) {
-      html += '<div class="detail-section"><h3>Quiz Results</h3>';
-      var qs = d.quizState;
-      var quizItems = [];
-      if (qs.sortScore !== null && qs.sortScore !== undefined) {
-        quizItems.push('Word Sort: ' + qs.sortScore + '/' + (qs.sortTotal || '?'));
-      }
-      if (qs.jigsawCompleted) {
-        quizItems.push('TEEL Jigsaw: ' + (qs.jigsawScore || 0));
-      }
-      // Gap fill scores
-      if (qs.gapScores) {
-        for (var gk in qs.gapScores) {
-          quizItems.push('Gap Fill ' + gk + ': ' + qs.gapScores[gk]);
-        }
-      }
-      // Verb scores
-      if (qs.verbScores) {
-        for (var vk in qs.verbScores) {
-          quizItems.push('Verb ' + vk + ': ' + qs.verbScores[vk]);
-        }
-      }
-      // Tense scores
-      if (qs.tenseScores) {
-        for (var tk in qs.tenseScores) {
-          quizItems.push('Tense ' + tk + ': ' + qs.tenseScores[tk]);
-        }
-      }
-      if (quizItems.length > 0) {
-        html += '<ul style="font-size:13px; padding-left:18px;">';
-        quizItems.forEach(function (item) { html += '<li>' + esc(item) + '</li>'; });
-        html += '</ul>';
-      } else {
-        html += '<p style="font-size:13px; color:#888;">No quiz data yet.</p>';
-      }
-      html += '</div>';
-    }
-
-    // Text responses
-    if (d.responses && Object.keys(d.responses).length > 0) {
-      html += '<div class="detail-section"><h3>Written Responses</h3>';
-      for (var rk in d.responses) {
-        var val = d.responses[rk];
-        if (val && typeof val === 'string' && val.trim()) {
-          html += '<div class="response-block">' +
-            '<div class="q-label">' + esc(rk) + '</div>' +
-            '<div class="q-answer">' + esc(val) + '</div></div>';
-        }
-      }
-      html += '</div>';
-    }
-
-    // Checklists
-    if (d.checklists && Object.keys(d.checklists).length > 0) {
-      html += '<div class="detail-section"><h3>Self-Assessment Checklists</h3>';
-      for (var ck in d.checklists) {
-        var items = d.checklists[ck];
-        if (typeof items === 'object') {
-          html += '<div class="response-block"><div class="q-label">' + esc(ck) + '</div>';
-          for (var ci in items) {
-            html += '<div class="q-answer">' + (items[ci] ? '✅' : '⬜') + ' ' + esc(ci) + '</div>';
-          }
-          html += '</div>';
-        }
-      }
-      html += '</div>';
-    }
 
     document.getElementById('detailContent').innerHTML = html;
   }
 
-  // ===== QUICK FEEDBACK =====
-  window.quickFeedback = function (name, cls, wsId) {
-    viewDetail(name, cls, wsId);
-    // Focus the textarea after a short delay
-    setTimeout(function () {
-      document.getElementById('feedbackText').focus();
-    }, 500);
+  window.closeDetail = function () {
+    document.getElementById('detailOverlay').classList.remove('visible');
+    CURRENT_DETAIL = null;
+  };
+
+  // ===== COMMENT BANK =====
+  function loadCommentBank() {
+    fetch(APPS_SCRIPT_URL + '?action=commentBank&passcode=' + encodeURIComponent(PASSCODE))
+      .then(function (r) { return r.json(); })
+      .then(function (result) {
+        if (result.status === 'ok') {
+          COMMENT_BANK = result.comments || [];
+          renderCommentBank();
+        }
+      })
+      .catch(function () { /* non-critical */ });
+  }
+
+  function renderCommentBank() {
+    var grouped = {};
+    COMMENT_BANK.forEach(function (c) {
+      var cat = c.category || 'general';
+      if (!grouped[cat]) grouped[cat] = [];
+      grouped[cat].push(c.text);
+    });
+
+    var html = '';
+    var order = ['teel', 'vocabulary', 'grammar', 'general'];
+    order.forEach(function (cat) {
+      if (!grouped[cat]) return;
+      html += '<div class="comment-category"><div class="cat-label">' + esc(cat) + '</div>';
+      grouped[cat].forEach(function (text) {
+        html += '<button class="comment-chip" onclick="insertComment(this)" data-text="' + escA(text) + '">' +
+          esc(text) + '</button>';
+      });
+      html += '</div>';
+    });
+    // Any remaining categories
+    for (var cat in grouped) {
+      if (order.indexOf(cat) >= 0) continue;
+      html += '<div class="comment-category"><div class="cat-label">' + esc(cat) + '</div>';
+      grouped[cat].forEach(function (text) {
+        html += '<button class="comment-chip" onclick="insertComment(this)" data-text="' + escA(text) + '">' +
+          esc(text) + '</button>';
+      });
+      html += '</div>';
+    }
+
+    document.getElementById('commentBankList').innerHTML = html;
+  }
+
+  window.insertComment = function (el) {
+    var ta = document.getElementById('feedbackText');
+    var text = el.dataset.text;
+    if (ta.value && !ta.value.endsWith('\n') && !ta.value.endsWith(' ')) ta.value += ' ';
+    ta.value += text;
+    ta.focus();
   };
 
   // ===== SEND FEEDBACK =====
   window.sendFeedback = function () {
-    if (!currentDetail) return;
+    if (!CURRENT_DETAIL) return;
     var text = document.getElementById('feedbackText').value.trim();
-    if (!text) {
-      showToast('Please type some feedback first.', 'error');
-      return;
-    }
+    if (!text) { showToast('Type feedback first.', 'error'); return; }
 
-    document.getElementById('feedbackStatus').innerHTML = '<span class="loading-spinner"></span> Sending...';
+    document.getElementById('feedbackStatus').innerHTML = '<span class="loading-spinner"></span>';
 
     fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
+      method: 'POST', headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify({
-        action: 'giveFeedback',
-        key: TEACHER_KEY,
-        studentName: currentDetail.name,
-        studentClass: currentDetail.class,
-        worksheetId: currentDetail.worksheetId,
+        action: 'giveFeedback', passcode: PASSCODE,
+        studentName: CURRENT_DETAIL.name,
+        studentClass: CURRENT_DETAIL.class,
+        worksheetId: CURRENT_DETAIL.worksheetId,
         feedbackText: text
       })
     })
     .then(function (r) { return r.json(); })
     .then(function (result) {
       if (result.status === 'ok') {
-        document.getElementById('feedbackStatus').textContent = '✅ Sent at ' +
+        document.getElementById('feedbackStatus').textContent = 'Sent ' +
           new Date().toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit' });
-        showToast('Feedback sent to ' + currentDetail.name + '!');
-        // Refresh table to update feedback column
+        showToast('Feedback sent to ' + CURRENT_DETAIL.name + '!');
         loadStudents();
       } else {
-        document.getElementById('feedbackStatus').textContent = '❌ ' + result.message;
-        showToast('Failed: ' + result.message, 'error');
+        document.getElementById('feedbackStatus').textContent = 'Failed: ' + result.message;
       }
     })
-    .catch(function (err) {
-      document.getElementById('feedbackStatus').textContent = '❌ Connection error';
-      showToast('Connection failed. Check your internet.', 'error');
+    .catch(function () {
+      document.getElementById('feedbackStatus').textContent = 'Connection error';
     });
   };
 
-  // ===== CLOSE DETAIL =====
-  window.closeDetail = function () {
-    document.getElementById('detailOverlay').classList.remove('visible');
-    currentDetail = null;
+  // ===== HEATMAP =====
+  function loadHeatmap() {
+    var cls = document.getElementById('filterClass').value;
+    if (!cls) {
+      document.getElementById('heatmapBody').innerHTML =
+        '<tr><td colspan="5" style="text-align:center;padding:30px;color:#888;">Select a class from the dropdown above to view the heatmap.</td></tr>';
+      return;
+    }
+
+    var url = APPS_SCRIPT_URL + '?action=heatmap&passcode=' + encodeURIComponent(PASSCODE) +
+      '&class=' + encodeURIComponent(cls);
+
+    document.getElementById('heatmapBody').innerHTML =
+      '<tr><td colspan="5" style="text-align:center;padding:20px;"><span class="loading-spinner"></span></td></tr>';
+
+    fetch(url).then(function (r) { return r.json(); }).then(function (result) {
+      if (result.status !== 'ok') {
+        document.getElementById('heatmapBody').innerHTML =
+          '<tr><td colspan="5" style="text-align:center;padding:20px;color:#c0392b;">' + esc(result.message) + '</td></tr>';
+        return;
+      }
+      renderHeatmap(result.heatmap || []);
+    }).catch(function () {
+      document.getElementById('heatmapBody').innerHTML =
+        '<tr><td colspan="5" style="text-align:center;padding:20px;color:#c0392b;">Connection failed.</td></tr>';
+    });
+  }
+
+  function renderHeatmap(data) {
+    if (data.length === 0) {
+      document.getElementById('heatmapBody').innerHTML =
+        '<tr><td colspan="5" style="text-align:center;padding:30px;color:#888;">No data for this class yet.</td></tr>';
+      return;
+    }
+    document.getElementById('heatmapBody').innerHTML = data.map(function (s) {
+      return '<tr>' +
+        '<td class="name-cell">' + esc(s.name) + '</td>' +
+        hmCell(s.vocabulary) + hmCell(s.teel) + hmCell(s.grammar) + hmCell(s.evidence) +
+        '</tr>';
+    }).join('');
+  }
+
+  function hmCell(v) {
+    return '<td><span class="heatmap-cell hm-' + v + '">' + v + '</span></td>';
+  }
+
+  // ===== EXPORT =====
+  window.doExport = function () {
+    var cls = document.getElementById('filterClass').value;
+    var url = APPS_SCRIPT_URL + '?action=export&passcode=' + encodeURIComponent(PASSCODE);
+    if (cls) url += '&class=' + encodeURIComponent(cls);
+
+    showToast('Generating CSV...');
+
+    fetch(url).then(function (r) { return r.json(); }).then(function (result) {
+      if (result.status !== 'ok') { showToast('Export failed: ' + result.message, 'error'); return; }
+      // Download CSV
+      var blob = new Blob([result.csv], { type: 'text/csv' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = result.filename || 'export.csv';
+      a.click();
+      URL.revokeObjectURL(a.href);
+      showToast('CSV downloaded!');
+    }).catch(function () { showToast('Export failed.', 'error'); });
   };
 
   // ===== HELPERS =====
-  function formatDate(iso) {
-    if (!iso) return '—';
+  function fmtDate(iso) {
+    if (!iso) return '\u2014';
     try {
       var d = new Date(iso);
       return d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' }) +
@@ -685,34 +989,24 @@ body {
 
   function esc(str) {
     if (!str) return '';
-    var div = document.createElement('div');
-    div.textContent = String(str);
-    return div.innerHTML;
+    var d = document.createElement('div'); d.textContent = String(str); return d.innerHTML;
   }
 
-  function escAttr(str) {
+  function escA(str) {
     return String(str || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
   }
 
   function showToast(msg, type) {
-    var old = document.querySelector('.dash-toast');
-    if (old) old.remove();
-    var toast = document.createElement('div');
-    toast.className = 'dash-toast' + (type === 'error' ? ' error' : '');
-    toast.textContent = msg;
-    document.body.appendChild(toast);
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () { toast.classList.add('show'); });
-    });
-    setTimeout(function () {
-      toast.classList.remove('show');
-      setTimeout(function () { toast.remove(); }, 300);
-    }, 4000);
+    var old = document.querySelector('.dash-toast'); if (old) old.remove();
+    var t = document.createElement('div');
+    t.className = 'dash-toast' + (type === 'error' ? ' error' : '');
+    t.textContent = msg; document.body.appendChild(t);
+    requestAnimationFrame(function () { requestAnimationFrame(function () { t.classList.add('show'); }); });
+    setTimeout(function () { t.classList.remove('show'); setTimeout(function () { t.remove(); }, 300); }, 3500);
   }
 
-  // Escape key closes detail
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && currentDetail) closeDetail();
+    if (e.key === 'Escape' && CURRENT_DETAIL) closeDetail();
   });
 
 })();

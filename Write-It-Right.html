@@ -810,6 +810,7 @@ body.fade-none .scaffold-partial { display: none; }
   <button onclick="switchModule(5)">5. Analyse a Design</button>
   <button onclick="switchModule(6)">6. Put It All Together</button>
   <button onclick="switchModule(7)">7. Grammar Gym</button>
+  <button onclick="switchModule(8)">8. Sentence Builder</button>
 </div>
 
 <!-- ========== MODULE 0: Diagnostic ========== -->
@@ -2426,6 +2427,316 @@ body.fade-none .scaffold-partial { display: none; }
 
 </div>
 
+<!-- ==================== MODULE 8: SENTENCE BUILDER ==================== -->
+<div class="module" id="mod8">
+
+  <!-- INTRO -->
+  <div class="section-card">
+    <h2>Sentence Builder — Write Like an Engineer</h2>
+    <p>In Modules 1-7 you learned to <em>identify</em> sentence types. Now you'll learn to <strong>build</strong> them yourself using Technology vocabulary. Strong sentences = strong design folios.</p>
+    <div class="eald-box">
+      <div class="eald-label">Sentence Pathway</div>
+      <strong>Level 1:</strong> Simple &rarr; <strong>Level 2:</strong> Compound &rarr; <strong>Level 3:</strong> Complex &rarr; <strong>Level 4:</strong> Compound-Complex &rarr; <strong>Level 5:</strong> Advanced Structures
+    </div>
+  </div>
+
+  <!-- LEVEL 1: SIMPLE SENTENCES -->
+  <div class="section-card">
+    <h2>Level 1 — Simple Sentences</h2>
+    <p>A <strong>simple sentence</strong> has <em>one subject</em> and <em>one verb</em>. In Technology, we use simple sentences for clear labels, measurements, and facts.</p>
+    <div class="grid-2 mt-2">
+      <div style="background:var(--blue-light);padding:14px;border-radius:8px;">
+        <strong style="color:var(--blue);">Pattern</strong>
+        <p style="font-size:0.85rem;margin-top:4px;">Subject + Verb + Object/Complement</p>
+      </div>
+      <div style="background:var(--green-light);padding:14px;border-radius:8px;">
+        <strong style="color:var(--green);">Technology Examples</strong>
+        <p style="font-size:0.85rem;margin-top:4px;">
+          "The bridge <strong>supports</strong> the load."<br>
+          "Cardboard <strong>is</strong> a lightweight material."<br>
+          "The model <strong>measures</strong> 30cm."
+        </p>
+      </div>
+    </div>
+
+    <h3 class="mt-2">Practice: Complete the Simple Sentences</h3>
+    <p style="font-size:0.85rem;color:var(--grey);">Fill each gap with a Technology word from the box below.</p>
+    <div style="background:var(--teal-light);padding:10px 14px;border-radius:8px;font-size:0.85rem;margin-bottom:12px;">
+      <strong>Word bank:</strong> sustainable, prototype, evaluate, materials, function
+    </div>
+
+    <div class="quiz-group">
+      <div class="quiz-q">1. The designer built a __________ to test the idea.</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="sbSimpleQ(1,this,false)">function</button>
+        <button class="quiz-option" onclick="sbSimpleQ(1,this,true)">prototype</button>
+        <button class="quiz-option" onclick="sbSimpleQ(1,this,false)">sustainable</button>
+      </div>
+      <div class="quiz-feedback" id="sbSFb1"></div>
+    </div>
+
+    <div class="quiz-group">
+      <div class="quiz-q">2. Recycled timber is a __________ material.</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="sbSimpleQ(2,this,false)">evaluate</button>
+        <button class="quiz-option" onclick="sbSimpleQ(2,this,false)">materials</button>
+        <button class="quiz-option" onclick="sbSimpleQ(2,this,true)">sustainable</button>
+      </div>
+      <div class="quiz-feedback" id="sbSFb2"></div>
+    </div>
+
+    <div class="quiz-group">
+      <div class="quiz-q">3. We need to __________ the design against the criteria.</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="sbSimpleQ(3,this,true)">evaluate</button>
+        <button class="quiz-option" onclick="sbSimpleQ(3,this,false)">prototype</button>
+        <button class="quiz-option" onclick="sbSimpleQ(3,this,false)">function</button>
+      </div>
+      <div class="quiz-feedback" id="sbSFb3"></div>
+    </div>
+
+    <h3 class="mt-2">Your Turn: Write 2 Simple Sentences</h3>
+    <p style="font-size:0.85rem;color:var(--grey);">Use Technology vocabulary. Each sentence needs one subject and one verb.</p>
+    <textarea id="sbL1write1" placeholder="e.g. The container restaurant serves burgers." oninput="saveResponse('sbL1write1')" style="width:100%;min-height:45px;padding:10px;border:2px solid #ddd;border-radius:8px;font-size:0.9rem;margin-bottom:8px;"></textarea>
+    <textarea id="sbL1write2" placeholder="e.g. Corrugated steel is a strong material." oninput="saveResponse('sbL1write2')" style="width:100%;min-height:45px;padding:10px;border:2px solid #ddd;border-radius:8px;font-size:0.9rem;"></textarea>
+  </div>
+
+  <!-- LEVEL 2: COMPOUND SENTENCES -->
+  <div class="section-card">
+    <h2>Level 2 — Compound Sentences (FANBOYS)</h2>
+    <p>A <strong>compound sentence</strong> joins two simple sentences with a <em>coordinating conjunction</em>. Remember <strong>FANBOYS</strong>:</p>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin:10px 0;">
+      <span style="background:var(--blue);color:white;padding:4px 12px;border-radius:20px;font-weight:700;font-size:0.85rem;">For</span>
+      <span style="background:var(--teal);color:white;padding:4px 12px;border-radius:20px;font-weight:700;font-size:0.85rem;">And</span>
+      <span style="background:var(--orange);color:white;padding:4px 12px;border-radius:20px;font-weight:700;font-size:0.85rem;">Nor</span>
+      <span style="background:var(--purple);color:white;padding:4px 12px;border-radius:20px;font-weight:700;font-size:0.85rem;">But</span>
+      <span style="background:var(--red);color:white;padding:4px 12px;border-radius:20px;font-weight:700;font-size:0.85rem;">Or</span>
+      <span style="background:var(--green);color:white;padding:4px 12px;border-radius:20px;font-weight:700;font-size:0.85rem;">Yet</span>
+      <span style="background:var(--grey-dark);color:white;padding:4px 12px;border-radius:20px;font-weight:700;font-size:0.85rem;">So</span>
+    </div>
+    <div style="background:var(--orange-light);padding:14px;border-radius:8px;font-size:0.85rem;">
+      <strong>Pattern:</strong> [Simple sentence]<strong>, [FANBOYS]</strong> [simple sentence].<br><br>
+      "The tower was tall<strong>, but</strong> it was not stable."<br>
+      "We tested the bridge<strong>, and</strong> it held 500 grams."<br>
+      "The material was cheap<strong>, so</strong> we chose it for our model."
+    </div>
+
+    <h3 class="mt-2">Practice: Choose the Right Conjunction</h3>
+
+    <div class="quiz-group">
+      <div class="quiz-q">1. "The design looked great, _____ it broke during testing."</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="sbCompQ(1,this,false)">and</button>
+        <button class="quiz-option" onclick="sbCompQ(1,this,true)">but</button>
+        <button class="quiz-option" onclick="sbCompQ(1,this,false)">so</button>
+      </div>
+      <div class="quiz-feedback" id="sbCFb1"></div>
+    </div>
+
+    <div class="quiz-group">
+      <div class="quiz-q">2. "The base was too narrow, _____ the tower collapsed."</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="sbCompQ(2,this,false)">but</button>
+        <button class="quiz-option" onclick="sbCompQ(2,this,false)">or</button>
+        <button class="quiz-option" onclick="sbCompQ(2,this,true)">so</button>
+      </div>
+      <div class="quiz-feedback" id="sbCFb2"></div>
+    </div>
+
+    <div class="quiz-group">
+      <div class="quiz-q">3. "We could use timber, _____ we could use recycled plastic."</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="sbCompQ(3,this,true)">or</button>
+        <button class="quiz-option" onclick="sbCompQ(3,this,false)">so</button>
+        <button class="quiz-option" onclick="sbCompQ(3,this,false)">yet</button>
+      </div>
+      <div class="quiz-feedback" id="sbCFb3"></div>
+    </div>
+
+    <h3 class="mt-2">Your Turn: Build Compound Sentences</h3>
+    <p style="font-size:0.85rem;color:var(--grey);">Join each pair of simple sentences with a FANBOYS word. Remember the comma before the conjunction!</p>
+    <p style="font-weight:600;font-size:0.9rem;">Join: "The model is 30cm long." + "It is 12cm wide."</p>
+    <textarea id="sbL2write1" placeholder="The model is 30cm long, and..." oninput="saveResponse('sbL2write1')" style="width:100%;min-height:45px;padding:10px;border:2px solid #ddd;border-radius:8px;font-size:0.9rem;margin-bottom:8px;"></textarea>
+    <p style="font-weight:600;font-size:0.9rem;">Join: "Cardboard is easy to cut." + "It is not very strong."</p>
+    <textarea id="sbL2write2" placeholder="Cardboard is easy to cut, but..." oninput="saveResponse('sbL2write2')" style="width:100%;min-height:45px;padding:10px;border:2px solid #ddd;border-radius:8px;font-size:0.9rem;"></textarea>
+  </div>
+
+  <!-- LEVEL 3: COMPLEX SENTENCES -->
+  <div class="section-card">
+    <h2>Level 3 — Complex Sentences</h2>
+    <p>A <strong>complex sentence</strong> has a <em>main clause</em> (makes sense alone) and a <em>subordinate clause</em> (depends on the main clause). They are joined by <strong>subordinating conjunctions</strong>:</p>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin:10px 0;">
+      <span style="background:var(--orange);color:white;padding:4px 10px;border-radius:16px;font-size:0.8rem;font-weight:600;">because</span>
+      <span style="background:var(--orange);color:white;padding:4px 10px;border-radius:16px;font-size:0.8rem;font-weight:600;">although</span>
+      <span style="background:var(--orange);color:white;padding:4px 10px;border-radius:16px;font-size:0.8rem;font-weight:600;">when</span>
+      <span style="background:var(--orange);color:white;padding:4px 10px;border-radius:16px;font-size:0.8rem;font-weight:600;">if</span>
+      <span style="background:var(--orange);color:white;padding:4px 10px;border-radius:16px;font-size:0.8rem;font-weight:600;">while</span>
+      <span style="background:var(--orange);color:white;padding:4px 10px;border-radius:16px;font-size:0.8rem;font-weight:600;">after</span>
+      <span style="background:var(--orange);color:white;padding:4px 10px;border-radius:16px;font-size:0.8rem;font-weight:600;">so that</span>
+      <span style="background:var(--orange);color:white;padding:4px 10px;border-radius:16px;font-size:0.8rem;font-weight:600;">unless</span>
+    </div>
+    <div style="background:var(--purple-light);padding:14px;border-radius:8px;font-size:0.85rem;">
+      <strong>Two patterns:</strong><br>
+      1. Main clause first: "The tower fell <strong>because</strong> the base was too narrow."<br>
+      2. Subordinate clause first (add a comma): "<strong>Although</strong> the design looked good<strong>,</strong> it failed the test."
+    </div>
+
+    <h3 class="mt-2">Practice: Add a Subordinate Clause</h3>
+    <p style="font-size:0.85rem;color:var(--grey);">Complete each sentence with a subordinate clause that makes sense.</p>
+
+    <p style="font-weight:600;font-size:0.9rem;">"We chose recycled cardboard because..."</p>
+    <textarea id="sbL3write1" placeholder="...it is cheap and sustainable." oninput="saveResponse('sbL3write1')" style="width:100%;min-height:45px;padding:10px;border:2px solid #ddd;border-radius:8px;font-size:0.9rem;margin-bottom:8px;"></textarea>
+
+    <p style="font-weight:600;font-size:0.9rem;">"Although the first prototype failed, ..."</p>
+    <textarea id="sbL3write2" placeholder="...we learned from our mistakes and improved the design." oninput="saveResponse('sbL3write2')" style="width:100%;min-height:45px;padding:10px;border:2px solid #ddd;border-radius:8px;font-size:0.9rem;margin-bottom:8px;"></textarea>
+
+    <p style="font-weight:600;font-size:0.9rem;">"If we had used a stronger base, ..."</p>
+    <textarea id="sbL3write3" placeholder="...the tower would have held more weight." oninput="saveResponse('sbL3write3')" style="width:100%;min-height:45px;padding:10px;border:2px solid #ddd;border-radius:8px;font-size:0.9rem;"></textarea>
+
+    <h3 class="mt-2">Quiz: Identify the Subordinating Conjunction</h3>
+
+    <div class="quiz-group">
+      <div class="quiz-q">1. "We redesigned the structure <strong>because</strong> it failed the load test." — What word makes this complex?</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="sbComplexQ(1,this,false)">and</button>
+        <button class="quiz-option" onclick="sbComplexQ(1,this,true)">because</button>
+        <button class="quiz-option" onclick="sbComplexQ(1,this,false)">but</button>
+      </div>
+      <div class="quiz-feedback" id="sbXFb1"></div>
+    </div>
+
+    <div class="quiz-group">
+      <div class="quiz-q">2. "<strong>Although</strong> timber is renewable, it can be expensive." — Which clause is the subordinate clause?</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="sbComplexQ(2,this,true)">Although timber is renewable</button>
+        <button class="quiz-option" onclick="sbComplexQ(2,this,false)">it can be expensive</button>
+      </div>
+      <div class="quiz-feedback" id="sbXFb2"></div>
+    </div>
+
+    <div class="quiz-group">
+      <div class="quiz-q">3. "The model will crack <strong>if</strong> you bend the cardboard too quickly." — What type of conjunction is "if"?</div>
+      <div class="quiz-options">
+        <button class="quiz-option" onclick="sbComplexQ(3,this,false)">coordinating (FANBOYS)</button>
+        <button class="quiz-option" onclick="sbComplexQ(3,this,true)">subordinating</button>
+      </div>
+      <div class="quiz-feedback" id="sbXFb3"></div>
+    </div>
+  </div>
+
+  <!-- LEVEL 4: COMPOUND-COMPLEX -->
+  <div class="section-card">
+    <h2>Level 4 — Compound-Complex Sentences</h2>
+    <p>A <strong>compound-complex sentence</strong> combines Levels 2 and 3: it has <em>at least two main clauses</em> and <em>at least one subordinate clause</em>.</p>
+    <div style="background:var(--teal-light);padding:14px;border-radius:8px;font-size:0.85rem;">
+      <strong>Example:</strong><br>
+      "<strong>Because</strong> the base was unstable, the team redesigned it<strong>, and</strong> the new version held 500g."<br><br>
+      <span style="color:var(--orange);">Subordinate clause</span> + <span style="color:var(--blue);">main clause 1</span> + <span style="color:var(--green);">FANBOYS</span> + <span style="color:var(--blue);">main clause 2</span>
+    </div>
+
+    <h3 class="mt-2">Practice: Build a Compound-Complex Sentence</h3>
+    <p style="font-size:0.85rem;color:var(--grey);">Combine the three ideas into ONE sentence using a subordinating conjunction AND a coordinating conjunction (FANBOYS).</p>
+
+    <div style="background:#f8f8f8;padding:12px;border-radius:8px;margin-bottom:10px;">
+      <strong>Ideas:</strong>
+      <ol style="font-size:0.85rem;margin:4px 0 0 18px;">
+        <li>The design was too heavy.</li>
+        <li>We removed the roof section.</li>
+        <li>The model became portable.</li>
+      </ol>
+    </div>
+    <div class="sentence-frame show-beginning" style="background:#e8f4fd;padding:10px 14px;border-radius:8px;margin-bottom:8px;font-size:0.85rem;">
+      <strong>Sentence frame:</strong> "Because __________, we __________, and __________."
+    </div>
+    <textarea id="sbL4write1" placeholder="Because the design was too heavy, we removed the roof section, and the model became portable." oninput="saveResponse('sbL4write1')" style="width:100%;min-height:60px;padding:10px;border:2px solid #ddd;border-radius:8px;font-size:0.9rem;margin-bottom:12px;"></textarea>
+
+    <div style="background:#f8f8f8;padding:12px;border-radius:8px;margin-bottom:10px;">
+      <strong>Ideas:</strong>
+      <ol style="font-size:0.85rem;margin:4px 0 0 18px;">
+        <li>We chose recycled materials.</li>
+        <li>Sustainability is important.</li>
+        <li>Our design scored well on the criteria.</li>
+      </ol>
+    </div>
+    <textarea id="sbL4write2" placeholder="Write your compound-complex sentence here..." oninput="saveResponse('sbL4write2')" style="width:100%;min-height:60px;padding:10px;border:2px solid #ddd;border-radius:8px;font-size:0.9rem;"></textarea>
+  </div>
+
+  <!-- LEVEL 5: ADVANCED STRUCTURES (for consolidating band) -->
+  <div class="section-card">
+    <h2>Level 5 — Advanced Structures</h2>
+    <div class="eald-box">
+      <div class="eald-label">Challenge Zone</div>
+      These sentence patterns are used in formal Technology reports and design evaluations. They make your writing sound professional and precise.
+    </div>
+
+    <!-- 5A: PASSIVE VOICE -->
+    <h3 class="mt-2">5A: Passive Voice</h3>
+    <p>In <strong>passive voice</strong>, the object comes first. This sounds more formal and is common in evaluation writing.</p>
+    <div class="grid-2 mt-1">
+      <div style="background:var(--red-light);padding:12px;border-radius:8px;">
+        <strong>Active:</strong> "We tested the materials."<br>
+        <span style="font-size:0.82rem;color:var(--grey);">(subject does the action)</span>
+      </div>
+      <div style="background:var(--green-light);padding:12px;border-radius:8px;">
+        <strong>Passive:</strong> "The materials <strong>were tested</strong>."<br>
+        <span style="font-size:0.82rem;color:var(--grey);">(object receives the action)</span>
+      </div>
+    </div>
+    <p class="mt-1" style="font-size:0.85rem;"><strong>Rewrite these in passive voice:</strong></p>
+    <p style="font-size:0.85rem;">Active: "The team measured the container."</p>
+    <textarea id="sbL5passive1" placeholder="The container was measured by the team." oninput="saveResponse('sbL5passive1')" style="width:100%;min-height:40px;padding:10px;border:2px solid #ddd;border-radius:8px;font-size:0.9rem;margin-bottom:8px;"></textarea>
+    <p style="font-size:0.85rem;">Active: "We selected recycled cardboard for the model."</p>
+    <textarea id="sbL5passive2" placeholder="Recycled cardboard was selected for the model." oninput="saveResponse('sbL5passive2')" style="width:100%;min-height:40px;padding:10px;border:2px solid #ddd;border-radius:8px;font-size:0.9rem;"></textarea>
+
+    <!-- 5B: CONDITIONALS -->
+    <h3 class="mt-2">5B: Conditionals</h3>
+    <p>"If... then..." sentences are essential for evaluations and improvements.</p>
+    <div style="background:var(--blue-light);padding:14px;border-radius:8px;font-size:0.85rem;margin:8px 0;">
+      <strong>Type 1 (real possibility):</strong> "If we use triangles, the structure <strong>will be</strong> stronger."<br>
+      <strong>Type 2 (hypothetical):</strong> "If we <strong>had</strong> more time, we <strong>would</strong> add a roof."<br>
+      <strong>Type 3 (past hypothetical):</strong> "If we <strong>had tested</strong> earlier, we <strong>would have found</strong> the weakness."
+    </div>
+    <p style="font-size:0.85rem;font-weight:600;">Write one conditional sentence for each type about your container restaurant design:</p>
+    <p style="font-size:0.82rem;color:var(--blue);">Type 1 (real possibility):</p>
+    <textarea id="sbL5cond1" placeholder="If we add ventilation, the kitchen will be safer." oninput="saveResponse('sbL5cond1')" style="width:100%;min-height:40px;padding:10px;border:2px solid #ddd;border-radius:8px;font-size:0.9rem;margin-bottom:6px;"></textarea>
+    <p style="font-size:0.82rem;color:var(--orange);">Type 2 (hypothetical):</p>
+    <textarea id="sbL5cond2" placeholder="If the container were larger, we would include more seating." oninput="saveResponse('sbL5cond2')" style="width:100%;min-height:40px;padding:10px;border:2px solid #ddd;border-radius:8px;font-size:0.9rem;margin-bottom:6px;"></textarea>
+    <p style="font-size:0.82rem;color:var(--purple);">Type 3 (past hypothetical):</p>
+    <textarea id="sbL5cond3" placeholder="If we had used thicker cardboard, the model would have been more stable." oninput="saveResponse('sbL5cond3')" style="width:100%;min-height:40px;padding:10px;border:2px solid #ddd;border-radius:8px;font-size:0.9rem;"></textarea>
+
+    <!-- 5C: PARTICIPIAL PHRASES & APPOSITIVES -->
+    <h3 class="mt-2">5C: Participial Phrases &amp; Appositives</h3>
+    <div class="grid-2 mt-1">
+      <div style="background:var(--teal-light);padding:12px;border-radius:8px;">
+        <strong>Participial phrase</strong> — starts with an -ing or -ed word:<br>
+        "<strong>Using recycled materials,</strong> the team built a sustainable design."
+      </div>
+      <div style="background:var(--purple-light);padding:12px;border-radius:8px;">
+        <strong>Appositive</strong> — defines a noun in the middle:<br>
+        "Cardboard, <strong>a lightweight and recyclable material,</strong> was used for the model."
+      </div>
+    </div>
+    <p class="mt-1" style="font-size:0.85rem;font-weight:600;">Write one sentence with a participial phrase and one with an appositive:</p>
+    <p style="font-size:0.82rem;color:var(--teal);">Participial phrase:</p>
+    <textarea id="sbL5part" placeholder="Considering the budget, we chose affordable materials." oninput="saveResponse('sbL5part')" style="width:100%;min-height:40px;padding:10px;border:2px solid #ddd;border-radius:8px;font-size:0.9rem;margin-bottom:6px;"></textarea>
+    <p style="font-size:0.82rem;color:var(--purple);">Appositive:</p>
+    <textarea id="sbL5appos" placeholder="Steel, a strong and durable material, is ideal for containers." oninput="saveResponse('sbL5appos')" style="width:100%;min-height:40px;padding:10px;border:2px solid #ddd;border-radius:8px;font-size:0.9rem;"></textarea>
+  </div>
+
+  <!-- CHECKLIST & COMPLETE -->
+  <div class="section-card">
+    <div class="checklist">
+      <h3>Module 8 Checklist</h3>
+      <div class="check-item"><input type="checkbox" id="chk8a" onchange="saveChecklist('chk8a')"><label>I can write simple sentences with Technology vocabulary</label></div>
+      <div class="check-item"><input type="checkbox" id="chk8b" onchange="saveChecklist('chk8b')"><label>I can join sentences using FANBOYS (compound)</label></div>
+      <div class="check-item"><input type="checkbox" id="chk8c" onchange="saveChecklist('chk8c')"><label>I can add subordinate clauses (complex)</label></div>
+      <div class="check-item"><input type="checkbox" id="chk8d" onchange="saveChecklist('chk8d')"><label>I tried at least one advanced structure (passive, conditional, or participial)</label></div>
+    </div>
+    <button class="btn btn-green mt-2" onclick="finishModule8()">Complete Module 8 &#127881;</button>
+  </div>
+
+</div>
+
 <!-- Save/Load Modal -->
 <div class="save-overlay" id="saveOverlay" onclick="if(event.target===this)closeSaveModal()">
   <div class="save-modal">
@@ -2667,6 +2978,27 @@ function restoreQuizStates() {
       }
     });
   }
+
+  // Restore Module 8 sentence builder quizzes
+  function restoreSbQuiz(scoreObj, savedScores, fbPrefix) {
+    if (!savedScores) return;
+    Object.keys(savedScores).forEach(qNum => {
+      scoreObj[qNum] = savedScores[qNum];
+      const fb = document.getElementById(fbPrefix + qNum);
+      const container = fb?.previousElementSibling;
+      if (container) {
+        const options = container.querySelectorAll('.quiz-option');
+        options.forEach(o => { o.disabled = true; o.style.pointerEvents = 'none'; });
+      }
+      if (fb) {
+        fb.classList.add('show', savedScores[qNum] ? 'correct' : 'incorrect');
+        fb.textContent = savedScores[qNum] ? 'Correct!' : 'Review the answer above.';
+      }
+    });
+  }
+  restoreSbQuiz(sbSimpleScores, qs.sbSimpleScores, 'sbSFb');
+  restoreSbQuiz(sbCompScores, qs.sbCompScores, 'sbCFb');
+  restoreSbQuiz(sbComplexScores, qs.sbComplexScores, 'sbXFb');
 }
 
 function updatePrintFields() {
@@ -2772,14 +3104,14 @@ function switchModule(n) {
 /* ========== PROGRESS TRACKING ========== */
 function updateOverallProgress() {
   let completed = 0;
-  for (let i = 1; i <= 7; i++) {
+  for (let i = 1; i <= 8; i++) {
     if (appData.moduleCompleted[i]) completed++;
   }
-  const pct = Math.round((completed / 7) * 100);
+  const pct = Math.round((completed / 8) * 100);
   document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('progressLabel').textContent = 'Progress: ' + completed + ' / 7 modules';
+  document.getElementById('progressLabel').textContent = 'Progress: ' + completed + ' / 8 modules';
   const tabs = document.querySelectorAll('.tab-bar button');
-  for (let i = 1; i <= 7; i++) {
+  for (let i = 1; i <= 8; i++) {
     if (appData.moduleCompleted[i]) tabs[i]?.classList.add('completed');
   }
   if (appData.diagnosticDone) tabs[0]?.classList.add('completed');
@@ -3728,6 +4060,97 @@ function sentenceTypeQ(qNum, btn, isCorrect) {
   saveAll();
 }
 
+/* ========== MODULE 8: SENTENCE BUILDER QUIZ LOGIC ========== */
+let sbSimpleScores = { 1: null, 2: null, 3: null };
+let sbCompScores = { 1: null, 2: null, 3: null };
+let sbComplexScores = { 1: null, 2: null, 3: null };
+
+const sbSimpleFb = {
+  1: ['Correct! A prototype is a test model of a design.', 'A prototype is a test model — "The designer built a prototype to test the idea."'],
+  2: ['Correct! Sustainable means it can last without harming the environment.', '"Sustainable" means environmentally responsible — recycled timber is a sustainable material.'],
+  3: ['Correct! To evaluate means to judge against criteria.', '"Evaluate" means to assess or judge — "We need to evaluate the design against the criteria."']
+};
+const sbCompFb = {
+  1: ['Correct! "But" shows contrast — it looked great BUT broke.', '"But" shows a contrast — looking great vs breaking. "The design looked great, but it broke during testing."'],
+  2: ['Correct! "So" shows cause and effect — narrow base SO it collapsed.', '"So" shows a result — the base was narrow, so the tower collapsed.'],
+  3: ['Correct! "Or" gives an alternative — timber OR recycled plastic.', '"Or" gives a choice between two options — timber or recycled plastic.']
+};
+const sbComplexFb = {
+  1: ['Correct! "Because" is a subordinating conjunction that adds a reason.', '"Because" introduces the reason — it makes the sentence complex.'],
+  2: ['Correct! "Although timber is renewable" depends on the main clause to make sense.', 'The subordinate clause starts with "Although" — it can\'t stand alone as a sentence.'],
+  3: ['Correct! "If" is a subordinating conjunction that introduces a condition.', '"If" is subordinating — it creates a condition, not a FANBOYS compound.']
+};
+
+function sbSimpleQ(qNum, btn, isCorrect) {
+  if (sbSimpleScores[qNum] !== null) return;
+  sbSimpleScores[qNum] = isCorrect ? 1 : 0;
+  if (!appData.quizState.sbSimpleScores) appData.quizState.sbSimpleScores = {};
+  appData.quizState.sbSimpleScores[qNum] = isCorrect ? 1 : 0;
+  const options = btn.parentElement.querySelectorAll('.quiz-option');
+  options.forEach(o => { o.disabled = true; o.style.pointerEvents = 'none'; });
+  btn.classList.add(isCorrect ? 'correct' : 'incorrect');
+  if (!isCorrect) options.forEach(o => { if (o.onclick?.toString().includes('true')) o.classList.add('correct'); });
+  const fb = document.getElementById('sbSFb' + qNum);
+  fb.classList.add('show', isCorrect ? 'correct' : 'incorrect');
+  fb.textContent = isCorrect ? sbSimpleFb[qNum][0] : sbSimpleFb[qNum][1];
+  saveAll();
+}
+
+function sbCompQ(qNum, btn, isCorrect) {
+  if (sbCompScores[qNum] !== null) return;
+  sbCompScores[qNum] = isCorrect ? 1 : 0;
+  if (!appData.quizState.sbCompScores) appData.quizState.sbCompScores = {};
+  appData.quizState.sbCompScores[qNum] = isCorrect ? 1 : 0;
+  const options = btn.parentElement.querySelectorAll('.quiz-option');
+  options.forEach(o => { o.disabled = true; o.style.pointerEvents = 'none'; });
+  btn.classList.add(isCorrect ? 'correct' : 'incorrect');
+  if (!isCorrect) options.forEach(o => { if (o.onclick?.toString().includes('true')) o.classList.add('correct'); });
+  const fb = document.getElementById('sbCFb' + qNum);
+  fb.classList.add('show', isCorrect ? 'correct' : 'incorrect');
+  fb.textContent = isCorrect ? sbCompFb[qNum][0] : sbCompFb[qNum][1];
+  saveAll();
+}
+
+function sbComplexQ(qNum, btn, isCorrect) {
+  if (sbComplexScores[qNum] !== null) return;
+  sbComplexScores[qNum] = isCorrect ? 1 : 0;
+  if (!appData.quizState.sbComplexScores) appData.quizState.sbComplexScores = {};
+  appData.quizState.sbComplexScores[qNum] = isCorrect ? 1 : 0;
+  const options = btn.parentElement.querySelectorAll('.quiz-option');
+  options.forEach(o => { o.disabled = true; o.style.pointerEvents = 'none'; });
+  btn.classList.add(isCorrect ? 'correct' : 'incorrect');
+  if (!isCorrect) options.forEach(o => { if (o.onclick?.toString().includes('true')) o.classList.add('correct'); });
+  const fb = document.getElementById('sbXFb' + qNum);
+  fb.classList.add('show', isCorrect ? 'correct' : 'incorrect');
+  fb.textContent = isCorrect ? sbComplexFb[qNum][0] : sbComplexFb[qNum][1];
+  saveAll();
+}
+
+function finishModule8() {
+  let score = 0;
+  // Quiz scores (9 questions total: 3 simple + 3 compound + 3 complex)
+  Object.values(sbSimpleScores).forEach(v => { if (v === 1) score++; });
+  Object.values(sbCompScores).forEach(v => { if (v === 1) score++; });
+  Object.values(sbComplexScores).forEach(v => { if (v === 1) score++; });
+  // Writing checks — count filled textareas with >= 5 words
+  const writeIds = [
+    'sbL1write1', 'sbL1write2', 'sbL2write1', 'sbL2write2',
+    'sbL3write1', 'sbL3write2', 'sbL3write3',
+    'sbL4write1', 'sbL4write2',
+    'sbL5passive1', 'sbL5passive2', 'sbL5cond1', 'sbL5cond2', 'sbL5cond3',
+    'sbL5part', 'sbL5appos'
+  ];
+  let filled = 0;
+  writeIds.forEach(id => {
+    const val = document.getElementById(id)?.value?.trim() || '';
+    if (val.split(/\s+/).filter(w => w.length > 0).length >= 5) filled++;
+  });
+  // Up to 6 bonus points for writing (1 per 3 filled textareas)
+  score += Math.min(Math.floor(filled / 3) * 2, 6);
+  appData.moduleScores[8] = Math.min(score, 15);
+  completeModule(8);
+}
+
 function finishModule7() {
   let score = 0;
   Object.values(tenseScores).forEach(v => { if (v === 1) score++; }); // up to 6
@@ -3743,6 +4166,7 @@ function finishModule7() {
   if (filled >= 5) score += 1;
   appData.moduleScores[7] = Math.min(score, 15);
   completeModule(7);
+  switchModule(8);
 }
 
 /* ========== INIT ========== */
@@ -3790,6 +4214,58 @@ document.addEventListener('DOMContentLoaded', function() {
   initWordSort();
   initJigsaw();
   restoreQuizStates();
+});
+</script>
+
+<!-- Self-Check Before Submit -->
+<div id="selfCheckCard" style="display:none;background:#fff;border:2px solid var(--teal);border-radius:10px;padding:16px 20px;margin:20px auto;max-width:700px;box-shadow:var(--shadow);">
+  <h3 style="color:var(--teal);margin-bottom:8px;font-size:1rem;">Quick Self-Check Before Submitting</h3>
+  <p style="font-size:0.85rem;color:var(--grey);margin-bottom:10px;">Tick the boxes before you submit your work to your teacher.</p>
+  <div style="display:flex;flex-direction:column;gap:6px;">
+    <label style="display:flex;align-items:center;gap:8px;font-size:0.9rem;cursor:pointer;">
+      <input type="checkbox" id="selfChk1" onchange="saveSelfCheck()">
+      I wrote at least 2 sentences in each writing activity I completed.
+    </label>
+    <label style="display:flex;align-items:center;gap:8px;font-size:0.9rem;cursor:pointer;">
+      <input type="checkbox" id="selfChk2" onchange="saveSelfCheck()">
+      I used at least one word from the word bank in my writing.
+    </label>
+    <label style="display:flex;align-items:center;gap:8px;font-size:0.9rem;cursor:pointer;">
+      <input type="checkbox" id="selfChk3" onchange="saveSelfCheck()">
+      I checked my spelling and capital letters.
+    </label>
+  </div>
+</div>
+<script>
+// Show self-check card once student has completed at least 3 modules
+function updateSelfCheckVisibility() {
+  let completed = 0;
+  for (let i = 1; i <= 8; i++) { if (appData.moduleCompleted[i]) completed++; }
+  document.getElementById('selfCheckCard').style.display = completed >= 3 ? 'block' : 'none';
+  // Restore checks
+  if (appData.selfCheck) {
+    document.getElementById('selfChk1').checked = !!appData.selfCheck.sentences;
+    document.getElementById('selfChk2').checked = !!appData.selfCheck.wordBank;
+    document.getElementById('selfChk3').checked = !!appData.selfCheck.spelling;
+  }
+}
+function saveSelfCheck() {
+  appData.selfCheck = {
+    sentences: document.getElementById('selfChk1').checked,
+    wordBank: document.getElementById('selfChk2').checked,
+    spelling: document.getElementById('selfChk3').checked
+  };
+  saveAll();
+}
+// Hook into progress update
+const _origUpdateProgress = updateOverallProgress;
+updateOverallProgress = function() {
+  _origUpdateProgress();
+  updateSelfCheckVisibility();
+};
+// Also run on load
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(updateSelfCheckVisibility, 200);
 });
 </script>
 
