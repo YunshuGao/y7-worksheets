@@ -559,17 +559,17 @@ function handleGetDetail(params) {
 
   var rowData = data[rowIdx];
 
-  // Find the DataJSON — try data column, then look for JSON in other columns
-  var dataStr = colVal(rowData, cm.data) || '';
-  if (!dataStr) {
-    // Old layout: scan columns for the JSON blob
-    for (var c = 0; c < rowData.length; c++) {
-      var cell = (rowData[c] || '').toString();
-      if (cell.charAt(0) === '{' && cell.length > 50) { dataStr = cell; break; }
-    }
+  // Find the DataJSON — scan ALL columns for a JSON blob
+  // This is the most reliable approach for both old and new layouts
+  var dataStr = '';
+  for (var c = 0; c < rowData.length; c++) {
+    var cell = (rowData[c] || '').toString();
+    if (cell.charAt(0) === '{' && cell.length > 50) { dataStr = cell; break; }
   }
   var appData = {};
   try { appData = JSON.parse(dataStr || '{}'); } catch (e) {}
+
+  var parseOk = !!(appData && appData.band);
 
   // Parse all writing responses into readable format
   var writings = extractWritings(appData);
@@ -589,7 +589,9 @@ function handleGetDetail(params) {
     // Pre-parsed for easy dashboard rendering
     writings: writings,
     scores: scores,
-    summary: buildStudentSummary(appData)
+    summary: buildStudentSummary(appData),
+    // Debug: remove after confirming it works
+    _debug: { dataFound: parseOk, dataLen: dataStr.length, colMap: cm, rowLen: rowData.length }
   };
 }
 
@@ -936,8 +938,11 @@ function extractWritings(appData) {
     { key: 'tenseT4', label: 'Verb Tense — Task 4' }
   ];
 
+  // Responses can be at appData.responses.KEY or appData.KEY (depends on version)
+  var responses = appData.responses || {};
+
   for (var i = 0; i < fields.length; i++) {
-    var val = appData[fields[i].key];
+    var val = responses[fields[i].key] || appData[fields[i].key];
     if (val !== undefined && val !== null && val !== '') {
       writings.push({
         key: fields[i].key,
@@ -959,32 +964,37 @@ function extractScores(appData) {
   if (!appData) return [];
 
   var scores = [];
-  var fields = [
-    { key: 'diagWordScore', label: 'Diagnostic — Word Match', max: 6 },
-    { key: 'diagSentenceScore', label: 'Diagnostic — Sentence Check', max: 3 },
-    { key: 'diagWriteScore', label: 'Diagnostic — Writing', max: 3 },
-    { key: 'diagTotalScore', label: 'Diagnostic — Total', max: 12 },
-    { key: 'mod1SortScore', label: 'Module 1 — Word Sort', max: 12 },
-    { key: 'mod1GapScore', label: 'Module 1 — Gap Fill', max: 4 },
-    { key: 'mod1WriteScore', label: 'Module 1 — Writing', max: 2 },
-    { key: 'mod2TypeScore', label: 'Module 2 — Text Type ID', max: 4 },
-    { key: 'mod2FeatureScore', label: 'Module 2 — Feature Spotter', max: 4 },
-    { key: 'mod3VSCCScore', label: 'Module 3 — VSCC Highlighter', max: 3 },
-    { key: 'mod3ALARMScore', label: 'Module 3 — ALARM Quiz', max: 4 },
-    { key: 'sentenceTypeScore', label: 'Sentence Type Quiz', max: 5 },
-    { key: 'tenseQuizScore', label: 'Verb Tense Quiz', max: 4 }
-  ];
 
-  for (var i = 0; i < fields.length; i++) {
-    var val = appData[fields[i].key];
-    if (val !== undefined && val !== null) {
+  // Module scores are at appData.moduleScores: { "0": 10, "1": 5, ... }
+  var ms = appData.moduleScores || {};
+  var moduleNames = [
+    'Diagnostic', 'Word Power', 'Text Types', 'Read the Question',
+    'Build a Paragraph', 'Analyse a Design', 'Put It All Together',
+    'Grammar Gym', 'Sentence Builder'
+  ];
+  for (var m = 0; m <= 8; m++) {
+    if (ms[m] !== undefined && ms[m] !== null) {
       scores.push({
-        key: fields[i].key,
-        label: fields[i].label,
-        score: Number(val) || 0,
-        maxScore: fields[i].max
+        key: 'module' + m,
+        label: 'Module ' + m + ' — ' + (moduleNames[m] || ''),
+        score: Number(ms[m]) || 0,
+        maxScore: m === 0 ? 12 : 15
       });
     }
+  }
+
+  // Quiz scores from appData.quizState
+  var qs = appData.quizState || {};
+  if (qs.sortScore !== null && qs.sortScore !== undefined) {
+    scores.push({ key: 'wordSort', label: 'Word Sort', score: qs.sortScore, maxScore: qs.sortTotal || 12 });
+  }
+  if (qs.jigsawScore !== null && qs.jigsawScore !== undefined) {
+    scores.push({ key: 'jigsawScore', label: 'TEEL Jigsaw', score: qs.jigsawScore, maxScore: 4 });
+  }
+
+  // Diagnostic score
+  if (appData.diagnosticScore !== undefined) {
+    scores.push({ key: 'diagnostic', label: 'Diagnostic Total', score: appData.diagnosticScore, maxScore: 12 });
   }
 
   return scores;
