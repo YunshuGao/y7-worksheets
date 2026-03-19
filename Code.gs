@@ -84,6 +84,9 @@ function doGet(e) {
       case 'feedback':
         result = handleGetFeedback(e.parameter);
         break;
+      case 'restore':
+        result = handleRestore(e.parameter);
+        break;
       // --- Teacher-facing (passcode auth) ---
       case 'login':
         result = handleLogin(e.parameter);
@@ -443,6 +446,77 @@ function handleGetFeedback(params) {
     hasFeedback: true,
     feedbackText: feedbackText,
     feedbackDate: feedbackDate
+  };
+}
+
+
+/**
+ * GET: Student restores their saved work from the server.
+ * Params: name, class
+ * No auth required.
+ * Returns the appData from their BEST submission (most modules completed).
+ */
+function handleRestore(params) {
+  var sheet = getOrCreateSheet();
+  var name = (params.name || '').trim();
+  var cls = (params['class'] || '').trim();
+
+  if (!name || !cls) {
+    return { status: 'ok', found: false };
+  }
+
+  var data = sheet.getDataRange().getValues();
+  var cm = buildColMap(data[0]);
+  var bestData = null;
+  var bestModules = -1;
+
+  for (var i = 1; i < data.length; i++) {
+    var rowName = (colVal(data[i], cm.name) || '').toString().trim();
+    var rowClass = (colVal(data[i], cm.class) || '').toString().trim();
+
+    if (rowName.toLowerCase() !== name.toLowerCase() ||
+        rowClass.toLowerCase() !== cls.toLowerCase()) continue;
+
+    // Find DataJSON in this row
+    var dataStr = colVal(data[i], cm.data) || '';
+    if (!dataStr) {
+      for (var c = 0; c < data[i].length; c++) {
+        var cell = (data[i][c] || '').toString();
+        if (cell.charAt(0) === '{' && cell.length > 50) { dataStr = cell; break; }
+      }
+    }
+    if (!dataStr) continue;
+
+    var appData = {};
+    try { appData = JSON.parse(dataStr); } catch (e) { continue; }
+
+    // Count completed modules to find the best submission
+    var moduleCount = 0;
+    if (appData.moduleScores) {
+      for (var m = 0; m <= 8; m++) {
+        if (appData.moduleScores[m] >= 1) moduleCount++;
+      }
+    } else if (appData.moduleCompleted) {
+      for (var m2 = 1; m2 <= 8; m2++) {
+        if (appData.moduleCompleted[m2]) moduleCount++;
+      }
+    }
+
+    if (moduleCount > bestModules) {
+      bestModules = moduleCount;
+      bestData = appData;
+    }
+  }
+
+  if (!bestData) {
+    return { status: 'ok', found: false };
+  }
+
+  return {
+    status: 'ok',
+    found: true,
+    modulesCompleted: bestModules,
+    data: bestData
   };
 }
 

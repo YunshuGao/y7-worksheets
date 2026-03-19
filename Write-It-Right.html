@@ -4278,6 +4278,58 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
+<!-- Server Restore: recover student work if localStorage is empty -->
+<script>
+(function() {
+  var RESTORE_URL = 'https://script.google.com/macros/s/AKfycbwq7dx3INqCCVukx2Xvufi8ak_d-WwwExG-R1zlGO2-JE2bTFGX66w2LaGVskAuF6_K6g/exec';
+  var restoreAttempted = false;
+
+  function tryRestore() {
+    if (restoreAttempted) return;
+    var name = (document.getElementById('studentName').value || '').trim();
+    var cls = (document.getElementById('studentClass').value || '').trim();
+    if (!name || !cls) return;
+
+    // Only restore if current data is mostly empty (no modules completed)
+    var completed = 0;
+    for (var i = 1; i <= 8; i++) { if (appData.moduleCompleted && appData.moduleCompleted[i]) completed++; }
+    if (completed > 0) { restoreAttempted = true; return; }  // already has work, skip
+
+    restoreAttempted = true;
+    fetch(RESTORE_URL + '?action=restore&name=' + encodeURIComponent(name) + '&class=' + encodeURIComponent(cls))
+      .then(function(r) { return r.json(); })
+      .then(function(result) {
+        if (result.found && result.modulesCompleted > 0) {
+          var msg = 'We found your previous work (' + result.modulesCompleted + ' modules completed).\n\nClick OK to restore it, or Cancel to start fresh.';
+          if (confirm(msg)) {
+            appData = { ...appData, ...result.data };
+            appData.studentName = name;
+            appData.studentClass = cls;
+            saveAll();
+            loadAll();
+            restoreQuizStates();
+          }
+        }
+      })
+      .catch(function() { /* silently fail */ });
+  }
+
+  // Check when student selects class (name may already be cached)
+  var clsEl = document.getElementById('studentClass');
+  var origOnchange = clsEl.onchange;
+  clsEl.onchange = function(e) {
+    if (origOnchange) origOnchange.call(this, e);
+    setTimeout(tryRestore, 300);
+  };
+  // Also check on name blur
+  document.getElementById('studentName').addEventListener('blur', function() {
+    setTimeout(tryRestore, 300);
+  });
+  // Also check on page load after a delay (in case both fields are cached)
+  setTimeout(tryRestore, 1000);
+})();
+</script>
+
 <!-- Submission System -->
 <script src="submission.js"></script>
 <script>
