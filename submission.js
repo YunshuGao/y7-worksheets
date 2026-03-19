@@ -96,7 +96,7 @@
       '.sub-offline-dot.online { background: #27ae60; }',
       '.sub-offline-dot.offline { background: #e74c3c; }',
       '',
-      /* ===== FEEDBACK COACH WIDGET ===== */',
+      '/* ===== FEEDBACK COACH WIDGET ===== */',
       '.fb-coach { position: fixed; bottom: 20px; right: 20px; z-index: 9998;',
       '  font-family: "Segoe UI", system-ui, sans-serif; }',
       '',
