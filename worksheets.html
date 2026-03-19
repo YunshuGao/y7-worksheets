@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Technology Worksheets — Ms Gao</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: #f0f4f8; color: #2c3e50; min-height: 100vh;
+}
+
+/* Header */
+.header {
+  background: linear-gradient(135deg, #1a3d5c 0%, #2c5f8a 100%);
+  color: #fff; padding: 20px 24px; display: flex; align-items: center;
+  justify-content: space-between; flex-wrap: wrap; gap: 10px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+}
+.header h1 { font-size: 1.3rem; font-weight: 700; }
+.header h1 span { color: #4ecdc4; }
+.header a { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.85rem; }
+.header a:hover { color: #fff; }
+
+/* Main */
+main { max-width: 900px; margin: 0 auto; padding: 24px 20px; }
+
+/* Year group tabs */
+.year-tabs {
+  display: flex; gap: 0; margin-bottom: 24px; background: #fff;
+  border-radius: 10px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.year-tab {
+  flex: 1; padding: 12px 16px; text-align: center; font-size: 0.9rem;
+  font-weight: 600; cursor: pointer; border: none; background: #fff;
+  color: #888; transition: all 0.2s; font-family: inherit;
+  border-bottom: 3px solid transparent;
+}
+.year-tab:hover { color: #2c3e50; background: #f8f8f8; }
+.year-tab.active { color: #1a3d5c; border-bottom-color: #4ecdc4; background: #f0faf7; }
+
+/* Lesson list */
+.year-section { display: none; }
+.year-section.active { display: block; }
+
+.unit-label {
+  font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;
+  color: #7f8c8d; font-weight: 600; margin: 20px 0 10px; padding-left: 4px;
+}
+
+.lesson-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 10px; margin-bottom: 16px;
+}
+.lesson-card {
+  display: flex; align-items: center; gap: 12px;
+  background: #fff; border-radius: 10px; padding: 12px 16px;
+  text-decoration: none; color: #2c3e50;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  border: 2px solid transparent; transition: all 0.15s;
+}
+.lesson-card:hover {
+  border-color: #4ecdc4; transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+.lesson-num {
+  background: #e8f0f8; color: #1a5276; font-weight: 700; font-size: 0.8rem;
+  width: 36px; height: 36px; border-radius: 8px; display: flex;
+  align-items: center; justify-content: center; flex-shrink: 0;
+}
+.lesson-num.interactive { background: #e0f5f2; color: #1a8a6e; }
+.lesson-info { flex: 1; min-width: 0; }
+.lesson-title { font-size: 0.88rem; font-weight: 600; line-height: 1.3; }
+.lesson-tag {
+  display: inline-block; font-size: 0.65rem; padding: 1px 6px; border-radius: 8px;
+  font-weight: 600; text-transform: uppercase; margin-top: 2px;
+}
+.lesson-tag.worksheet { background: #d6eaf8; color: #1a5276; }
+.lesson-tag.interactive { background: #d4efdf; color: #1e8449; }
+.lesson-tag.tool { background: #f3e8f9; color: #6c3483; }
+
+/* Footer */
+.footer { text-align: center; padding: 16px; font-size: 0.75rem; color: #aaa; }
+.footer a { color: #7f8c8d; }
+
+@media (max-width: 600px) {
+  .header { padding: 14px 16px; }
+  main { padding: 16px 12px; }
+  .lesson-grid { grid-template-columns: 1fr; }
+  .year-tab { font-size: 0.8rem; padding: 10px 8px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1><span>Technology</span> Worksheets</h1>
+  <a href="faculty.html">&larr; Back to Ms Gao's Tools</a>
+</div>
+
+<main>
+
+<div class="year-tabs">
+  <button class="year-tab active" onclick="showYear('y7')">Year 7</button>
+  <button class="year-tab" onclick="showYear('y8')">Year 8</button>
+</div>
+
+<!-- ===== YEAR 7 ===== -->
+<div class="year-section active" id="section-y7">
+
+  <div class="unit-label">Term 1 — Engineering &amp; Sustainable Design (20 lessons)</div>
+  <div class="lesson-grid">
+    <a class="lesson-card" href="T1-L01-Worksheet.html">
+      <div class="lesson-num">L01</div>
+      <div class="lesson-info"><div class="lesson-title">What is Technology? / What is Design?</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="T1-L02-Worksheet.html">
+      <div class="lesson-num">L02</div>
+      <div class="lesson-info"><div class="lesson-title">Design Careers &amp; Elements of Design</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="T1-L03-Worksheet.html">
+      <div class="lesson-num">L03</div>
+      <div class="lesson-info"><div class="lesson-title">Principles of Design &amp; Characteristics</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="T1-L04-Worksheet.html">
+      <div class="lesson-num">L04</div>
+      <div class="lesson-info"><div class="lesson-title">Design Challenges — Circle, Texture &amp; Paper Boat</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="T1-L05-Worksheet.html">
+      <div class="lesson-num">L05</div>
+      <div class="lesson-info"><div class="lesson-title">Engineering Structures — Tower &amp; Phone Stand</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="T1-L06-Worksheet.html">
+      <div class="lesson-num">L06</div>
+      <div class="lesson-info"><div class="lesson-title">Marble Run &amp; Marble Maze Challenges</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="T1-L07-Worksheet.html">
+      <div class="lesson-num">L07</div>
+      <div class="lesson-info"><div class="lesson-title">The Design Process</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="T1-L08-Worksheet.html">
+      <div class="lesson-num">L08</div>
+      <div class="lesson-info"><div class="lesson-title">Paper Boat No. 2 — Applying the Design Process</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="T1-L09-Worksheet.html">
+      <div class="lesson-num">L09</div>
+      <div class="lesson-info"><div class="lesson-title">Measurement &amp; Estimation</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="T1-L10-Worksheet.html">
+      <div class="lesson-num">L10</div>
+      <div class="lesson-info"><div class="lesson-title">Perimeter, Area, Volume &amp; Capacity</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="T1-L11-Worksheet.html">
+      <div class="lesson-num">L11</div>
+      <div class="lesson-info"><div class="lesson-title">Technical Lettering &amp; Scale</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="T1-L12-Worksheet.html">
+      <div class="lesson-num">L12</div>
+      <div class="lesson-info"><div class="lesson-title">Isometric Drawing</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="T1-L13-Worksheet.html">
+      <div class="lesson-num">L13</div>
+      <div class="lesson-info"><div class="lesson-title">Orthogonal (Multi-View) Drawing</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="T1-L14-Worksheet.html">
+      <div class="lesson-num">L14</div>
+      <div class="lesson-info"><div class="lesson-title">Colour in Design &amp; Digital File Types</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="T1-L15-Worksheet.html">
+      <div class="lesson-num">L15</div>
+      <div class="lesson-info"><div class="lesson-title">3D Shapes, Nets &amp; Freehand Sketching</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="T1-L16-Worksheet.html">
+      <div class="lesson-num">L16</div>
+      <div class="lesson-info"><div class="lesson-title">Bridge Types &amp; Engineering Forces</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="T1-L17-Worksheet.html">
+      <div class="lesson-num">L17</div>
+      <div class="lesson-info"><div class="lesson-title">Bridge Design Brief &amp; Research</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="T1-L18-Worksheet.html">
+      <div class="lesson-num">L18</div>
+      <div class="lesson-info"><div class="lesson-title">Bridge Construction — Building Your Trusses</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="T1-L19-Worksheet.html">
+      <div class="lesson-num">L19</div>
+      <div class="lesson-info"><div class="lesson-title">Bridge Construction — Completion &amp; Test Prep</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="T1-L20-Worksheet.html">
+      <div class="lesson-num">L20</div>
+      <div class="lesson-info"><div class="lesson-title">Testing Day! Load Testing &amp; Evaluation</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+  </div>
+
+  <div class="unit-label">Interactive Tools</div>
+  <div class="lesson-grid">
+    <a class="lesson-card" href="design-process-interactive.html">
+      <div class="lesson-num interactive">&#9881;</div>
+      <div class="lesson-info"><div class="lesson-title">Design Process Explorer</div><span class="lesson-tag interactive">Interactive</span></div>
+    </a>
+    <a class="lesson-card" href="Write-It-Right.html">
+      <div class="lesson-num interactive">&#9997;</div>
+      <div class="lesson-info"><div class="lesson-title">Write It Right — Academic Writing Toolkit</div><span class="lesson-tag interactive">Interactive</span></div>
+    </a>
+  </div>
+</div>
+
+<!-- ===== YEAR 8 ===== -->
+<div class="year-section" id="section-y8">
+
+  <div class="unit-label">Term 1 — Container to Countertop (20 lessons)</div>
+  <div class="lesson-grid">
+    <a class="lesson-card" href="https://yunshugao.github.io/y8-worksheets/T1-L01-Worksheet.html" target="_blank">
+      <div class="lesson-num">L01</div>
+      <div class="lesson-info"><div class="lesson-title">Lesson 1</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="https://yunshugao.github.io/y8-worksheets/T1-L02-Worksheet.html" target="_blank">
+      <div class="lesson-num">L02</div>
+      <div class="lesson-info"><div class="lesson-title">Lesson 2</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="https://yunshugao.github.io/y8-worksheets/T1-L03-Worksheet.html" target="_blank">
+      <div class="lesson-num">L03</div>
+      <div class="lesson-info"><div class="lesson-title">Lesson 3</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="https://yunshugao.github.io/y8-worksheets/T1-L04-Worksheet.html" target="_blank">
+      <div class="lesson-num">L04</div>
+      <div class="lesson-info"><div class="lesson-title">Lesson 4</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="https://yunshugao.github.io/y8-worksheets/T1-L05-Worksheet.html" target="_blank">
+      <div class="lesson-num">L05</div>
+      <div class="lesson-info"><div class="lesson-title">Lesson 5</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="https://yunshugao.github.io/y8-worksheets/T1-L06-Worksheet.html" target="_blank">
+      <div class="lesson-num">L06</div>
+      <div class="lesson-info"><div class="lesson-title">Lesson 6</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="https://yunshugao.github.io/y8-worksheets/T1-L07-Worksheet.html" target="_blank">
+      <div class="lesson-num">L07</div>
+      <div class="lesson-info"><div class="lesson-title">Lesson 7</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="https://yunshugao.github.io/y8-worksheets/T1-L08-Worksheet.html" target="_blank">
+      <div class="lesson-num">L08</div>
+      <div class="lesson-info"><div class="lesson-title">Lesson 8</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="https://yunshugao.github.io/y8-worksheets/T1-L09-Worksheet.html" target="_blank">
+      <div class="lesson-num">L09</div>
+      <div class="lesson-info"><div class="lesson-title">Lesson 9</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="https://yunshugao.github.io/y8-worksheets/T1-L10-Worksheet.html" target="_blank">
+      <div class="lesson-num">L10</div>
+      <div class="lesson-info"><div class="lesson-title">Lesson 10</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="https://yunshugao.github.io/y8-worksheets/T1-L11-Worksheet.html" target="_blank">
+      <div class="lesson-num">L11</div>
+      <div class="lesson-info"><div class="lesson-title">Lesson 11</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="https://yunshugao.github.io/y8-worksheets/T1-L12-Worksheet.html" target="_blank">
+      <div class="lesson-num">L12</div>
+      <div class="lesson-info"><div class="lesson-title">Lesson 12</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="https://yunshugao.github.io/y8-worksheets/T1-L13-Worksheet.html" target="_blank">
+      <div class="lesson-num">L13</div>
+      <div class="lesson-info"><div class="lesson-title">Lesson 13</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="https://yunshugao.github.io/y8-worksheets/T1-L14-Worksheet.html" target="_blank">
+      <div class="lesson-num">L14</div>
+      <div class="lesson-info"><div class="lesson-title">Lesson 14</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="https://yunshugao.github.io/y8-worksheets/T1-L15-Worksheet.html" target="_blank">
+      <div class="lesson-num">L15</div>
+      <div class="lesson-info"><div class="lesson-title">Lesson 15</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="https://yunshugao.github.io/y8-worksheets/T1-L16-Worksheet.html" target="_blank">
+      <div class="lesson-num">L16</div>
+      <div class="lesson-info"><div class="lesson-title">Lesson 16</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="https://yunshugao.github.io/y8-worksheets/T1-L17-Worksheet.html" target="_blank">
+      <div class="lesson-num">L17</div>
+      <div class="lesson-info"><div class="lesson-title">Lesson 17</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="https://yunshugao.github.io/y8-worksheets/T1-L18-Worksheet.html" target="_blank">
+      <div class="lesson-num">L18</div>
+      <div class="lesson-info"><div class="lesson-title">Lesson 18</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="https://yunshugao.github.io/y8-worksheets/T1-L19-Worksheet.html" target="_blank">
+      <div class="lesson-num">L19</div>
+      <div class="lesson-info"><div class="lesson-title">Lesson 19</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+    <a class="lesson-card" href="https://yunshugao.github.io/y8-worksheets/T1-L20-Worksheet.html" target="_blank">
+      <div class="lesson-num">L20</div>
+      <div class="lesson-info"><div class="lesson-title">Lesson 20</div><span class="lesson-tag worksheet">Worksheet</span></div>
+    </a>
+  </div>
+
+  <div class="unit-label">Interactive Tools</div>
+  <div class="lesson-grid">
+    <a class="lesson-card" href="https://yunshugao.github.io/y8-worksheets/T1-L06-Scale-Explorer-Interactive.html" target="_blank">
+      <div class="lesson-num interactive">&#9881;</div>
+      <div class="lesson-info"><div class="lesson-title">Scale Explorer</div><span class="lesson-tag interactive">Interactive</span></div>
+    </a>
+    <a class="lesson-card" href="https://yunshugao.github.io/y8-worksheets/T1-L08-Drawing-Workshop-Interactive.html" target="_blank">
+      <div class="lesson-num interactive">&#9881;</div>
+      <div class="lesson-info"><div class="lesson-title">Drawing Workshop</div><span class="lesson-tag interactive">Interactive</span></div>
+    </a>
+    <a class="lesson-card" href="https://yunshugao.github.io/y8-worksheets/T1-L08-Projection-Explorer-Interactive.html" target="_blank">
+      <div class="lesson-num interactive">&#9881;</div>
+      <div class="lesson-info"><div class="lesson-title">Projection Explorer</div><span class="lesson-tag interactive">Interactive</span></div>
+    </a>
+    <a class="lesson-card" href="https://yunshugao.github.io/y8-worksheets/T1-L09-Floor-Plan-Explorer-Interactive.html" target="_blank">
+      <div class="lesson-num interactive">&#9881;</div>
+      <div class="lesson-info"><div class="lesson-title">Floor Plan Explorer</div><span class="lesson-tag interactive">Interactive</span></div>
+    </a>
+    <a class="lesson-card" href="https://yunshugao.github.io/y8-worksheets/Assessment-Writing-Coach.html" target="_blank">
+      <div class="lesson-num interactive">&#9997;</div>
+      <div class="lesson-info"><div class="lesson-title">Assessment Writing Coach</div><span class="lesson-tag tool">Writing Tool</span></div>
+    </a>
+    <a class="lesson-card" href="https://yunshugao.github.io/y8-worksheets/Design-Portfolio.html" target="_blank">
+      <div class="lesson-num interactive">&#128196;</div>
+      <div class="lesson-info"><div class="lesson-title">Design Portfolio</div><span class="lesson-tag tool">Portfolio Tool</span></div>
+    </a>
+  </div>
+</div>
+
+</main>
+
+<div class="footer">
+  Ms Gao &middot; Arthur Phillip High School &middot; <a href="faculty.html">Back to all tools</a>
+</div>
+
+<script>
+function showYear(year) {
+  document.querySelectorAll('.year-section').forEach(function(s) { s.classList.remove('active'); });
+  document.querySelectorAll('.year-tab').forEach(function(t) { t.classList.remove('active'); });
+  document.getElementById('section-' + year).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
