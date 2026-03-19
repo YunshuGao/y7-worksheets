@@ -103,6 +103,9 @@ function doGet(e) {
       case 'export':
         result = handleExport(e.parameter);
         break;
+      case 'diag':
+        result = handleDiag(e.parameter);
+        break;
       default:
         result = { status: 'error', message: 'Unknown action: ' + action };
     }
@@ -164,13 +167,48 @@ function getOrCreateSheet() {
 }
 
 /**
- * Get the column index (0-based) for Subject in the Submissions sheet.
- * Returns 9 for new sheets (column J), or finds it dynamically for migrated sheets.
+ * Build a column map from header names → 0-based indices.
+ * Handles BOTH old (6-col) and new (10-col) sheet layouts.
+ *
+ * Old layout: Timestamp | Student Name | Class | Worksheet | Data JSON | Subject
+ * New layout: Timestamp | StudentName | StudentClass | WorksheetId | WorksheetTitle | SubmissionCount | DataJSON | FeedbackText | FeedbackDate | Subject
+ *
+ * The map always returns { timestamp, name, class, wsId, wsTitle, count, data, feedback, feedbackDate, subject }
+ * with -1 for columns that don't exist.
  */
-function getSubjectColIndex(sheet) {
-  var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
-  var idx = headers.indexOf('Subject');
-  return idx >= 0 ? idx : 9;  // default to column J (index 9)
+function buildColMap(headers) {
+  var map = { timestamp: 0, name: -1, class: -1, wsId: -1, wsTitle: -1, count: -1, data: -1, feedback: -1, feedbackDate: -1, subject: -1 };
+
+  for (var i = 0; i < headers.length; i++) {
+    var h = (headers[i] || '').toString().trim().toLowerCase().replace(/[\s_]+/g, '');
+    // Match flexibly: "Student Name", "StudentName", "student_name" all → name
+    if (h === 'studentname' || h === 'name') map.name = i;
+    else if (h === 'studentclass' || h === 'class') map.class = i;
+    else if (h === 'worksheetid' || h === 'worksheet') map.wsId = i;
+    else if (h === 'worksheettitle') map.wsTitle = i;
+    else if (h === 'submissioncount') map.count = i;
+    else if (h === 'datajson' || h === 'data json' || h === 'datajson') map.data = i;
+    else if (h === 'feedbacktext') map.feedback = i;
+    else if (h === 'feedbackdate') map.feedbackDate = i;
+    else if (h === 'subject') map.subject = i;
+    else if (h === 'timestamp') map.timestamp = i;
+  }
+
+  // In old 6-col layout, "Worksheet" column holds the title (no separate ID)
+  // and "Data JSON" holds the appData blob
+  if (map.wsTitle === -1 && map.wsId >= 0) {
+    // Old layout: wsId column actually holds the worksheet title
+    // wsId and wsTitle are the same column
+    map.wsTitle = map.wsId;
+  }
+
+  return map;
+}
+
+/** Helper: safely read a row value by column map index */
+function colVal(row, idx) {
+  if (idx < 0 || idx >= row.length) return '';
+  return row[idx];
 }
 
 /**
@@ -232,8 +270,11 @@ function getOrCreateCommentBankSheet() {
  */
 function findStudentRow(sheet, name, cls, worksheetId) {
   var data = sheet.getDataRange().getValues();
+  var cm = buildColMap(data[0]);
   for (var i = 1; i < data.length; i++) {
-    if (data[i][1] === name && data[i][2] === cls && data[i][3] === worksheetId) {
+    if (colVal(data[i], cm.name) === name &&
+        colVal(data[i], cm.class) === cls &&
+        colVal(data[i], cm.wsId) === worksheetId) {
       return i + 1;
     }
   }
@@ -427,7 +468,7 @@ function handleGetStudents(params) {
 
   var sheet = getOrCreateSheet();
   var data = sheet.getDataRange().getValues();
-  var subjectIdx = getSubjectColIndex(sheet);
+  var cm = buildColMap(data[0]);
   var students = [];
 
   // Normalise teacher class list for comparison
@@ -435,9 +476,9 @@ function handleGetStudents(params) {
 
   for (var i = 1; i < data.length; i++) {
     var row = data[i];
-    var rowClass = (row[2] || '').toString().trim();
+    var rowClass = colVal(row, cm.class).toString().trim();
     var rowClassUpper = rowClass.toUpperCase();
-    var rowSubject = (row[subjectIdx] || 'technology').toString().toLowerCase();
+    var rowSubject = (colVal(row, cm.subject) || 'technology').toString().toLowerCase();
 
     // Teacher can only see their assigned classes
     if (normalClasses.length > 0) {
@@ -445,25 +486,31 @@ function handleGetStudents(params) {
     }
     // Additional filters
     if (filterClass && rowClassUpper !== filterClass.toUpperCase()) continue;
-    if (filterWs && row[3] !== filterWs) continue;
+    if (filterWs && colVal(row, cm.wsId) !== filterWs) continue;
     if (filterSubject && rowSubject !== filterSubject) continue;
 
-    // Parse DataJSON for summary
+    // Parse DataJSON for summary — try data column, then wsTitle column (old layout puts JSON there)
+    var dataStr = colVal(row, cm.data) || '';
+    if (!dataStr && cm.wsTitle >= 0) {
+      // In old layout, the DataJSON might be in what we called wsTitle
+      var candidate = colVal(row, cm.wsTitle) || '';
+      if (candidate.toString().charAt(0) === '{') dataStr = candidate;
+    }
     var appData = {};
-    try { appData = JSON.parse(row[6] || '{}'); } catch (e) {}
+    try { appData = JSON.parse(dataStr || '{}'); } catch (e) {}
 
     var summary = buildStudentSummary(appData);
 
     students.push({
-      name: row[1],
+      name: colVal(row, cm.name),
       class: rowClass,
-      worksheetId: row[3],
-      worksheetTitle: row[4],
-      submissionCount: row[5],
-      lastSubmitted: row[0],
+      worksheetId: colVal(row, cm.wsId),
+      worksheetTitle: colVal(row, cm.wsTitle),
+      submissionCount: colVal(row, cm.count) || 1,
+      lastSubmitted: colVal(row, cm.timestamp),
       subject: rowSubject,
-      hasFeedback: !!row[7],
-      feedbackDate: row[8] || '',
+      hasFeedback: !!colVal(row, cm.feedback),
+      feedbackDate: colVal(row, cm.feedbackDate) || '',
       // Parsed summary fields
       band: summary.band,
       diagnosticScore: summary.diagnosticScore,
@@ -495,14 +542,34 @@ function handleGetDetail(params) {
   var cls = (params['class'] || '').trim();
   var wsId = params.ws || '';
 
-  var row = findStudentRow(sheet, name, cls, wsId);
-  if (row < 0) {
+  var data = sheet.getDataRange().getValues();
+  var cm = buildColMap(data[0]);
+
+  // Find student row using column map
+  var rowIdx = -1;
+  for (var i = 1; i < data.length; i++) {
+    if (colVal(data[i], cm.name) === name && colVal(data[i], cm.class).toString().trim() === cls) {
+      rowIdx = i;
+      break;
+    }
+  }
+  if (rowIdx < 0) {
     return { status: 'error', message: 'Student not found.' };
   }
 
-  var dataJson = sheet.getRange(row, 7).getValue();
+  var rowData = data[rowIdx];
+
+  // Find the DataJSON — try data column, then look for JSON in other columns
+  var dataStr = colVal(rowData, cm.data) || '';
+  if (!dataStr) {
+    // Old layout: scan columns for the JSON blob
+    for (var c = 0; c < rowData.length; c++) {
+      var cell = (rowData[c] || '').toString();
+      if (cell.charAt(0) === '{' && cell.length > 50) { dataStr = cell; break; }
+    }
+  }
   var appData = {};
-  try { appData = JSON.parse(dataJson || '{}'); } catch (e) {}
+  try { appData = JSON.parse(dataStr || '{}'); } catch (e) {}
 
   // Parse all writing responses into readable format
   var writings = extractWritings(appData);
@@ -512,11 +579,11 @@ function handleGetDetail(params) {
     status: 'ok',
     name: name,
     class: cls,
-    worksheetId: wsId,
-    submissionCount: sheet.getRange(row, 6).getValue(),
-    lastSubmitted: sheet.getRange(row, 1).getValue(),
-    feedbackText: sheet.getRange(row, 8).getValue() || '',
-    feedbackDate: sheet.getRange(row, 9).getValue() || '',
+    worksheetId: colVal(rowData, cm.wsId),
+    submissionCount: colVal(rowData, cm.count) || 1,
+    lastSubmitted: colVal(rowData, cm.timestamp),
+    feedbackText: colVal(rowData, cm.feedback) || '',
+    feedbackDate: colVal(rowData, cm.feedbackDate) || '',
     // Full data for dashboard to display
     data: appData,
     // Pre-parsed for easy dashboard rendering
@@ -587,22 +654,30 @@ function handleGetHeatmap(params) {
 
   var sheet = getOrCreateSheet();
   var data = sheet.getDataRange().getValues();
-  var subjectIdx = getSubjectColIndex(sheet);
+  var cm = buildColMap(data[0]);
   var heatmap = [];
 
   for (var i = 1; i < data.length; i++) {
     var row = data[i];
-    if (row[2] !== filterClass) continue;
-    var rowSubject = (row[subjectIdx] || 'technology').toString().toLowerCase();
+    if (colVal(row, cm.class).toString().trim().toUpperCase() !== filterClass.toUpperCase()) continue;
+    var rowSubject = (colVal(row, cm.subject) || 'technology').toString().toLowerCase();
     if (filterSubject && rowSubject !== filterSubject) continue;
 
+    // Find DataJSON
+    var dataStr = colVal(row, cm.data) || '';
+    if (!dataStr) {
+      for (var c = 0; c < row.length; c++) {
+        var cell = (row[c] || '').toString();
+        if (cell.charAt(0) === '{' && cell.length > 50) { dataStr = cell; break; }
+      }
+    }
     var appData = {};
-    try { appData = JSON.parse(row[6] || '{}'); } catch (e) {}
+    try { appData = JSON.parse(dataStr || '{}'); } catch (e) {}
 
     var scores = computeHeatmapScores(appData);
 
     heatmap.push({
-      name: row[1],
+      name: colVal(row, cm.name),
       vocabulary: scores.vocabulary,
       teel: scores.teel,
       grammar: scores.grammar,
@@ -696,8 +771,23 @@ function handleGiveFeedback(payload) {
     return { status: 'error', message: 'Student submission not found.' };
   }
 
-  sheet.getRange(row, 8).setValue(feedback);
-  sheet.getRange(row, 9).setValue(new Date().toISOString());
+  // Find or create feedback columns
+  var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+  var fbCol = headers.indexOf('FeedbackText');
+  var fdCol = headers.indexOf('FeedbackDate');
+  if (fbCol === -1) {
+    fbCol = headers.length;
+    sheet.getRange(1, fbCol + 1).setValue('FeedbackText').setFontWeight('bold');
+    fdCol = fbCol + 1;
+    sheet.getRange(1, fdCol + 1).setValue('FeedbackDate').setFontWeight('bold');
+  }
+  if (fdCol === -1) {
+    fdCol = fbCol + 1;
+    sheet.getRange(1, fdCol + 1).setValue('FeedbackDate').setFontWeight('bold');
+  }
+
+  sheet.getRange(row, fbCol + 1).setValue(feedback);
+  sheet.getRange(row, fdCol + 1).setValue(new Date().toISOString());
 
   return { status: 'ok', message: 'Feedback saved.' };
 }
@@ -974,4 +1064,48 @@ function csvEscape(val) {
     return '"' + str.replace(/"/g, '""') + '"';
   }
   return str;
+}
+
+/**
+ * TEMPORARY DIAGNOSTIC — remove after debugging.
+ * Returns raw sheet info so we can see exactly what's in the data.
+ */
+function handleDiag(params) {
+  if (!checkAuth(params)) {
+    return { status: 'error', message: 'Invalid passcode.' };
+  }
+  var sheet = getOrCreateSheet();
+  var data = sheet.getDataRange().getValues();
+  var headers = data[0] || [];
+  var teacherClasses = getTeacherClasses(params);
+  var normalClasses = (teacherClasses || []).map(function(c) { return c.toString().trim().toUpperCase(); });
+
+  // Sample first 3 data rows
+  var samples = [];
+  for (var i = 1; i < Math.min(data.length, 4); i++) {
+    var row = data[i];
+    samples.push({
+      rowIndex: i,
+      colA_timestamp: String(row[0]),
+      colB_name: String(row[1]),
+      colC_class: String(row[2]),
+      colC_type: typeof row[2],
+      colC_trimUpper: (row[2] || '').toString().trim().toUpperCase(),
+      colD_wsId: String(row[3]),
+      colE_wsTitle: String(row[4]),
+      colF_count: String(row[5]),
+      colG_dataLen: String(row[6] || '').length,
+      matchesTeacher: normalClasses.indexOf((row[2] || '').toString().trim().toUpperCase()) >= 0
+    });
+  }
+
+  return {
+    status: 'ok',
+    totalRows: data.length - 1,
+    headers: headers.map(String),
+    headerCount: headers.length,
+    teacherClasses: teacherClasses,
+    normalClasses: normalClasses,
+    samples: samples
+  };
 }
