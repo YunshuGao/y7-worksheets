@@ -878,7 +878,7 @@ function buildStudentSummary(appData) {
 
   var band = appData.band || 'unknown';
   var diagScore = appData.diagnosticScore || appData.diagTotalScore || 0;
-  var modulesCompleted = countCompleted(appData.moduleCompleted);
+  var modulesCompleted = countCompleted(appData.moduleCompleted, appData.moduleScores);
 
   // Aggregate word count from all writing fields
   var totalWords = 0;
@@ -1128,11 +1128,18 @@ function computeHeatmapScores(appData) {
 //  UTILITIES
 // ===================================================================
 
-function countCompleted(moduleCompleted) {
+function countCompleted(moduleCompleted, moduleScores) {
   if (!moduleCompleted) return 0;
   var count = 0;
   for (var key in moduleCompleted) {
-    if (moduleCompleted[key] === true) count++;
+    if (moduleCompleted[key] !== true) continue;
+    // Module 0 (diagnostic) counts if flagged complete
+    if (key === '0') { count++; continue; }
+    // All other modules: only count if they have a real score >= 1
+    // This prevents "click-through" students from showing false progress
+    if (moduleScores && moduleScores[key] && Number(moduleScores[key]) >= 1) {
+      count++;
+    }
   }
   return count;
 }

@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feedback + Revision — Y7 Technology</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --bg: #FAF9F7;
+  --bg-card: #F0EDE8;
+  --bg-dark: #2D2B27;
+  --text: #1A1A1A;
+  --text-mid: #6B665E;
+  --text-lt: #9C968E;
+  --coral: #D97757;
+  --blue: #5B8DEF;
+  --green: #4A9E6F;
+  --amber: #D4723C;
+  --red: #C44E3D;
+  --purple: #7C5CBF;
+  --teel-t: #2E86AB;
+  --teel-e: #4A9E6F;
+  --teel-x: #D4723C;
+  --teel-l: #7C5CBF;
+  --white: #FFFFFF;
+  --border: #E5E1DB;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', -apple-system, system-ui, sans-serif;
+  background: #1a1a1a;
+  overflow: hidden;
+}
+
+/* ===== SLIDE CONTAINER ===== */
+.deck { position: relative; width: 100vw; height: 100vh; }
+.slide {
+  position: absolute; top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  display: none; flex-direction: column;
+  padding: 60px 80px;
+  background: var(--bg);
+  overflow: hidden;
+}
+.slide.active { display: flex; }
+.slide.dark { background: var(--bg-dark); }
+
+/* ===== TYPOGRAPHY ===== */
+.slide-num {
+  position: absolute; top: 24px; right: 40px;
+  font-size: 13px; color: var(--text-lt); font-weight: 500;
+}
+.dark .slide-num { color: #666; }
+
+h1 { font-size: 48px; font-weight: 700; color: var(--text); line-height: 1.15; margin-bottom: 8px; }
+h2 { font-size: 36px; font-weight: 700; color: var(--text); line-height: 1.2; margin-bottom: 6px; }
+h3 { font-size: 22px; font-weight: 600; color: var(--text); margin-bottom: 12px; }
+.subtitle { font-size: 20px; color: var(--text-mid); font-weight: 400; margin-bottom: 24px; }
+.dark h1, .dark h2 { color: var(--white); }
+.dark .subtitle { color: #999; }
+
+.accent-bar {
+  width: 120px; height: 4px; background: var(--coral);
+  border-radius: 2px; margin: 16px 0 24px;
+}
+
+.section-num {
+  font-size: 64px; font-weight: 700; color: var(--coral);
+  opacity: 0.2; position: absolute; top: 40px; left: 80px;
+}
+
+/* ===== CARDS & BOXES ===== */
+.card {
+  background: var(--bg-card); border-radius: 12px;
+  padding: 24px 28px;
+}
+.card-green { background: #E8F5EC; border-left: 4px solid var(--green); }
+.card-red { background: #FCE8E4; border-left: 4px solid var(--red); }
+.card-blue { background: #E8F0FD; border-left: 4px solid var(--blue); }
+.card-amber { background: #FDF0E4; border-left: 4px solid var(--amber); }
+.card-purple { background: #EEE4F7; border-left: 4px solid var(--purple); }
+.card-dark { background: var(--bg-dark); color: var(--white); border-radius: 12px; padding: 24px 28px; }
+
+/* ===== GRID ===== */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+.flex-row { display: flex; gap: 24px; align-items: stretch; }
+.flex-col { display: flex; flex-direction: column; gap: 16px; }
+.flex-1 { flex: 1; }
+.mt-1 { margin-top: 16px; }
+.mt-2 { margin-top: 24px; }
+
+/* ===== BEFORE/AFTER ===== */
+.before-after {
+  display: grid; grid-template-columns: 1fr auto 1fr; gap: 0; align-items: center;
+  margin-bottom: 16px;
+}
+.ba-arrow {
+  font-size: 28px; color: var(--coral); font-weight: 700;
+  padding: 0 16px;
+}
+.ba-box {
+  padding: 16px 20px; border-radius: 10px; min-height: 80px;
+  display: flex; flex-direction: column; justify-content: center;
+}
+.ba-before { background: #FCE8E4; border-left: 4px solid var(--red); }
+.ba-after { background: #E8F5EC; border-left: 4px solid var(--green); }
+.ba-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+.ba-label.red { color: var(--red); }
+.ba-label.green { color: var(--green); }
+.ba-text { font-size: 17px; color: var(--text); line-height: 1.5; }
+.ba-meta { font-size: 12px; color: var(--text-lt); margin-top: 4px; }
+
+/* ===== TEEL BLOCKS ===== */
+.teel-block {
+  padding: 18px 24px; border-radius: 10px; margin-bottom: 10px;
+  border-left: 5px solid; display: flex; align-items: flex-start; gap: 16px;
+}
+.teel-block .letter {
+  font-size: 32px; font-weight: 700; min-width: 40px; text-align: center;
+}
+.teel-block .content { flex: 1; }
+.teel-block .label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+.teel-block .text { font-size: 16px; line-height: 1.6; color: var(--text); }
+.teel-t { background: #E0F0F7; border-color: var(--teel-t); }
+.teel-t .letter, .teel-t .label { color: var(--teel-t); }
+.teel-e1 { background: #E4F2E8; border-color: var(--teel-e); }
+.teel-e1 .letter, .teel-e1 .label { color: var(--teel-e); }
+.teel-e2 { background: #FDF0E4; border-color: var(--teel-x); }
+.teel-e2 .letter, .teel-e2 .label { color: var(--teel-x); }
+.teel-l { background: #EEE4F7; border-color: var(--teel-l); }
+.teel-l .letter, .teel-l .label { color: var(--teel-l); }
+
+/* ===== GRAMMAR CARDS ===== */
+.grammar-card {
+  background: var(--bg-card); border-radius: 10px; padding: 20px;
+}
+.grammar-card h4 { font-size: 15px; font-weight: 700; color: var(--coral); margin-bottom: 10px; }
+.fix-line { font-size: 16px; margin-bottom: 6px; line-height: 1.5; }
+.fix-line .wrong { color: var(--red); text-decoration: line-through; opacity: 0.7; }
+.fix-line .right { color: var(--green); font-weight: 600; }
+
+/* ===== PROGRESS BAR ===== */
+.progress-track {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  height: 4px; background: rgba(0,0,0,0.08); z-index: 100;
+}
+.progress-fill {
+  height: 100%; background: var(--coral); transition: width 0.3s ease;
+}
+
+/* ===== NAV HINT ===== */
+.nav-hint {
+  position: fixed; bottom: 12px; right: 24px; z-index: 100;
+  font-size: 12px; color: #999; font-family: 'Inter', sans-serif;
+}
+
+/* ===== PRINT ===== */
+@media print {
+  .slide { position: relative; display: flex !important; page-break-after: always; height: auto; min-height: 100vh; }
+  .progress-track, .nav-hint { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+<!-- ══════ SLIDE 1: TITLE ══════ -->
+<div class="slide dark active">
+  <span class="slide-num">1 / 9</span>
+  <div style="margin-top:auto;margin-bottom:auto;">
+    <p style="font-size:14px;color:#777;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">Year 7 Technology · 7TECE</p>
+    <h1 style="font-size:56px;color:var(--white);">Feedback <span style="color:var(--coral);">+</span> Revision</h1>
+    <p style="font-size:22px;color:#999;margin-top:8px;margin-bottom:40px;">Learning from your writing to make it stronger</p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <span style="background:rgba(217,119,87,0.15);color:var(--coral);padding:8px 16px;border-radius:8px;font-size:14px;font-weight:600;">1. Read feedback (10 min)</span>
+      <span style="background:rgba(91,141,239,0.15);color:var(--blue);padding:8px 16px;border-radius:8px;font-size:14px;font-weight:600;">2. Complete sentences (10 min)</span>
+      <span style="background:rgba(74,158,111,0.15);color:var(--green);padding:8px 16px;border-radius:8px;font-size:14px;font-weight:600;">3. Improve together (10 min)</span>
+      <span style="background:rgba(212,114,60,0.15);color:var(--amber);padding:8px 16px;border-radius:8px;font-size:14px;font-weight:600;">4. Grammar fixes (10 min)</span>
+      <span style="background:rgba(124,92,191,0.15);color:var(--purple);padding:8px 16px;border-radius:8px;font-size:14px;font-weight:600;">5. TEEL structure (15 min)</span>
+      <span style="background:rgba(217,119,87,0.15);color:var(--coral);padding:8px 16px;border-radius:8px;font-size:14px;font-weight:600;">6. Revise your work (15 min)</span>
+      <span style="background:rgba(255,255,255,0.1);color:#999;padding:8px 16px;border-radius:8px;font-size:14px;font-weight:600;">7. Resubmit (5 min)</span>
+    </div>
+    <p style="font-size:13px;color:#555;margin-top:32px;">TE4-DES-01 · Communicates and evaluates design ideas and solutions</p>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 2: READ FEEDBACK ══════ -->
+<div class="slide">
+  <span class="slide-num">2 / 9</span>
+  <span class="section-num">1</span>
+  <h2 style="margin-left:60px;">Read Your Feedback</h2>
+  <div class="accent-bar" style="margin-left:60px;"></div>
+  <div class="grid-2" style="margin-top:16px;">
+    <div class="flex-col">
+      <p style="font-size:17px;color:var(--text-mid);margin-bottom:16px;">Open Write It Right on your Chromebook</p>
+      <div class="card" style="font-size:17px;line-height:2;">
+        <strong>1.</strong> Check your name and class are correct<br>
+        <strong>2.</strong> Look for the <span style="color:var(--green);font-weight:600;">green feedback panel</span> at the top<br>
+        <strong>3.</strong> Read my feedback carefully<br>
+        <strong>4.</strong> In your notebook, write:
+      </div>
+      <div class="card" style="background:var(--white);border:2px solid var(--coral);margin-top:8px;">
+        <p style="font-size:18px;color:var(--coral);font-weight:600;line-height:2.2;">
+          "Ms Gao said: _______________"<br>
+          "I need to: _______________"
+        </p>
+      </div>
+    </div>
+    <div>
+      <div class="card-green" style="padding:28px;">
+        <p style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:8px;">TEACHER FEEDBACK</p>
+        <p style="font-size:16px;font-style:italic;line-height:1.7;color:var(--text);">
+          "Your TEEL paragraph is well structured — all four parts are there. But your analysis answers need more detail. Instead of short phrases, try: <span style="color:var(--coral);font-weight:600;">I can see a [thing] made from [material].</span>"
+        </p>
+        <p style="font-size:13px;color:var(--text-lt);margin-top:12px;">↑ This is what your feedback looks like</p>
+      </div>
+      <p style="font-size:15px;color:var(--text-lt);margin-top:20px;text-align:center;">You have 10 minutes. Read it. Write your action step. Then look up.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 3: COMPLETE SENTENCES ══════ -->
+<div class="slide">
+  <span class="slide-num">3 / 9</span>
+  <span class="section-num">2</span>
+  <h2 style="margin-left:60px;">What Makes a Complete Sentence?</h2>
+  <div class="accent-bar" style="margin-left:60px;"></div>
+  <p style="font-size:17px;color:var(--text-mid);margin-bottom:20px;margin-left:60px;">These are real answers from our class. Which ones are complete sentences?</p>
+
+  <div class="grid-2" style="margin-bottom:24px;">
+    <div class="card-red" style="padding:24px;">
+      <p style="font-size:12px;font-weight:700;color:var(--red);margin-bottom:12px;">✗ NOT COMPLETE SENTENCES</p>
+      <p style="font-size:20px;line-height:2;color:var(--text);">
+        "A phone stand"<br>
+        "cardboard"<br>
+        "the phone fall"<br>
+        "not at all"
+      </p>
+    </div>
+    <div class="card-green" style="padding:24px;">
+      <p style="font-size:12px;font-weight:700;color:var(--green);margin-bottom:12px;">✓ COMPLETE SENTENCES</p>
+      <p style="font-size:20px;line-height:2;color:var(--text);">
+        "I can see a phone stand made from cardboard."<br>
+        "The phone fell because the base was too narrow."<br>
+        "Cardboard is a lightweight, recyclable material."
+      </p>
+    </div>
+  </div>
+
+  <div class="card-dark">
+    <p style="font-size:20px;font-weight:600;color:var(--white);margin-bottom:8px;">A complete sentence needs:</p>
+    <p style="font-size:28px;font-weight:700;color:var(--coral);margin-bottom:4px;">
+      Subject <span style="color:#666;font-weight:400;font-size:20px;">(who/what)</span> +
+      Verb <span style="color:#666;font-weight:400;font-size:20px;">(does what)</span> +
+      Detail <span style="color:#666;font-weight:400;font-size:20px;">(about what)</span>
+    </p>
+    <p style="font-size:17px;color:#999;margin-top:8px;">
+      <span style="color:var(--blue);">The phone stand</span> &nbsp;
+      <span style="color:var(--green);">is made from</span> &nbsp;
+      <span style="color:var(--amber);">folded cardboard.</span>
+    </p>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 4: IMPROVE TOGETHER ══════ -->
+<div class="slide">
+  <span class="slide-num">4 / 9</span>
+  <span class="section-num">3</span>
+  <h2 style="margin-left:60px;">Let's Improve These Together</h2>
+  <div class="accent-bar" style="margin-left:60px;"></div>
+
+  <div class="before-after">
+    <div class="ba-box ba-before">
+      <p class="ba-label red">BEFORE</p>
+      <p class="ba-text">"i see a phone"</p>
+      <p class="ba-meta">4 words · no capital · no detail</p>
+    </div>
+    <span class="ba-arrow">→</span>
+    <div class="ba-box ba-after">
+      <p class="ba-label green">AFTER</p>
+      <p class="ba-text">"I can see a phone stand made from folded cardboard."</p>
+      <p class="ba-meta">10 words · tells us WHAT and WHAT IT'S MADE FROM</p>
+    </div>
+  </div>
+
+  <div class="before-after">
+    <div class="ba-box ba-before">
+      <p class="ba-label red">BEFORE</p>
+      <p class="ba-text">"its not that bad"</p>
+      <p class="ba-meta">4 words · vague · no reason</p>
+    </div>
+    <span class="ba-arrow">→</span>
+    <div class="ba-box ba-after">
+      <p class="ba-label green">AFTER</p>
+      <p class="ba-text">"The design is effective <strong>because</strong> it holds the phone at a comfortable angle."</p>
+      <p class="ba-meta">13 words · specific · gives a reason with "because"</p>
+    </div>
+  </div>
+
+  <div class="before-after">
+    <div class="ba-box ba-before">
+      <p class="ba-label red">BEFORE</p>
+      <p class="ba-text">"both of them are good because they have good structure"</p>
+      <p class="ba-meta">10 words · repeats "good" · not specific</p>
+    </div>
+    <span class="ba-arrow">→</span>
+    <div class="ba-box ba-after">
+      <p class="ba-label green">AFTER</p>
+      <p class="ba-text">"Both designs use strong bases, <strong>but</strong> Design B held more weight <strong>because</strong> its wide base made it more stable."</p>
+      <p class="ba-meta">18 words · specific · compound sentence with "but" + "because"</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 5: GRAMMAR QUICK FIXES ══════ -->
+<div class="slide">
+  <span class="slide-num">5 / 9</span>
+  <span class="section-num">4</span>
+  <h2 style="margin-left:60px;">Grammar Quick Fixes</h2>
+  <div class="accent-bar" style="margin-left:60px;"></div>
+  <p style="font-size:16px;color:var(--text-mid);margin-bottom:20px;margin-left:60px;">Common mistakes from our class — and how to fix them</p>
+
+  <div class="grid-3" style="margin-bottom:20px;">
+    <div class="grammar-card">
+      <h4>Always capitalise "I"</h4>
+      <p class="fix-line"><span class="wrong">✗ "i see a phone"</span></p>
+      <p class="fix-line"><span class="right">✓ "I can see a phone stand."</span></p>
+    </div>
+    <div class="grammar-card">
+      <h4>Past tense for what happened</h4>
+      <p class="fix-line"><span class="wrong">✗ "the phone fall"</span></p>
+      <p class="fix-line"><span class="right">✓ "The phone fell."</span></p>
+      <p class="fix-line"><span class="wrong">✗ "We hid to make"</span></p>
+      <p class="fix-line"><span class="right">✓ "We had to make."</span></p>
+    </div>
+    <div class="grammar-card">
+      <h4>Don't skip small words</h4>
+      <p class="fix-line"><span class="wrong">✗ "10 pieces paper"</span></p>
+      <p class="fix-line"><span class="right">✓ "10 pieces of paper"</span></p>
+      <p class="fix-line"><span class="wrong">✗ "are towers evaluate"</span></p>
+      <p class="fix-line"><span class="right">✓ "our towers evaluate"</span></p>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card-blue" style="padding:24px;">
+      <h4 style="color:var(--blue);font-size:18px;margin-bottom:10px;">The magic word: "because"</h4>
+      <p style="font-size:16px;line-height:1.7;">
+        Short: "The design is good."<br>
+        Better: "The design is effective <strong style="color:var(--green);">because the wide base makes it stable.</strong>"<br><br>
+        <strong style="color:var(--blue);">Add "because" + a reason = instant improvement!</strong>
+      </p>
+    </div>
+    <div class="card-purple" style="padding:24px;">
+      <h4 style="color:var(--purple);font-size:18px;margin-bottom:10px;">Swap everyday → technical words</h4>
+      <p style="font-size:16px;line-height:1.8;">
+        "good" → <strong>effective, functional, suitable</strong><br>
+        "strong" → <strong>durable, rigid, reinforced</strong><br>
+        "looks nice" → <strong>aesthetic, appealing</strong><br>
+        "green" → <strong>sustainable, eco-friendly</strong>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 6: TEEL STRUCTURE ══════ -->
+<div class="slide">
+  <span class="slide-num">6 / 9</span>
+  <span class="section-num">5</span>
+  <h2 style="margin-left:60px;">TEEL Paragraph Structure</h2>
+  <div class="accent-bar" style="margin-left:60px;"></div>
+  <p style="font-size:16px;color:var(--text-mid);margin-bottom:16px;margin-left:60px;">Here's a real TEEL paragraph from our class — one of the best examples:</p>
+
+  <div class="teel-block teel-t">
+    <div class="letter">T</div>
+    <div class="content">
+      <p class="label">Topic Sentence — states the main idea</p>
+      <p class="text">"The design process is a useful framework for solving problems in Technology."</p>
+    </div>
+  </div>
+  <div class="teel-block teel-e1">
+    <div class="letter">E</div>
+    <div class="content">
+      <p class="label">Evidence — gives a specific example</p>
+      <p class="text">"For example, when we built paper boats, we followed the steps of investigate, design, produce, test, and evaluate."</p>
+    </div>
+  </div>
+  <div class="teel-block teel-e2">
+    <div class="letter">E</div>
+    <div class="content">
+      <p class="label">Explanation — explains WHY the evidence matters</p>
+      <p class="text">"This structured approach helped us identify problems early and improve our designs before the final build."</p>
+    </div>
+  </div>
+  <div class="teel-block teel-l">
+    <div class="letter">L</div>
+    <div class="content">
+      <p class="label">Link — connects back to the topic</p>
+      <p class="text">"Therefore, the design process ensures that students create better products by thinking carefully at each stage."</p>
+    </div>
+  </div>
+
+  <p style="font-size:15px;color:var(--coral);font-style:italic;margin-top:16px;margin-left:60px;">
+    Notice: each section starts with a signal word — "For example", "This", "Therefore" — these guide the reader.
+  </p>
+</div>
+
+<!-- ══════ SLIDE 7: TEEL MISTAKES ══════ -->
+<div class="slide">
+  <span class="slide-num">7 / 9</span>
+  <h2>TEEL — What to Avoid</h2>
+  <div class="accent-bar"></div>
+
+  <div class="grid-2" style="margin-bottom:24px;">
+    <div class="card-red" style="padding:24px;">
+      <p style="font-size:13px;font-weight:700;color:var(--red);margin-bottom:10px;">✗ JUST COPYING THE SCAFFOLD</p>
+      <p style="font-size:16px;line-height:1.8;color:var(--text);">
+        Plan Topic: "main key facts"<br>
+        Plan Evidence: "An example"<br>
+        Plan Explanation: "why the evidence matters"<br>
+        Plan Link: "the connection to the topic"
+      </p>
+      <p style="font-size:14px;color:var(--red);margin-top:10px;font-style:italic;">This repeats the instructions, not YOUR ideas!</p>
+    </div>
+    <div class="card-green" style="padding:24px;">
+      <p style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:10px;">✓ USING YOUR OWN IDEAS</p>
+      <p style="font-size:16px;line-height:1.8;color:var(--text);">
+        Plan Topic: "My tower design is strong and stable"<br>
+        Plan Evidence: "Used cardboard with reinforced corners; tested with weights"<br>
+        Plan Explanation: "The materials stop it from tipping or bending"<br>
+        Plan Link: "My design shows careful planning and effective construction"
+      </p>
+    </div>
+  </div>
+
+  <div class="card-amber" style="padding:24px;">
+    <p style="font-size:17px;font-weight:700;color:var(--amber);margin-bottom:8px;">⚠ Does this sound like a Year 7 student?</p>
+    <p style="font-size:16px;color:var(--text);font-style:italic;line-height:1.6;margin-bottom:12px;">
+      "The cardboard phone stand presents itself as a very simple yet functional design. At first glance, you see an A-frame structure... The 60-degree angle is a thoughtful ergonomic choice, allowing users to watch videos comfortably." <span style="color:var(--text-lt);">(90 words)</span>
+    </p>
+    <p style="font-size:15px;color:var(--text-mid);margin-bottom:8px;">
+      Compare with the same student's diagnostic: "In technology this term we have built columns of different shapes to figure out which shape is the strongest." <span style="color:var(--text-lt);">(24 words, simple)</span>
+    </p>
+    <p style="font-size:17px;font-weight:700;color:var(--amber);">
+      Your writing should sound like YOU. I'd rather read 2 honest sentences than a perfect paragraph that isn't yours.
+    </p>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 8: YOUR TURN ══════ -->
+<div class="slide">
+  <span class="slide-num">8 / 9</span>
+  <span class="section-num">6</span>
+  <h2 style="margin-left:60px;">Your Turn — Revise Your Work</h2>
+  <div class="accent-bar" style="margin-left:60px;"></div>
+  <p style="font-size:16px;color:var(--text-mid);margin-bottom:20px;margin-left:60px;">Open Write It Right. Use what you just learned. 15 minutes.</p>
+
+  <div class="grid-3">
+    <div class="card" style="border-top:4px solid var(--green);">
+      <h3 style="color:var(--green);font-size:17px;">Everyone</h3>
+      <ol style="font-size:16px;line-height:2;padding-left:18px;color:var(--text);">
+        <li>Find your <strong>shortest</strong> answer</li>
+        <li>Make it a <strong>complete sentence</strong><br><span style="font-size:14px;color:var(--text-mid);">(subject + verb + detail)</span></li>
+        <li>Add <strong>"because"</strong> + a reason</li>
+        <li>Swap one everyday word for a <strong>technical word</strong></li>
+        <li>Repeat for the next shortest</li>
+      </ol>
+    </div>
+    <div class="card" style="border-top:4px solid var(--blue);">
+      <h3 style="color:var(--blue);font-size:17px;">Finished early?</h3>
+      <p style="font-size:16px;line-height:1.8;color:var(--text);">
+        Check your TEEL paragraph:<br>
+        <span style="color:var(--teel-t);font-weight:600;">T</span> — Clear main idea?<br>
+        <span style="color:var(--teel-e);font-weight:600;">E</span> — "For example"?<br>
+        <span style="color:var(--teel-x);font-weight:600;">E</span> — Explains WHY?<br>
+        <span style="color:var(--teel-l);font-weight:600;">L</span> — "Therefore"?<br><br>
+        Then try <strong>Module 8:<br>Sentence Builder</strong>
+      </p>
+    </div>
+    <div class="card" style="border-top:4px solid var(--amber);">
+      <h3 style="color:var(--amber);font-size:17px;">Sentence starters</h3>
+      <p style="font-size:16px;line-height:2;color:var(--text);">
+        "I can see a ________ made from ________."<br><br>
+        "It was designed this way because ________."<br><br>
+        "The design is effective because ________."<br><br>
+        "One improvement could be ________."
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SLIDE 9: RESUBMIT + EXIT ══════ -->
+<div class="slide">
+  <span class="slide-num">9 / 9</span>
+  <span class="section-num">7</span>
+  <h2 style="margin-left:60px;">Resubmit + Exit Ticket</h2>
+  <div class="accent-bar" style="margin-left:60px;"></div>
+
+  <div class="grid-2" style="margin-bottom:24px;">
+    <div class="card-green" style="padding:28px;">
+      <h3 style="color:var(--green);font-size:18px;">Before you close your Chromebook:</h3>
+      <p style="font-size:20px;line-height:2.2;margin-top:12px;">
+        <strong>1.</strong> Click "Submit to Teacher" again<br>
+        <strong>2.</strong> Wait for the green "Submitted!"<br>
+        <strong>3.</strong> Then close your lid
+      </p>
+    </div>
+    <div class="card" style="padding:28px;border:2px solid var(--coral);">
+      <h3 style="color:var(--coral);font-size:18px;">In your notebook, write:</h3>
+      <p style="font-size:19px;line-height:2;margin-top:12px;color:var(--text);">
+        "I improved my answer in Module ___.<br>
+        I changed <strong>___</strong> to <strong>___</strong><br>
+        because ___."
+      </p>
+    </div>
+  </div>
+
+  <div class="card-dark" style="padding:28px;">
+    <h3 style="color:var(--white);font-size:20px;margin-bottom:16px;">Three things that make good Technology writing:</h3>
+    <div style="display:flex;gap:40px;">
+      <div style="flex:1;text-align:center;">
+        <p style="font-size:36px;margin-bottom:4px;">📝</p>
+        <p style="font-size:16px;color:var(--coral);font-weight:600;">Complete sentences</p>
+        <p style="font-size:14px;color:#999;">subject + verb + detail</p>
+      </div>
+      <div style="flex:1;text-align:center;">
+        <p style="font-size:36px;margin-bottom:4px;">💡</p>
+        <p style="font-size:16px;color:var(--coral);font-weight:600;">Reasons</p>
+        <p style="font-size:14px;color:#999;">add "because" + why</p>
+      </div>
+      <div style="flex:1;text-align:center;">
+        <p style="font-size:36px;margin-bottom:4px;">🔬</p>
+        <p style="font-size:16px;color:var(--coral);font-weight:600;">Technical vocabulary</p>
+        <p style="font-size:14px;color:#999;">sustainable, aesthetic, evaluate</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end deck -->
+
+<!-- Progress bar -->
+<div class="progress-track"><div class="progress-fill" id="progressFill" style="width:11.1%"></div></div>
+<div class="nav-hint">← → arrow keys to navigate · F11 fullscreen</div>
+
+<script>
+(function(){
+  const slides = document.querySelectorAll('.slide');
+  let current = 0;
+  const total = slides.length;
+
+  function show(n) {
+    if (n < 0 || n >= total) return;
+    slides[current].classList.remove('active');
+    current = n;
+    slides[current].classList.add('active');
+    document.getElementById('progressFill').style.width = ((current + 1) / total * 100) + '%';
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); show(current + 1); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); show(current - 1); }
+    if (e.key === 'Home') { e.preventDefault(); show(0); }
+    if (e.key === 'End') { e.preventDefault(); show(total - 1); }
+  });
+
+  // Click left/right halves
+  document.addEventListener('click', function(e) {
+    if (e.clientX > window.innerWidth / 2) show(current + 1);
+    else show(current - 1);
+  });
+})();
+</script>
+</body>
+</html>

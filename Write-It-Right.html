@@ -3118,10 +3118,16 @@ function updateOverallProgress() {
 }
 
 function completeModule(n) {
+  // Gate: require minimum score before marking complete (except diagnostic M0)
+  if (n > 0 && (appData.moduleScores[n] || 0) < 1) {
+    alert('You need to complete the activities in this module before moving on. Try answering the questions and writing at least a few sentences.');
+    return false;
+  }
   appData.moduleCompleted[n] = true;
   updateOverallProgress();
   if (n < 6) calculateFade(n);
   saveAll();
+  return true;
 }
 
 /* ========== BAND SYSTEM ========== */
@@ -3496,7 +3502,7 @@ function finishModule1() {
   if (terms.count >= 1) score += 1;
   if (text.trim().split(/\s+/).filter(w => w.length > 0).length >= 8) score += 1;
   appData.moduleScores[1] = score; // max ~10
-  completeModule(1);
+  if (!completeModule(1)) return;
   switchModule(2);
 }
 
@@ -3634,7 +3640,7 @@ function finishModule5() {
   if (compTerms.count >= 2) score += 1;
 
   appData.moduleScores[5] = Math.min(Math.round(score), 8);
-  completeModule(5);
+  if (!completeModule(5)) return;
   switchModule(6);
 }
 
@@ -3821,7 +3827,7 @@ function finishModule4() {
     appData.fadeLevels[6] = 'none';
   }
 
-  completeModule(4);
+  if (!completeModule(4)) return;
   switchModule(5);
 }
 
@@ -3941,7 +3947,7 @@ function finishModule3() {
   });
   score += Math.round((vsccCorrect / Math.max(vsccTotal, 1)) * 4); // up to 4
   appData.moduleScores[3] = Math.min(score, 8);
-  completeModule(3);
+  if (!completeModule(3)) return;
   switchModule(4);
 }
 
@@ -3985,7 +3991,7 @@ function finishModule2() {
   else if (terms.count >= 1) score += 1;
   if (words >= 30) score += 1; // bonus for length
   appData.moduleScores[2] = Math.min(score, 10);
-  completeModule(2);
+  if (!completeModule(2)) return;
   switchModule(3);
 }
 
@@ -4165,7 +4171,7 @@ function finishModule7() {
   if (filled >= 3) score += 2;
   if (filled >= 5) score += 1;
   appData.moduleScores[7] = Math.min(score, 15);
-  completeModule(7);
+  if (!completeModule(7)) return;
   switchModule(8);
 }
 
