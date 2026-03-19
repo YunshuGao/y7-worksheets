@@ -573,7 +573,17 @@ body {
           showToast('Error: ' + (result.message || 'Unknown'), 'error');
           return;
         }
-        ALL_STUDENTS = result.students || [];
+        // Dedup: keep only the most complete submission per student+class
+        var raw = result.students || [];
+        var best = {};
+        raw.forEach(function (s) {
+          var key = (s.name || '').trim().toLowerCase() + '|' + (s.class || '').trim().toLowerCase();
+          if (!best[key] || (s.modulesCompleted || 0) > (best[key].modulesCompleted || 0)) {
+            best[key] = s;
+          }
+        });
+        ALL_STUDENTS = Object.keys(best).map(function (k) { return best[k]; });
+
         document.getElementById('lastUpdated').textContent =
           new Date().toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit' });
 
@@ -938,7 +948,18 @@ body {
     });
   }
 
-  function renderHeatmap(data) {
+  function renderHeatmap(raw) {
+    // Dedup: keep highest-scoring entry per student
+    var best = {};
+    raw.forEach(function (s) {
+      var key = (s.name || '').trim().toLowerCase();
+      var score = (s.vocabulary || 0) + (s.teel || 0) + (s.grammar || 0) + (s.evidence || 0);
+      var prevScore = best[key] ? (best[key].vocabulary + best[key].teel + best[key].grammar + best[key].evidence) : -1;
+      if (score > prevScore) best[key] = s;
+    });
+    var data = Object.keys(best).map(function (k) { return best[k]; });
+    data.sort(function (a, b) { return a.name.localeCompare(b.name); });
+
     if (data.length === 0) {
       document.getElementById('heatmapBody').innerHTML =
         '<tr><td colspan="5" style="text-align:center;padding:30px;color:#888;">No data for this class yet.</td></tr>';
