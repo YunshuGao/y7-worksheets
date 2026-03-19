@@ -501,6 +501,9 @@ body {
 .show-beginning { display: none !important; }
 .show-developing { display: none !important; }
 .show-consolidating { display: none !important; }
+/* Before diagnostic: show developing (middle tier) as default so students can always write */
+body:not(.band-beginning):not(.band-developing):not(.band-consolidating) .show-developing { display: block !important; }
+body:not(.band-beginning):not(.band-developing):not(.band-consolidating) .show-developing.inline { display: inline !important; }
 body.band-beginning .show-beginning { display: block !important; }
 body.band-beginning .show-beginning.inline { display: inline !important; }
 body.band-developing .show-developing { display: block !important; }
