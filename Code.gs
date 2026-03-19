@@ -430,17 +430,21 @@ function handleGetStudents(params) {
   var subjectIdx = getSubjectColIndex(sheet);
   var students = [];
 
+  // Normalise teacher class list for comparison
+  var normalClasses = (teacherClasses || []).map(function(c) { return c.toString().trim().toUpperCase(); });
+
   for (var i = 1; i < data.length; i++) {
     var row = data[i];
-    var rowClass = row[2];
+    var rowClass = (row[2] || '').toString().trim();
+    var rowClassUpper = rowClass.toUpperCase();
     var rowSubject = (row[subjectIdx] || 'technology').toString().toLowerCase();
 
     // Teacher can only see their assigned classes
-    if (teacherClasses && teacherClasses.length > 0) {
-      if (teacherClasses.indexOf(rowClass) === -1) continue;
+    if (normalClasses.length > 0) {
+      if (normalClasses.indexOf(rowClassUpper) === -1) continue;
     }
     // Additional filters
-    if (filterClass && rowClass !== filterClass) continue;
+    if (filterClass && rowClassUpper !== filterClass.toUpperCase()) continue;
     if (filterWs && row[3] !== filterWs) continue;
     if (filterSubject && rowSubject !== filterSubject) continue;
 
