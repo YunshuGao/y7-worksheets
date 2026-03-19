@@ -298,10 +298,18 @@
     var body = document.getElementById('fbCardBody');
     if (!feedbackData) { body.innerHTML = '<p style="color:#888;text-align:center;padding:20px;">No feedback yet.</p>'; return; }
 
+    var isRevision = feedbackData.revision;
     var checks = {};
     try { checks = JSON.parse(sessionStorage.getItem(config.storageKey + '-fb-checks') || '{}'); } catch (e) {}
 
-    var checkItems = [
+    // Different checklists for regular feedback vs revision
+    var checkItems = isRevision ? [
+      'Read the feedback carefully',
+      'Go to the section that needs rewriting',
+      'Delete the old text and write YOUR OWN words',
+      'Check: does it sound like something YOU would say?',
+      'Resubmit to teacher'
+    ] : [
       'Read the feedback carefully',
       'Find the section to improve',
       'Make your changes',
@@ -310,11 +318,51 @@
 
     var html = '';
 
+    // Header colour and icon differ for revision
+    var headerEl = document.querySelector('.fb-card-header');
+    if (headerEl) {
+      headerEl.style.background = isRevision
+        ? 'linear-gradient(135deg, #922b21, #c0392b)'
+        : 'linear-gradient(135deg, #1a3d5c, #2c5f8a)';
+    }
+    var headerTitle = document.querySelector('.fb-card-header h3');
+    if (headerTitle) {
+      headerTitle.innerHTML = isRevision
+        ? '\u270D\uFE0F Revision Coach'
+        : '\uD83C\uDFAF Feedback Coach';
+    }
+
+    // Revision banner
+    if (isRevision) {
+      html += '<div style="background:#fce4e4;border:1px solid #f5c6cb;border-radius:8px;' +
+        'padding:10px 12px;margin-bottom:12px;font-size:13px;color:#922b21;">' +
+        '<strong>\u270D\uFE0F Revision needed</strong> — Your teacher wants you to rewrite this section ' +
+        'in your own words. That is okay! Use the sentence starters below to help you.' +
+        '</div>';
+    }
+
     // Teacher's message
-    html += '<div class="fb-message">' +
-      '<div class="fb-quote">"' + esc(feedbackData.text) + '"</div>' +
+    var msgBorder = isRevision ? '#c0392b' : '#2980b9';
+    var msgBg = isRevision ? '#fef5f5' : '#f0f7ff';
+    html += '<div class="fb-message" style="border-left-color:' + msgBorder + ';background:' + msgBg + ';">' +
+      '<div class="fb-quote">\u201C' + esc(feedbackData.text) + '\u201D</div>' +
       '<div class="fb-date">From your teacher \u00b7 ' + formatDate(feedbackData.date) + '</div>' +
       '</div>';
+
+    // Sentence starters (only for revision mode)
+    if (isRevision) {
+      html += '<div style="background:#f0f7ff;border-radius:8px;padding:10px 14px;margin-bottom:12px;">' +
+        '<div style="font-size:12px;font-weight:700;color:#1a3d5c;margin-bottom:6px;">' +
+        '\uD83D\uDCA1 Sentence starters to help you</div>' +
+        '<div style="font-size:13px;color:#333;line-height:1.7;">' +
+        '\u2022 "In class, we learned that..."<br>' +
+        '\u2022 "I think this is important because..."<br>' +
+        '\u2022 "One example from our activity is..."<br>' +
+        '\u2022 "The design process helped me to..."<br>' +
+        '\u2022 "I found that [material] works well because..."<br>' +
+        '\u2022 "If I could improve my design, I would..."' +
+        '</div></div>';
+    }
 
     // Checklist
     html += '<div class="fb-checklist">' +
@@ -332,29 +380,34 @@
     var done = 0;
     for (var j = 0; j < checkItems.length; j++) { if (checks[j]) done++; }
     var pct = Math.round((done / checkItems.length) * 100);
-    html += '<div class="fb-progress"><div class="fb-progress-fill" style="width:' + pct + '%"></div></div>';
+    var barColour = isRevision ? 'linear-gradient(90deg, #e74c3c, #c0392b)' : 'linear-gradient(90deg, #1A8A6E, #27ae60)';
+    html += '<div class="fb-progress"><div class="fb-progress-fill" style="width:' + pct + '%;background:' + barColour + '"></div></div>';
 
     // Action buttons
+    var readyThreshold = checkItems.length - 1; // all but last = ready to resubmit
     if (feedbackState === 'resubmitted') {
       html += '<div class="fb-done">' +
         '<div class="fb-done-icon">\uD83C\uDF1F</div>' +
-        '<div class="fb-done-text">Feedback addressed!</div>' +
+        '<div class="fb-done-text">' + (isRevision ? 'Revision submitted!' : 'Feedback addressed!') + '</div>' +
         '<div class="fb-done-sub">Your teacher will review your updated work.</div>' +
         '</div>';
-    } else if (done >= 3) {
+    } else if (done >= readyThreshold) {
       html += '<div class="fb-actions">' +
-        '<button class="fb-action-btn fb-action-primary" onclick="window._fbResubmit()">' +
-          '\uD83D\uDCE4 I\'m ready — resubmit my work</button>' +
+        '<button class="fb-action-btn fb-action-primary" onclick="window._fbResubmit()"' +
+          (isRevision ? ' style="background:#c0392b;"' : '') + '>' +
+          '\uD83D\uDCE4 I\'m ready \u2014 resubmit my work</button>' +
         '</div>';
     } else if (feedbackState === 'read' || feedbackState === 'working') {
       html += '<div class="fb-actions">' +
-        '<button class="fb-action-btn fb-action-primary" onclick="window._fbStartWorking()">' +
-          '\uD83D\uDCAA Got it — I\'ll work on it</button>' +
+        '<button class="fb-action-btn fb-action-primary" onclick="window._fbStartWorking()"' +
+          (isRevision ? ' style="background:#c0392b;"' : '') + '>' +
+          (isRevision ? '\u270D\uFE0F I\'ll rewrite it now' : '\uD83D\uDCAA Got it \u2014 I\'ll work on it') + '</button>' +
         '</div>';
     } else {
       html += '<div class="fb-actions">' +
-        '<button class="fb-action-btn fb-action-primary" onclick="window._fbStartWorking()">' +
-          '\uD83D\uDCAA Got it — I\'ll work on it</button>' +
+        '<button class="fb-action-btn fb-action-primary" onclick="window._fbStartWorking()"' +
+          (isRevision ? ' style="background:#c0392b;"' : '') + '>' +
+          (isRevision ? '\u270D\uFE0F I\'ll rewrite it now' : '\uD83D\uDCAA Got it \u2014 I\'ll work on it') + '</button>' +
         '</div>';
     }
 
@@ -381,15 +434,29 @@
     if (!trigger) return;
 
     trigger.className = 'fb-trigger';
+    var isRevision = feedbackData && feedbackData.revision;
+
     if (feedbackState === 'new') {
       trigger.classList.add('state-new');
-      icon.textContent = '\uD83D\uDCAC';
-      text.textContent = 'New feedback!';
+      if (isRevision) {
+        trigger.style.background = '#c0392b';
+        icon.textContent = '\u270D\uFE0F';
+        text.textContent = 'Revision needed!';
+      } else {
+        icon.textContent = '\uD83D\uDCAC';
+        text.textContent = 'New feedback!';
+      }
       trigger.style.display = 'flex';
     } else if (feedbackState === 'read' || feedbackState === 'working') {
       trigger.classList.add('state-working');
-      icon.textContent = '\uD83D\uDCDD';
-      text.textContent = 'Working on feedback';
+      if (isRevision) {
+        trigger.style.background = '#c0392b';
+        icon.textContent = '\u270D\uFE0F';
+        text.textContent = 'Rewriting...';
+      } else {
+        icon.textContent = '\uD83D\uDCDD';
+        text.textContent = 'Working on feedback';
+      }
       trigger.style.display = 'flex';
     } else if (feedbackState === 'resubmitted') {
       trigger.classList.add('state-resubmitted');
@@ -421,7 +488,10 @@
       .then(function (r) { return r.json(); })
       .then(function (result) {
         if (result && result.hasFeedback) {
-          feedbackData = { text: result.feedbackText, date: result.feedbackDate };
+          var rawText = result.feedbackText || '';
+          var isRevision = rawText.indexOf('[REVISION]') === 0;
+          var cleanText = isRevision ? rawText.replace('[REVISION] ', '').replace('[REVISION]', '') : rawText;
+          feedbackData = { text: cleanText, date: result.feedbackDate, revision: isRevision };
 
           // Check if this is new feedback (different from what we last saw)
           var lastSeenFb = null;

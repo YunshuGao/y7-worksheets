@@ -257,7 +257,12 @@ function getOrCreateCommentBankSheet() {
       ['grammar',    'all', 'Watch your subject-verb agreement (e.g. "the design was" not "the design were").'],
       ['general',    'all', 'Well done — you have completed all modules!'],
       ['general',    'all', 'Keep practising your sentence structure — you are improving.'],
-      ['general',    'all', 'Please complete the remaining modules before the end of term.']
+      ['general',    'all', 'Please complete the remaining modules before the end of term.'],
+      ['revision',   'all', 'This response does not sound like your own writing. Please rewrite it in your own words — I want to hear YOUR ideas.'],
+      ['revision',   'all', 'Your answer is too advanced for what we have covered in class. Please rewrite using the vocabulary and sentence patterns from the modules.'],
+      ['revision',   'all', 'I can see you understand the topic, but I need you to express it in your own words. Use the sentence starters from the word bank to help you.'],
+      ['revision',   'all', 'This section needs to be rewritten. Think about what YOU learned in class and write about that. It is okay to keep it simple.'],
+      ['revision',   'all', 'Good effort on the other sections! This part needs to be in your own words. Try starting with "I think..." or "In class, we learned..."']
     ];
     sheet.getRange(2, 1, seed.length, 3).setValues(seed);
   }
@@ -788,10 +793,18 @@ function handleGiveFeedback(payload) {
     sheet.getRange(1, fdCol + 1).setValue('FeedbackDate').setFontWeight('bold');
   }
 
-  sheet.getRange(row, fbCol + 1).setValue(feedback);
+  // Store feedback with optional revision flag
+  var revisionRequired = payload.revisionRequired ? 'yes' : '';
+  var feedbackObj = feedback;
+  if (revisionRequired) {
+    // Prefix with [REVISION] tag so the student client can detect it
+    feedbackObj = '[REVISION] ' + feedback;
+  }
+
+  sheet.getRange(row, fbCol + 1).setValue(feedbackObj);
   sheet.getRange(row, fdCol + 1).setValue(new Date().toISOString());
 
-  return { status: 'ok', message: 'Feedback saved.' };
+  return { status: 'ok', message: revisionRequired ? 'Revision request sent.' : 'Feedback saved.' };
 }
 
 /**

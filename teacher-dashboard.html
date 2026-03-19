@@ -445,8 +445,15 @@ body {
       <div class="feedback-form">
         <div class="fb-label">Your Feedback</div>
         <textarea id="feedbackText" placeholder="Type or click a comment above..."></textarea>
+        <label style="display:flex;align-items:center;gap:6px;margin:8px 0 4px;font-size:12px;cursor:pointer;color:#c0392b;">
+          <input type="checkbox" id="revisionToggle" onchange="toggleRevisionMode()" style="accent-color:#c0392b;">
+          <strong>Needs Revision</strong> — student must rewrite this section
+        </label>
+        <div id="revisionHint" style="display:none;font-size:11px;color:#888;margin-bottom:6px;padding:6px 8px;background:#fdf0e0;border-radius:4px;">
+          The student will see a special "Revision Coach" with sentence starters to help them rewrite in their own words.
+        </div>
         <div class="fb-actions">
-          <button class="send-btn" onclick="sendFeedback()">Send</button>
+          <button class="send-btn" id="sendFbBtn" onclick="sendFeedback()">Send Feedback</button>
           <span class="feedback-status" id="feedbackStatus"></span>
         </div>
       </div>
@@ -887,11 +894,25 @@ body {
   };
 
   // ===== SEND FEEDBACK =====
+  window.toggleRevisionMode = function () {
+    var on = document.getElementById('revisionToggle').checked;
+    document.getElementById('revisionHint').style.display = on ? 'block' : 'none';
+    var btn = document.getElementById('sendFbBtn');
+    if (on) {
+      btn.textContent = 'Send Revision Request';
+      btn.style.background = '#c0392b';
+    } else {
+      btn.textContent = 'Send Feedback';
+      btn.style.background = '#1A8A6E';
+    }
+  };
+
   window.sendFeedback = function () {
     if (!CURRENT_DETAIL) return;
     var text = document.getElementById('feedbackText').value.trim();
     if (!text) { showToast('Type feedback first.', 'error'); return; }
 
+    var isRevision = document.getElementById('revisionToggle').checked;
     document.getElementById('feedbackStatus').innerHTML = '<span class="loading-spinner"></span>';
 
     fetch(APPS_SCRIPT_URL, {
@@ -901,7 +922,8 @@ body {
         studentName: CURRENT_DETAIL.name,
         studentClass: CURRENT_DETAIL.class,
         worksheetId: CURRENT_DETAIL.worksheetId,
-        feedbackText: text
+        feedbackText: text,
+        revisionRequired: isRevision
       })
     })
     .then(function (r) { return r.json(); })
