@@ -1,31 +1,30 @@
 /**
- * submission.js — Student Submission & Teacher Feedback Module
+ * submission.js — Student Submission & Feedback Coach
  *
- * Include in any Y7 worksheet to enable:
- *   - "Submit to Teacher" button
- *   - Submission status tracking
- *   - Teacher feedback display
+ * VERSION 2.0 — Redesigned feedback experience
  *
- * Usage:
- *   <script src="submission.js"></script>
- *   <script>initSubmission({ storageKey: 'y7wir-data', worksheetTitle: 'Write It Right' });</script>
+ * Features:
+ *   - "Submit to Teacher" button with offline retry
+ *   - "Feedback Coach" floating widget (bottom-right)
+ *     → new feedback badge → expand to read → checklist → resubmit prompt
+ *   - Cross-worksheet name caching
  *
  * Privacy: Data sent ONLY to teacher's Google Sheet via Apps Script.
- *          No third-party services. No student email addresses collected.
  */
 
 (function () {
   'use strict';
 
   // ===== CONFIGURATION =====
-  // Teacher: replace this URL after deploying Google Apps Script
-  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwq7dx3INqCCVukx2Xvufi8ak_d-WwwExG-R1zlGO2-JE2bTFGX66w2LaGVskAuF6_K6g/exec';
+  var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwq7dx3INqCCVukx2Xvufi8ak_d-WwwExG-R1zlGO2-JE2bTFGX66w2LaGVskAuF6_K6g/exec';
 
-  // ===== MODULE STATE =====
-  let config = {};
-  let submissionMeta = {};  // cached locally: { lastSubmitted, submissionCount }
+  // ===== STATE =====
+  var config = {};
+  var submissionMeta = {};
+  var feedbackState = 'none'; // 'none' | 'new' | 'read' | 'working' | 'resubmitted'
+  var feedbackData = null;    // { text, date }
 
-  // ===== INITIALISATION =====
+  // ===== INIT =====
   window.initSubmission = function (opts) {
     config = {
       storageKey: opts.storageKey || 'worksheet-data',
@@ -43,36 +42,33 @@
         catch (e) { return null; }
       },
       containerSelector: opts.containerSelector || '.btn-bar',
-      insertMode: opts.insertMode || 'append'  // 'append' = inside container, 'after' = after container
+      insertMode: opts.insertMode || 'append'
     };
 
-    // Load cached submission metadata
     var metaKey = config.storageKey + '-submission-meta';
     try {
       var saved = localStorage.getItem(metaKey);
       if (saved) submissionMeta = JSON.parse(saved);
     } catch (e) { submissionMeta = {}; }
 
-    // Inject CSS
-    injectStyles();
+    // Restore feedback state from this session
+    try {
+      var fbState = sessionStorage.getItem(config.storageKey + '-fb-state');
+      if (fbState) feedbackState = fbState;
+    } catch (e) {}
 
-    // Inject UI elements
+    injectStyles();
     injectSubmitButton();
     injectStatusBadge();
-    injectFeedbackPanel();
-
-    // Cache student name across worksheets
+    injectFeedbackCoach();
     restoreCachedName();
 
-    // Check for feedback on load (non-blocking)
     if (APPS_SCRIPT_URL && config.getStudentName()) {
       checkForFeedback();
     }
 
-    // Retry any pending submissions
     retryPendingSubmission();
 
-    // Listen for online/offline
     window.addEventListener('online', function () { updateOnlineStatus(true); });
     window.addEventListener('offline', function () { updateOnlineStatus(false); });
     updateOnlineStatus(navigator.onLine);
@@ -82,6 +78,7 @@
   function injectStyles() {
     var style = document.createElement('style');
     style.textContent = [
+      /* Submit button */
       '.sub-btn { background: #1A8A6E; color: #fff; border: 2px solid #16755d; border-radius: 6px;',
       '  padding: 6px 14px; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex;',
       '  align-items: center; gap: 6px; transition: all 0.2s; font-family: inherit; }',
@@ -92,50 +89,115 @@
       '.sub-btn.loading .spinner { display: inline-block; }',
       '.sub-btn.loading .btn-label { display: none; }',
       '@keyframes sub-spin { to { transform: rotate(360deg); } }',
-      '',
       '.sub-status { font-size: 11px; color: #666; padding: 4px 8px; display: inline-block; }',
       '.sub-status.has-submitted { color: #1A8A6E; }',
-      '',
-      '.sub-feedback-panel { background: #f0faf7; border-left: 4px solid #1A8A6E; border-radius: 0 8px 8px 0;',
-      '  padding: 14px 18px; margin: 10px 0; display: none; position: relative; }',
-      '.sub-feedback-panel.visible { display: block; }',
-      '.sub-feedback-panel h4 { margin: 0 0 8px; color: #1A8A6E; font-size: 14px; }',
-      '.sub-feedback-panel p { margin: 0; font-size: 13px; line-height: 1.5; color: #333; }',
-      '.sub-feedback-panel .fb-date { font-size: 11px; color: #888; margin-top: 6px; }',
-      '.sub-feedback-badge { background: #E8712B; color: #fff; font-size: 10px; padding: 2px 6px;',
-      '  border-radius: 10px; margin-left: 6px; animation: sub-pulse 1.5s ease-in-out 3; }',
-      '@keyframes sub-pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }',
-      '',
-      '.sub-toast { position: fixed; bottom: 20px; right: 20px; background: #1A8A6E; color: #fff;',
-      '  padding: 12px 20px; border-radius: 8px; font-size: 13px; z-index: 9999;',
-      '  transform: translateY(100px); opacity: 0; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }',
-      '.sub-toast.show { transform: translateY(0); opacity: 1; }',
-      '.sub-toast.error { background: #c0392b; }',
-      '',
-      '.sub-privacy { font-size: 10px; color: #999; text-align: center; padding: 4px; }',
-      '',
       '.sub-offline-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block;',
       '  margin-right: 4px; vertical-align: middle; }',
       '.sub-offline-dot.online { background: #27ae60; }',
       '.sub-offline-dot.offline { background: #e74c3c; }',
       '',
-      '@media print { .sub-btn, .sub-status, .sub-feedback-panel, .sub-toast, .sub-privacy { display: none !important; } }'
+      /* ===== FEEDBACK COACH WIDGET ===== */',
+      '.fb-coach { position: fixed; bottom: 20px; right: 20px; z-index: 9998;',
+      '  font-family: "Segoe UI", system-ui, sans-serif; }',
+      '',
+      /* Floating trigger button */
+      '.fb-trigger { display: none; align-items: center; gap: 8px; padding: 10px 16px;',
+      '  border-radius: 24px; border: none; cursor: pointer; font-size: 14px;',
+      '  font-weight: 600; font-family: inherit; box-shadow: 0 4px 16px rgba(0,0,0,0.15);',
+      '  transition: all 0.2s; }',
+      '.fb-trigger:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }',
+      '.fb-trigger.state-new { display: flex; background: #e67e22; color: #fff;',
+      '  animation: fb-bounce 1s ease-in-out 3; }',
+      '.fb-trigger.state-working { display: flex; background: #2980b9; color: #fff; }',
+      '.fb-trigger.state-resubmitted { display: flex; background: #27ae60; color: #fff; }',
+      '@keyframes fb-bounce { 0%,100% { transform: translateY(0); }',
+      '  50% { transform: translateY(-6px); } }',
+      '',
+      /* Expanded card */
+      '.fb-card { display: none; position: fixed; bottom: 20px; right: 20px;',
+      '  width: 340px; max-height: 80vh; background: #fff; border-radius: 16px;',
+      '  box-shadow: 0 8px 32px rgba(0,0,0,0.18); overflow: hidden;',
+      '  flex-direction: column; z-index: 9999; animation: fb-slideUp 0.25s ease-out; }',
+      '.fb-card.visible { display: flex; }',
+      '@keyframes fb-slideUp { from { opacity: 0; transform: translateY(20px); }',
+      '  to { opacity: 1; transform: translateY(0); } }',
+      '',
+      /* Card header */
+      '.fb-card-header { background: linear-gradient(135deg, #1a3d5c, #2c5f8a); color: #fff;',
+      '  padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; }',
+      '.fb-card-header h3 { font-size: 14px; margin: 0; display: flex; align-items: center; gap: 6px; }',
+      '.fb-card-close { background: none; border: none; color: rgba(255,255,255,0.7);',
+      '  font-size: 20px; cursor: pointer; padding: 0 4px; }',
+      '.fb-card-close:hover { color: #fff; }',
+      '',
+      /* Card body */
+      '.fb-card-body { padding: 16px; overflow-y: auto; flex: 1; }',
+      '.fb-message { background: #f0f7ff; border-left: 4px solid #2980b9;',
+      '  border-radius: 0 8px 8px 0; padding: 12px 14px; margin-bottom: 12px; }',
+      '.fb-message .fb-quote { font-size: 14px; line-height: 1.6; color: #333;',
+      '  font-style: italic; }',
+      '.fb-message .fb-date { font-size: 11px; color: #888; margin-top: 6px; }',
+      '',
+      /* Action checklist */
+      '.fb-checklist { margin-bottom: 12px; }',
+      '.fb-checklist h4 { font-size: 13px; color: #1a3d5c; margin-bottom: 8px;',
+      '  display: flex; align-items: center; gap: 6px; }',
+      '.fb-check-item { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0;',
+      '  font-size: 13px; color: #333; cursor: pointer; }',
+      '.fb-check-item input[type="checkbox"] { margin-top: 2px; accent-color: #1A8A6E;',
+      '  width: 16px; height: 16px; cursor: pointer; }',
+      '.fb-check-item.checked label { color: #888; text-decoration: line-through; }',
+      '',
+      /* Progress bar */
+      '.fb-progress { background: #eee; border-radius: 10px; height: 6px;',
+      '  margin: 8px 0 12px; overflow: hidden; }',
+      '.fb-progress-fill { background: linear-gradient(90deg, #1A8A6E, #27ae60);',
+      '  height: 100%; border-radius: 10px; transition: width 0.3s ease; }',
+      '',
+      /* Action buttons */
+      '.fb-actions { display: flex; flex-direction: column; gap: 6px; }',
+      '.fb-action-btn { padding: 10px 14px; border-radius: 8px; border: none;',
+      '  font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit;',
+      '  transition: all 0.15s; text-align: center; }',
+      '.fb-action-primary { background: #1A8A6E; color: #fff; }',
+      '.fb-action-primary:hover { background: #16755d; }',
+      '.fb-action-secondary { background: #f0f4f8; color: #2c3e50; border: 1px solid #ddd; }',
+      '.fb-action-secondary:hover { background: #e4e8ec; }',
+      '',
+      /* Done state */
+      '.fb-done { text-align: center; padding: 8px 0; }',
+      '.fb-done .fb-done-icon { font-size: 32px; margin-bottom: 4px; }',
+      '.fb-done .fb-done-text { font-size: 14px; color: #1A8A6E; font-weight: 600; }',
+      '.fb-done .fb-done-sub { font-size: 12px; color: #888; margin-top: 2px; }',
+      '',
+      /* Toast */
+      '.sub-toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px);',
+      '  background: #1A8A6E; color: #fff; padding: 12px 24px; border-radius: 10px;',
+      '  font-size: 13px; z-index: 10000; opacity: 0; transition: all 0.3s ease;',
+      '  box-shadow: 0 4px 16px rgba(0,0,0,0.15); text-align: center; max-width: 90vw; }',
+      '.sub-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }',
+      '.sub-toast.error { background: #c0392b; }',
+      '',
+      /* Print + mobile */
+      '@media print { .sub-btn, .sub-status, .fb-coach, .sub-toast { display: none !important; } }',
+      '@media (max-width: 500px) {',
+      '  .fb-card { width: calc(100vw - 24px); right: 12px; bottom: 12px; }',
+      '  .fb-trigger { bottom: 12px; right: 12px; }',
+      '}'
     ].join('\n');
     document.head.appendChild(style);
   }
 
-  // ===== UI INJECTION =====
+  // ===== SUBMIT BUTTON =====
   function injectSubmitButton() {
     var container = document.querySelector(config.containerSelector);
     if (!container) return;
-
     var btn = document.createElement('button');
     btn.className = 'sub-btn';
     btn.id = 'subSubmitBtn';
-    btn.title = 'Submit your work to Yunshu Gao(Ms Gao)';
+    btn.title = 'Submit your work to your teacher';
     btn.innerHTML = '<span class="btn-label">\uD83D\uDCE4 Submit to Teacher</span><span class="spinner"></span>';
     btn.onclick = handleSubmit;
-
     if (config.insertMode === 'append') {
       container.appendChild(btn);
     } else {
@@ -146,7 +208,6 @@
   function injectStatusBadge() {
     var btn = document.getElementById('subSubmitBtn');
     if (!btn) return;
-
     var badge = document.createElement('span');
     badge.className = 'sub-status';
     badge.id = 'subStatusBadge';
@@ -154,98 +215,198 @@
     updateStatusBadge();
   }
 
-  function injectFeedbackPanel() {
-    // Insert after the topbar/btn-bar area, before worksheet content
-    var container = document.querySelector(config.containerSelector);
-    if (!container) return;
+  // ===== FEEDBACK COACH WIDGET =====
+  function injectFeedbackCoach() {
+    var coach = document.createElement('div');
+    coach.className = 'fb-coach';
+    coach.id = 'fbCoach';
+    coach.innerHTML =
+      /* Floating trigger */
+      '<button class="fb-trigger" id="fbTrigger" onclick="window._fbToggle()">' +
+        '<span id="fbTriggerIcon">\uD83D\uDCAC</span>' +
+        '<span id="fbTriggerText">New feedback!</span>' +
+      '</button>' +
+      /* Expanded card */
+      '<div class="fb-card" id="fbCard">' +
+        '<div class="fb-card-header">' +
+          '<h3>\uD83C\uDFAF Feedback Coach</h3>' +
+          '<button class="fb-card-close" onclick="window._fbClose()">&times;</button>' +
+        '</div>' +
+        '<div class="fb-card-body" id="fbCardBody"></div>' +
+      '</div>';
+    document.body.appendChild(coach);
+  }
 
-    var panel = document.createElement('div');
-    panel.className = 'sub-feedback-panel';
-    panel.id = 'subFeedbackPanel';
-    panel.innerHTML = '<h4>\uD83D\uDCAC Teacher Feedback</h4>' +
-      '<p id="subFeedbackText"></p>' +
-      '<div class="fb-date" id="subFeedbackDate"></div>';
-
-    // Insert after the container's parent section (topbar or btn-bar)
-    var ws = document.querySelector('.worksheet, #ws, .tab-bar, .topbar');
-    if (ws) {
-      ws.parentNode.insertBefore(panel, ws.nextSibling);
+  // Toggle card open/closed
+  window._fbToggle = function () {
+    var card = document.getElementById('fbCard');
+    var trigger = document.getElementById('fbTrigger');
+    if (card.classList.contains('visible')) {
+      card.classList.remove('visible');
+      trigger.style.display = 'flex';
     } else {
-      container.parentNode.insertBefore(panel, container.nextSibling);
-    }
-  }
-
-  // ===== SUBMISSION =====
-  function handleSubmit() {
-    var name = config.getStudentName();
-    var cls = config.getStudentClass();
-
-    if (!name) {
-      showToast('Please enter your name before submitting.', 'error');
-      return;
-    }
-    if (!cls) {
-      showToast('Please select your class before submitting.', 'error');
-      return;
-    }
-
-    if (!APPS_SCRIPT_URL) {
-      showToast('Submission not configured yet. Your work is saved locally.', 'error');
-      return;
-    }
-
-    // Show privacy notice on first submit
-    if (!submissionMeta.privacyAcknowledged) {
-      if (!confirm('Privacy Notice: Your name and answers will be sent to your teacher\'s Google account. No other service receives your data.\n\nClick OK to submit.')) {
-        return;
+      renderFeedbackCard();
+      card.classList.add('visible');
+      trigger.style.display = 'none';
+      if (feedbackState === 'new') {
+        feedbackState = 'read';
+        saveFbState();
       }
-      submissionMeta.privacyAcknowledged = true;
-      saveSubmissionMeta();
+    }
+  };
+
+  window._fbClose = function () {
+    document.getElementById('fbCard').classList.remove('visible');
+    document.getElementById('fbTrigger').style.display = 'flex';
+    updateTriggerAppearance();
+  };
+
+  // Check all items clicked
+  window._fbCheck = function (cb, idx) {
+    var item = cb.closest('.fb-check-item');
+    item.classList.toggle('checked', cb.checked);
+    updateCheckProgress();
+    // Save check state
+    try {
+      var checks = JSON.parse(sessionStorage.getItem(config.storageKey + '-fb-checks') || '{}');
+      checks[idx] = cb.checked;
+      sessionStorage.setItem(config.storageKey + '-fb-checks', JSON.stringify(checks));
+    } catch (e) {}
+  };
+
+  window._fbStartWorking = function () {
+    feedbackState = 'working';
+    saveFbState();
+    document.getElementById('fbCard').classList.remove('visible');
+    updateTriggerAppearance();
+    showToast('Great! Take your time to improve your work. \uD83D\uDCAA');
+  };
+
+  window._fbResubmit = function () {
+    document.getElementById('fbCard').classList.remove('visible');
+    document.getElementById('fbTrigger').style.display = 'none';
+    // Trigger the submit button
+    var btn = document.getElementById('subSubmitBtn');
+    if (btn) {
+      btn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      btn.style.animation = 'fb-bounce 0.5s ease-in-out 2';
+      setTimeout(function () { btn.style.animation = ''; }, 1200);
+    }
+  };
+
+  function renderFeedbackCard() {
+    var body = document.getElementById('fbCardBody');
+    if (!feedbackData) { body.innerHTML = '<p style="color:#888;text-align:center;padding:20px;">No feedback yet.</p>'; return; }
+
+    var checks = {};
+    try { checks = JSON.parse(sessionStorage.getItem(config.storageKey + '-fb-checks') || '{}'); } catch (e) {}
+
+    var checkItems = [
+      'Read the feedback carefully',
+      'Find the section to improve',
+      'Make your changes',
+      'Resubmit to teacher'
+    ];
+
+    var html = '';
+
+    // Teacher's message
+    html += '<div class="fb-message">' +
+      '<div class="fb-quote">"' + esc(feedbackData.text) + '"</div>' +
+      '<div class="fb-date">From your teacher \u00b7 ' + formatDate(feedbackData.date) + '</div>' +
+      '</div>';
+
+    // Checklist
+    html += '<div class="fb-checklist">' +
+      '<h4>\u2705 What to do next</h4>';
+    for (var i = 0; i < checkItems.length; i++) {
+      var checked = checks[i] ? ' checked' : '';
+      var cls = checks[i] ? ' checked' : '';
+      html += '<div class="fb-check-item' + cls + '">' +
+        '<input type="checkbox" id="fbChk' + i + '"' + checked + ' onchange="window._fbCheck(this,' + i + ')">' +
+        '<label for="fbChk' + i + '">' + checkItems[i] + '</label></div>';
+    }
+    html += '</div>';
+
+    // Progress bar
+    var done = 0;
+    for (var j = 0; j < checkItems.length; j++) { if (checks[j]) done++; }
+    var pct = Math.round((done / checkItems.length) * 100);
+    html += '<div class="fb-progress"><div class="fb-progress-fill" style="width:' + pct + '%"></div></div>';
+
+    // Action buttons
+    if (feedbackState === 'resubmitted') {
+      html += '<div class="fb-done">' +
+        '<div class="fb-done-icon">\uD83C\uDF1F</div>' +
+        '<div class="fb-done-text">Feedback addressed!</div>' +
+        '<div class="fb-done-sub">Your teacher will review your updated work.</div>' +
+        '</div>';
+    } else if (done >= 3) {
+      html += '<div class="fb-actions">' +
+        '<button class="fb-action-btn fb-action-primary" onclick="window._fbResubmit()">' +
+          '\uD83D\uDCE4 I\'m ready — resubmit my work</button>' +
+        '</div>';
+    } else if (feedbackState === 'read' || feedbackState === 'working') {
+      html += '<div class="fb-actions">' +
+        '<button class="fb-action-btn fb-action-primary" onclick="window._fbStartWorking()">' +
+          '\uD83D\uDCAA Got it — I\'ll work on it</button>' +
+        '</div>';
+    } else {
+      html += '<div class="fb-actions">' +
+        '<button class="fb-action-btn fb-action-primary" onclick="window._fbStartWorking()">' +
+          '\uD83D\uDCAA Got it — I\'ll work on it</button>' +
+        '</div>';
     }
 
-    var btn = document.getElementById('subSubmitBtn');
-    btn.classList.add('loading');
-    btn.disabled = true;
-
-    var data = config.getData();
-    var payload = {
-      action: 'submit',
-      studentName: name,
-      studentClass: cls,
-      worksheetId: config.storageKey,
-      worksheetTitle: config.worksheetTitle,
-      data: data
-    };
-
-    // Cache student name for other worksheets
-    localStorage.setItem('y7-student-name', name);
-    localStorage.setItem('y7-student-class', cls);
-
-    sendToAppsScript(payload)
-      .then(function (result) {
-        btn.classList.remove('loading');
-        btn.disabled = false;
-        submissionMeta.lastSubmitted = new Date().toISOString();
-        submissionMeta.submissionCount = (submissionMeta.submissionCount || 0) + 1;
-        saveSubmissionMeta();
-        updateStatusBadge();
-        showToast('Submitted! Your teacher can now see your work. (' +
-          submissionMeta.submissionCount + ' submission' +
-          (submissionMeta.submissionCount > 1 ? 's' : '') + ')');
-        // Clear any pending submission
-        localStorage.removeItem(config.storageKey + '-pending-submission');
-      })
-      .catch(function (err) {
-        btn.classList.remove('loading');
-        btn.disabled = false;
-        // Queue for retry
-        localStorage.setItem(config.storageKey + '-pending-submission', JSON.stringify(payload));
-        showToast('Could not submit right now \u2014 saved for retry. Check your internet connection.', 'error');
-        console.warn('Submission error:', err);
-      });
+    body.innerHTML = html;
   }
 
-  // ===== FEEDBACK =====
+  function updateCheckProgress() {
+    var checks = {};
+    try { checks = JSON.parse(sessionStorage.getItem(config.storageKey + '-fb-checks') || '{}'); } catch (e) {}
+    var done = 0;
+    for (var j = 0; j < 4; j++) { if (checks[j]) done++; }
+    var pct = Math.round((done / 4) * 100);
+    var fill = document.querySelector('.fb-progress-fill');
+    if (fill) fill.style.width = pct + '%';
+
+    // If 3+ checked, show resubmit button
+    if (done >= 3) renderFeedbackCard();
+  }
+
+  function updateTriggerAppearance() {
+    var trigger = document.getElementById('fbTrigger');
+    var icon = document.getElementById('fbTriggerIcon');
+    var text = document.getElementById('fbTriggerText');
+    if (!trigger) return;
+
+    trigger.className = 'fb-trigger';
+    if (feedbackState === 'new') {
+      trigger.classList.add('state-new');
+      icon.textContent = '\uD83D\uDCAC';
+      text.textContent = 'New feedback!';
+      trigger.style.display = 'flex';
+    } else if (feedbackState === 'read' || feedbackState === 'working') {
+      trigger.classList.add('state-working');
+      icon.textContent = '\uD83D\uDCDD';
+      text.textContent = 'Working on feedback';
+      trigger.style.display = 'flex';
+    } else if (feedbackState === 'resubmitted') {
+      trigger.classList.add('state-resubmitted');
+      icon.textContent = '\u2705';
+      text.textContent = 'Feedback done!';
+      trigger.style.display = 'flex';
+      setTimeout(function () { trigger.style.display = 'none'; }, 5000);
+    } else {
+      trigger.style.display = 'none';
+    }
+  }
+
+  function saveFbState() {
+    try { sessionStorage.setItem(config.storageKey + '-fb-state', feedbackState); } catch (e) {}
+  }
+
+  // ===== FEEDBACK CHECK =====
   function checkForFeedback() {
     var name = config.getStudentName();
     var cls = config.getStudentClass();
@@ -260,73 +421,116 @@
       .then(function (r) { return r.json(); })
       .then(function (result) {
         if (result && result.hasFeedback) {
-          showFeedback(result.feedbackText, result.feedbackDate);
+          feedbackData = { text: result.feedbackText, date: result.feedbackDate };
+
+          // Check if this is new feedback (different from what we last saw)
+          var lastSeenFb = null;
+          try { lastSeenFb = localStorage.getItem(config.storageKey + '-fb-last-seen'); } catch (e) {}
+
+          if (lastSeenFb !== result.feedbackText) {
+            // New or updated feedback
+            feedbackState = 'new';
+            saveFbState();
+            // Clear old checklist
+            try { sessionStorage.removeItem(config.storageKey + '-fb-checks'); } catch (e) {}
+          }
+
+          // Save what we've seen
+          try { localStorage.setItem(config.storageKey + '-fb-last-seen', result.feedbackText); } catch (e) {}
+
+          updateTriggerAppearance();
         }
       })
-      .catch(function () { /* silently fail — feedback check is non-critical */ });
+      .catch(function () { /* silently fail */ });
   }
 
-  function showFeedback(text, date) {
-    var panel = document.getElementById('subFeedbackPanel');
-    var textEl = document.getElementById('subFeedbackText');
-    var dateEl = document.getElementById('subFeedbackDate');
-    if (!panel || !textEl) return;
+  // ===== SUBMISSION =====
+  function handleSubmit() {
+    var name = config.getStudentName();
+    var cls = config.getStudentClass();
 
-    textEl.textContent = text;
-    if (dateEl && date) {
-      dateEl.textContent = 'Feedback given: ' + formatDate(date);
+    if (!name) { showToast('Please enter your name first.', 'error'); return; }
+    if (!cls) { showToast('Please select your class first.', 'error'); return; }
+    if (!APPS_SCRIPT_URL) { showToast('Submission not configured. Your work is saved locally.', 'error'); return; }
+
+    if (!submissionMeta.privacyAcknowledged) {
+      if (!confirm('Privacy Notice: Your name and answers will be sent to your teacher\'s Google account. No other service receives your data.\n\nClick OK to submit.')) return;
+      submissionMeta.privacyAcknowledged = true;
+      saveSubmissionMeta();
     }
-    panel.classList.add('visible');
 
-    // Show badge on submit button
     var btn = document.getElementById('subSubmitBtn');
-    if (btn && !document.getElementById('subFbBadge')) {
-      var badge = document.createElement('span');
-      badge.className = 'sub-feedback-badge';
-      badge.id = 'subFbBadge';
-      badge.textContent = 'New feedback!';
-      btn.parentNode.insertBefore(badge, btn.nextSibling);
-    }
+    btn.classList.add('loading');
+    btn.disabled = true;
+
+    var payload = {
+      action: 'submit',
+      studentName: name,
+      studentClass: cls,
+      worksheetId: config.storageKey,
+      worksheetTitle: config.worksheetTitle,
+      data: config.getData()
+    };
+
+    localStorage.setItem('y7-student-name', name);
+    localStorage.setItem('y7-student-class', cls);
+
+    sendToAppsScript(payload)
+      .then(function () {
+        btn.classList.remove('loading');
+        btn.disabled = false;
+        submissionMeta.lastSubmitted = new Date().toISOString();
+        submissionMeta.submissionCount = (submissionMeta.submissionCount || 0) + 1;
+        saveSubmissionMeta();
+        updateStatusBadge();
+
+        // Update feedback state if they had feedback
+        if (feedbackData && (feedbackState === 'working' || feedbackState === 'read')) {
+          feedbackState = 'resubmitted';
+          saveFbState();
+          updateTriggerAppearance();
+          showToast('\u2705 Submitted! Your teacher will see your improvements.');
+        } else {
+          showToast('\uD83D\uDCE4 Submitted! Your teacher can now see your work.');
+        }
+
+        localStorage.removeItem(config.storageKey + '-pending-submission');
+      })
+      .catch(function () {
+        btn.classList.remove('loading');
+        btn.disabled = false;
+        localStorage.setItem(config.storageKey + '-pending-submission', JSON.stringify(payload));
+        showToast('Could not submit \u2014 saved for retry when you\'re back online.', 'error');
+      });
   }
 
-  // ===== APPS SCRIPT COMMUNICATION =====
+  // ===== NETWORK =====
   function sendToAppsScript(payload) {
     return fetch(APPS_SCRIPT_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },  // Apps Script needs text/plain for CORS
+      headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify(payload)
     })
-    .then(function (response) {
-      if (!response.ok) throw new Error('HTTP ' + response.status);
-      return response.json();
-    })
-    .then(function (result) {
-      if (result.status !== 'ok') throw new Error(result.message || 'Unknown error');
-      return result;
-    });
+    .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function (result) { if (result.status !== 'ok') throw new Error(result.message); return result; });
   }
 
-  // ===== RETRY PENDING =====
   function retryPendingSubmission() {
     var pendingKey = config.storageKey + '-pending-submission';
     var pending = localStorage.getItem(pendingKey);
     if (!pending || !APPS_SCRIPT_URL || !navigator.onLine) return;
-
     try {
-      var payload = JSON.parse(pending);
-      sendToAppsScript(payload)
+      sendToAppsScript(JSON.parse(pending))
         .then(function () {
           localStorage.removeItem(pendingKey);
           submissionMeta.lastSubmitted = new Date().toISOString();
           submissionMeta.submissionCount = (submissionMeta.submissionCount || 0) + 1;
           saveSubmissionMeta();
           updateStatusBadge();
-          showToast('Previous submission sent successfully!');
+          showToast('Previous submission sent!');
         })
-        .catch(function () { /* keep pending for next retry */ });
-    } catch (e) {
-      localStorage.removeItem(pendingKey);
-    }
+        .catch(function () {});
+    } catch (e) { localStorage.removeItem(pendingKey); }
   }
 
   // ===== HELPERS =====
@@ -337,12 +541,10 @@
   function updateStatusBadge() {
     var badge = document.getElementById('subStatusBadge');
     if (!badge) return;
-
     if (submissionMeta.lastSubmitted) {
       badge.className = 'sub-status has-submitted';
-      badge.innerHTML = '<span class="sub-offline-dot online"></span>' +
-        'Submitted ' + submissionMeta.submissionCount + ' time' +
-        (submissionMeta.submissionCount > 1 ? 's' : '') +
+      badge.innerHTML = '<span class="sub-offline-dot online"></span>Submitted ' +
+        submissionMeta.submissionCount + ' time' + (submissionMeta.submissionCount > 1 ? 's' : '') +
         ' \u2014 last: ' + formatDate(submissionMeta.lastSubmitted);
     } else {
       badge.textContent = 'Not yet submitted';
@@ -352,45 +554,22 @@
   function updateOnlineStatus(isOnline) {
     var btn = document.getElementById('subSubmitBtn');
     if (!btn) return;
-
-    if (isOnline) {
-      btn.disabled = false;
-      btn.title = 'Submit your work to Yunshu Gao(Ms Gao)';
-    } else {
-      btn.disabled = true;
-      btn.title = 'You are offline \u2014 your work is saved locally';
-    }
-
-    // Update dot indicator
+    btn.disabled = !isOnline;
+    btn.title = isOnline ? 'Submit your work to your teacher' : 'You are offline \u2014 work is saved locally';
     var dot = document.querySelector('.sub-offline-dot');
-    if (dot) {
-      dot.className = 'sub-offline-dot ' + (isOnline ? 'online' : 'offline');
-    }
+    if (dot) dot.className = 'sub-offline-dot ' + (isOnline ? 'online' : 'offline');
   }
 
   function restoreCachedName() {
-    // Auto-fill student name from cross-worksheet cache if current field is empty
-    var nameEl = null;
-    try { nameEl = config.getStudentName ? null : null; } catch (e) {}
-
     var cachedName = localStorage.getItem('y7-student-name');
     var cachedClass = localStorage.getItem('y7-student-class');
-
     if (cachedName) {
-      var nameInput = document.getElementById('f-name') || document.getElementById('studentName');
-      if (nameInput && !nameInput.value.trim()) {
-        nameInput.value = cachedName;
-        // Trigger save if the worksheet has a saveAll function
-        if (typeof window.saveAll === 'function') window.saveAll();
-      }
+      var el = document.getElementById('f-name') || document.getElementById('studentName');
+      if (el && !el.value.trim()) { el.value = cachedName; if (typeof window.saveAll === 'function') window.saveAll(); }
     }
-
     if (cachedClass) {
-      var classInput = document.getElementById('f-class') || document.getElementById('studentClass');
-      if (classInput && !classInput.value) {
-        classInput.value = cachedClass;
-        if (typeof window.saveAll === 'function') window.saveAll();
-      }
+      var el2 = document.getElementById('f-class') || document.getElementById('studentClass');
+      if (el2 && !el2.value) { el2.value = cachedClass; if (typeof window.saveAll === 'function') window.saveAll(); }
     }
   }
 
@@ -399,31 +578,22 @@
       var d = new Date(iso);
       return d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' }) +
         ', ' + d.toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit' });
-    } catch (e) {
-      return iso;
-    }
+    } catch (e) { return iso; }
+  }
+
+  function esc(str) {
+    if (!str) return '';
+    var d = document.createElement('div'); d.textContent = String(str); return d.innerHTML;
   }
 
   function showToast(msg, type) {
-    // Remove existing toast
-    var old = document.querySelector('.sub-toast');
-    if (old) old.remove();
-
+    var old = document.querySelector('.sub-toast'); if (old) old.remove();
     var toast = document.createElement('div');
     toast.className = 'sub-toast' + (type === 'error' ? ' error' : '');
     toast.textContent = msg;
     document.body.appendChild(toast);
-
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () {
-        toast.classList.add('show');
-      });
-    });
-
-    setTimeout(function () {
-      toast.classList.remove('show');
-      setTimeout(function () { toast.remove(); }, 300);
-    }, 4000);
+    requestAnimationFrame(function () { requestAnimationFrame(function () { toast.classList.add('show'); }); });
+    setTimeout(function () { toast.classList.remove('show'); setTimeout(function () { toast.remove(); }, 300); }, 4000);
   }
 
 })();
