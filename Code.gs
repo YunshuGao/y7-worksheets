@@ -276,14 +276,20 @@ function getOrCreateCommentBankSheet() {
 function findStudentRow(sheet, name, cls, worksheetId) {
   var data = sheet.getDataRange().getValues();
   var cm = buildColMap(data[0]);
+  var fallback = -1;
   for (var i = 1; i < data.length; i++) {
-    if (colVal(data[i], cm.name) === name &&
-        colVal(data[i], cm.class) === cls &&
-        colVal(data[i], cm.wsId) === worksheetId) {
-      return i + 1;
+    var rowName = colVal(data[i], cm.name);
+    var rowClass = colVal(data[i], cm.class);
+    var rowWsId = colVal(data[i], cm.wsId);
+    if (rowName === name && rowClass === cls) {
+      if (rowWsId === worksheetId) {
+        return i + 1;  // exact match
+      }
+      // Track name+class match as fallback (handles old "Write It Right" vs new "y7wir-data")
+      fallback = i + 1;
     }
   }
-  return -1;
+  return fallback;
 }
 
 
@@ -416,8 +422,17 @@ function handleGetFeedback(params) {
     return { status: 'ok', hasFeedback: false };
   }
 
-  var feedbackText = sheet.getRange(row, 8).getValue();
-  var feedbackDate = sheet.getRange(row, 9).getValue();
+  var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+  var cm = buildColMap(headers);
+  var fbCol = cm.feedback >= 0 ? cm.feedback + 1 : -1;
+  var fdCol = cm.feedbackDate >= 0 ? cm.feedbackDate + 1 : -1;
+
+  if (fbCol < 0) {
+    return { status: 'ok', hasFeedback: false };
+  }
+
+  var feedbackText = sheet.getRange(row, fbCol).getValue();
+  var feedbackDate = fdCol > 0 ? sheet.getRange(row, fdCol).getValue() : '';
 
   if (!feedbackText) {
     return { status: 'ok', hasFeedback: false };
