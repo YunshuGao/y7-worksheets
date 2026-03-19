@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TAS Faculty — Write It Right</title>
+<title>Ms Gao's Learning Tools — APHS</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body {
@@ -39,8 +39,11 @@ main {
   font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;
   color: #7f8c8d; font-weight: 600; margin-bottom: 12px;
 }
+.section-desc {
+  font-size: 0.85rem; color: #888; margin: -8px 0 14px; line-height: 1.5;
+}
 
-/* ===== SUBJECT CARDS ===== */
+/* ===== CARDS ===== */
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -70,16 +73,25 @@ main {
   margin-top: 10px; font-size: 0.7rem; font-weight: 600;
   padding: 3px 10px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.5px;
 }
+.card .card-classes {
+  font-size: 0.72rem; color: #aaa; margin-top: 4px;
+}
 
-/* Subject colours */
+/* Colour themes */
+.card.writing .icon { background: #e0f5f2; }
+.card.writing .card-tag { background: #d4efdf; color: #1e8449; }
+
 .card.technology .icon { background: #e8f0f8; }
 .card.technology .card-tag { background: #d6eaf8; color: #1a5276; }
-.card.food-tech .icon { background: #fdebd0; }
-.card.food-tech .card-tag { background: #fdebd0; color: #a04000; }
-.card.design-tech .icon { background: #e8f8ef; }
-.card.design-tech .card-tag { background: #d4efdf; color: #1e8449; }
-.card.ag-tech .icon { background: #f3e8f9; }
-.card.ag-tech .card-tag { background: #f3e8f9; color: #6c3483; }
+
+.card.multimedia .icon { background: #f3e8f9; }
+.card.multimedia .card-tag { background: #f3e8f9; color: #6c3483; }
+
+.card.gameon .icon { background: #fdebd0; }
+.card.gameon .card-tag { background: #fdebd0; color: #a04000; }
+
+.card.coming-soon { opacity: 0.55; pointer-events: none; }
+.card.coming-soon .card-tag { background: #eee; color: #999; }
 
 /* ===== TEACHER SECTION ===== */
 .teacher-card {
@@ -108,14 +120,6 @@ main {
 }
 .footer a { color: #7f8c8d; }
 
-/* ===== COMING SOON BADGE ===== */
-.card.coming-soon {
-  opacity: 0.55; pointer-events: none;
-}
-.card.coming-soon .card-tag {
-  background: #eee; color: #999;
-}
-
 /* ===== RESPONSIVE ===== */
 @media (max-width: 600px) {
   .header { padding: 20px 16px; }
@@ -128,62 +132,88 @@ main {
 <body>
 
 <div class="header">
-  <h1><span>Write It Right</span> — TAS Faculty</h1>
-  <div class="subtitle">Academic writing tools for Technology students</div>
+  <h1><span>Ms Gao's</span> Learning Tools</h1>
+  <div class="subtitle">Interactive tools for Technology &amp; Literacy</div>
   <div class="school-badge">Arthur Phillip High School &middot; 2026</div>
 </div>
 
 <main>
 
-  <!-- STUDENT TOOLS -->
-  <div class="section-label">Student Tools — Choose Your Subject</div>
+  <!-- SECTION 1: WRITING & GRAMMAR -->
+  <div class="section-label">English Grammar &amp; Sentence Structure</div>
+  <div class="section-desc">Academic writing toolkit — vocabulary, TEEL paragraphs, sentence building, and grammar practice for Technology subjects.</div>
   <div class="card-grid">
 
-    <a class="card technology" href="Write-It-Right.html?subject=technology">
-      <div class="icon">&#128295;</div>
-      <div class="card-title">Technology Mandatory</div>
-      <div class="card-desc">Year 7–8 Engineering, materials, sustainable design vocabulary and writing</div>
+    <a class="card writing" href="Write-It-Right.html">
+      <div class="icon">&#9997;&#65039;</div>
+      <div class="card-title">Write It Right</div>
+      <div class="card-desc">8 modules: vocabulary, text types, TEEL paragraphs, sentence builder, grammar gym</div>
       <div class="card-tag">Available Now</div>
+      <div class="card-classes">All Year 7–8 Technology classes</div>
     </a>
 
-    <a class="card food-tech coming-soon" href="Write-It-Right.html?subject=food-tech">
-      <div class="icon">&#127858;</div>
-      <div class="card-title">Food Technology</div>
-      <div class="card-desc">Nutrition, food safety, recipe analysis vocabulary and writing</div>
-      <div class="card-tag">Coming Soon</div>
-    </a>
-
-    <a class="card design-tech coming-soon" href="Write-It-Right.html?subject=design-tech">
-      <div class="icon">&#9999;&#65039;</div>
-      <div class="card-title">Design &amp; Technology</div>
-      <div class="card-desc">Design thinking, prototyping, innovation vocabulary and writing</div>
-      <div class="card-tag">Coming Soon</div>
-    </a>
-
-    <a class="card ag-tech coming-soon" href="Write-It-Right.html?subject=ag-tech">
-      <div class="icon">&#127793;</div>
-      <div class="card-title">Agricultural Technology</div>
-      <div class="card-desc">Agriculture, sustainability, land management vocabulary and writing</div>
-      <div class="card-tag">Coming Soon</div>
+    <a class="card writing" href="Write-It-Right-Student-Instructions.html">
+      <div class="icon">&#128214;</div>
+      <div class="card-title">Student Guide</div>
+      <div class="card-desc">How to use Write It Right — step-by-step instructions for students</div>
+      <div class="card-tag">Reference</div>
     </a>
 
   </div>
 
-  <!-- TEACHER TOOLS -->
+  <!-- SECTION 2: MY CLASSES -->
+  <div class="section-label">My Classes — Interactive Lessons</div>
+  <div class="card-grid">
+
+    <a class="card technology" href="T1-L01-Worksheet.html">
+      <div class="icon">&#128295;</div>
+      <div class="card-title">Y7–8 Technology</div>
+      <div class="card-desc">Engineering &amp; sustainable design — interactive lesson worksheets T1-L01 to T1-L20</div>
+      <div class="card-tag">20 Lessons</div>
+      <div class="card-classes">7TECE &middot; 7TECI &middot; 7TECJ &middot; 8TECI</div>
+    </a>
+
+    <a class="card multimedia coming-soon" href="#">
+      <div class="icon">&#127916;</div>
+      <div class="card-title">Y10 IST Multimedia</div>
+      <div class="card-desc">Industry technology multimedia — digital media production and portfolio</div>
+      <div class="card-tag">Coming Soon</div>
+      <div class="card-classes">10IST</div>
+    </a>
+
+    <a class="card gameon" href="https://yunshugao.github.io/y9-gameon/" target="_blank">
+      <div class="icon">&#127918;</div>
+      <div class="card-title">Y9 Game On</div>
+      <div class="card-desc">Unity game development &amp; C# — step-by-step tutorials on GitHub Pages</div>
+      <div class="card-tag">Available Now</div>
+      <div class="card-classes">9GAMZA</div>
+    </a>
+
+    <a class="card technology" href="design-process-interactive.html">
+      <div class="icon">&#128736;&#65039;</div>
+      <div class="card-title">Design Process Explorer</div>
+      <div class="card-desc">Interactive guide to the design process — investigate, design, produce, test, evaluate</div>
+      <div class="card-tag">Available Now</div>
+      <div class="card-classes">All Technology classes</div>
+    </a>
+
+  </div>
+
+  <!-- SECTION 3: TEACHER TOOLS -->
   <div class="section-label">Teacher Tools</div>
 
   <a class="teacher-card" href="teacher-dashboard.html">
     <div class="t-icon">&#128202;</div>
     <div>
       <div class="t-title">Teacher Dashboard</div>
-      <div class="t-desc">View student work, give feedback, export data, class heatmap</div>
+      <div class="t-desc">View student writing, give feedback, revision coach, class heatmap, export data</div>
     </div>
   </a>
 
 </main>
 
 <div class="footer">
-  TAS Faculty &middot; Arthur Phillip High School &middot; <a href="https://github.com/yunshugao/y7-worksheets" target="_blank">GitHub</a>
+  Ms Gao &middot; Arthur Phillip High School &middot; <a href="https://github.com/yunshugao" target="_blank">GitHub</a>
 </div>
 
 </body>
