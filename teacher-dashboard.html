@@ -212,6 +212,8 @@ body {
   margin-bottom: 6px; border-left: 3px solid #4ecdc4;
 }
 .writing-block .w-label { font-size: 11px; color: #888; margin-bottom: 2px; font-weight: 600; }
+.writing-block .w-prompt { font-size: 12px; color: #555; margin-bottom: 4px; font-style: italic;
+  background: #eef3f7; padding: 4px 8px; border-radius: 4px; line-height: 1.4; }
 .writing-block .w-text { font-size: 13px; color: #333; white-space: pre-wrap; }
 .writing-block .w-meta { font-size: 10px; color: #aaa; margin-top: 2px; }
 
@@ -811,8 +813,10 @@ body {
         else if (w.key === 'teelE2') cls = ' teel-e2';
         else if (w.key === 'teelL') cls = ' teel-l';
 
+        var promptHtml = w.prompt ? '<div class="w-prompt">' + esc(w.prompt) + '</div>' : '';
         html += '<div class="writing-block' + cls + '">' +
           '<div class="w-label">' + esc(w.label) + '</div>' +
+          promptHtml +
           '<div class="w-text">' + esc(w.text) + '</div>' +
           '<div class="w-meta">' + w.wordCount + ' words</div></div>';
       });
