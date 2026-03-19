@@ -375,13 +375,15 @@ function handleSubmit(payload) {
   var row = findStudentRow(sheet, name, cls, wsId);
   var now = new Date().toISOString();
   var dataJson = JSON.stringify(data);
-  var subjectCol = getSubjectColIndex(sheet) + 1;  // 1-based for Range
+  var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+  var cm = buildColMap(headers);
+  var subjectCol = cm.subject >= 0 ? cm.subject + 1 : 10;  // 1-based; default col J
 
   if (row > 0) {
-    var currentCount = sheet.getRange(row, 6).getValue() || 0;
-    sheet.getRange(row, 1).setValue(now);
-    sheet.getRange(row, 6).setValue(currentCount + 1);
-    sheet.getRange(row, 7).setValue(dataJson);
+    var currentCount = sheet.getRange(row, cm.count >= 0 ? cm.count + 1 : 6).getValue() || 0;
+    sheet.getRange(row, cm.timestamp + 1).setValue(now);
+    sheet.getRange(row, cm.count >= 0 ? cm.count + 1 : 6).setValue(currentCount + 1);
+    sheet.getRange(row, cm.data >= 0 ? cm.data + 1 : 7).setValue(dataJson);
     sheet.getRange(row, subjectCol).setValue(subject);
   } else {
     // Build row array — pad to 10 columns
@@ -713,7 +715,9 @@ function handleExport(params) {
 
   var sheet = getOrCreateSheet();
   var data = sheet.getDataRange().getValues();
-  var subjectIdx = getSubjectColIndex(sheet);
+  var headers = data[0] || [];
+  var cmExp = buildColMap(headers);
+  var subjectIdx = cmExp.subject >= 0 ? cmExp.subject : 9;
 
   // CSV header
   var csvRows = ['Name,Class,Band,Modules Completed,Total Modules,Word Count,Vocabulary,TEEL,Grammar,Evidence,Submissions,Last Submitted,Has Feedback'];
