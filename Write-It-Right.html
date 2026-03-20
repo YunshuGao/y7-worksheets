@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>Write It Right — Y7 Academic Writing Toolkit</title>
 <style>
 /* ========== CSS Custom Properties ========== */
@@ -827,8 +830,8 @@ body.fade-none .scaffold-partial { display: none; }
       <strong>Diagnostic</strong> means a quick check to find out what you know. There are no wrong answers — just do your best!
     </div>
     <div style="margin-top:12px; background:#e8f5e9; border-left:4px solid #1a8a7d; border-radius:0 8px 8px 0; padding:12px 16px;">
-      <strong style="color:#1a8a7d;">&#128190; How to save your work</strong><br>
-      <span style="font-size:0.9rem;">Your work saves automatically on <em>this</em> computer. If you use a <strong>different computer next lesson</strong>, click the green <strong>&#128190; Save / Load</strong> button at the top before you pack up. Copy your save code and paste it into a Google Doc or email it to yourself. Next lesson, paste it back to continue where you left off.</span>
+      <strong style="color:#1a8a7d;">&#128190; Your work saves automatically!</strong><br>
+      <span style="font-size:0.9rem;">Your work is <strong>saved to the cloud automatically</strong> as you type. Next lesson, just type your <strong>name</strong> and select your <strong>class</strong> — your work will be restored automatically, even on a different computer! &#9989;</span>
     </div>
   </div>
 
@@ -2860,12 +2863,49 @@ function _doBackup() {
     subject: 'technology',
     data: appData
   };
+  _showSaveStatus('saving');
   fetch(BACKUP_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain' },
     body: JSON.stringify(payload),
     redirect: 'follow'
-  }).catch(function() {}); // silent — never show errors for auto-backup
+  }).then(function(r) {
+    if (r.ok) _showSaveStatus('saved');
+    else _showSaveStatus('error');
+  }).catch(function() { _showSaveStatus('error'); });
+}
+
+/* ── Visual auto-save indicator ── */
+var _saveStatusTimer = null;
+function _showSaveStatus(state) {
+  var el = document.getElementById('autoSaveStatus');
+  if (!el) {
+    el = document.createElement('span');
+    el.id = 'autoSaveStatus';
+    el.style.cssText = 'font-size:11px;padding:2px 8px;border-radius:10px;margin-left:8px;transition:opacity 0.5s;vertical-align:middle;';
+    var topbar = document.querySelector('.topbar');
+    if (topbar) topbar.appendChild(el);
+  }
+  if (state === 'saving') {
+    el.textContent = '☁️ Saving...';
+    el.style.background = 'rgba(255,255,255,0.2)';
+    el.style.color = '#fff';
+    el.style.opacity = '1';
+  } else if (state === 'saved') {
+    el.textContent = '☁️ Saved ✓';
+    el.style.background = 'rgba(46,204,113,0.3)';
+    el.style.color = '#fff';
+    el.style.opacity = '1';
+    if (_saveStatusTimer) clearTimeout(_saveStatusTimer);
+    _saveStatusTimer = setTimeout(function() { el.style.opacity = '0'; }, 3000);
+  } else {
+    el.textContent = '⚠️ Save failed — will retry';
+    el.style.background = 'rgba(231,76,60,0.3)';
+    el.style.color = '#fff';
+    el.style.opacity = '1';
+    if (_saveStatusTimer) clearTimeout(_saveStatusTimer);
+    _saveStatusTimer = setTimeout(function() { el.style.opacity = '0'; }, 5000);
+  }
 }
 
 /* ── Save on page close / tab switch ── */
