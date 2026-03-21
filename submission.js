@@ -662,11 +662,13 @@
     var cachedClass = localStorage.getItem('y7-student-class');
     if (cachedName) {
       var el = document.getElementById('f-name') || document.getElementById('studentName');
-      if (el && !el.value.trim()) { el.value = cachedName; if (typeof window.saveAll === 'function') window.saveAll(); }
+      if (el && !el.value.trim()) { el.value = cachedName; }
+      // DO NOT call saveAll() here — loadAll() hasn't run yet, so appData is empty.
+      // Calling saveAll() would overwrite the good localStorage data with empty appData.
     }
     if (cachedClass) {
       var el2 = document.getElementById('f-class') || document.getElementById('studentClass');
-      if (el2 && !el2.value) { el2.value = cachedClass; if (typeof window.saveAll === 'function') window.saveAll(); }
+      if (el2 && !el2.value) { el2.value = cachedClass; }
     }
   }
 
