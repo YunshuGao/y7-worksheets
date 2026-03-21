@@ -2828,7 +2828,9 @@ body.fade-none .scaffold-partial { display: none; }
 
 <script>
 /* ========== DATA STORE ========== */
+const APP_VERSION = '2.1.0'; // increment on each deploy to track cache issues
 const STORAGE_KEY = 'y7wir-data';
+console.log('[Write It Right] Version ' + APP_VERSION + ' loaded at ' + new Date().toLocaleTimeString());
 
 let appData = {
   studentName: '',
@@ -2864,11 +2866,14 @@ var _lastBackupJson = '';
 function saveAll() {
   appData.studentName = document.getElementById('studentName').value;
   appData.studentClass = document.getElementById('studentClass').value;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+  var json = JSON.stringify(appData);
+  // Save to BOTH localStorage AND sessionStorage (sessionStorage always survives refresh)
+  try { localStorage.setItem(STORAGE_KEY, json); } catch(e) {}
+  try { sessionStorage.setItem(STORAGE_KEY, json); } catch(e) {}
   updatePrintFields();
   // Remember name/class in a cookie so we can auto-restore next session
   _rememberStudent(appData.studentName, appData.studentClass);
-  // Throttled server backup — waits 5 seconds of inactivity then sends
+  // Throttled server backup
   _scheduleBackup();
 }
 
@@ -3009,7 +3014,9 @@ window.addEventListener('pagehide', function() {
 });
 
 function loadAll() {
-  const saved = localStorage.getItem(STORAGE_KEY);
+  // Try localStorage first, fall back to sessionStorage (survives refresh even if localStorage is blocked)
+  var saved = localStorage.getItem(STORAGE_KEY);
+  if (!saved) saved = sessionStorage.getItem(STORAGE_KEY);
   if (saved) {
     try {
       const parsed = JSON.parse(saved);
@@ -4614,5 +4621,7 @@ try {
   });
 } catch(e) { console.warn('Submission system not available:', e.message); }
 </script>
+<div style="text-align:center;padding:20px;font-size:11px;color:#aaa;margin-top:40px;" id="versionFooter"></div>
+<script>document.getElementById('versionFooter').textContent = 'Write It Right v' + APP_VERSION + ' • Cloud auto-save enabled';</script>
 </body>
 </html>
