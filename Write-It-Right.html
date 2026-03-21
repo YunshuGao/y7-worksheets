@@ -4481,6 +4481,18 @@ document.addEventListener('DOMContentLoaded', function() {
   initWordSort();
   initJigsaw();
   restoreQuizStates();
+
+  // Re-trigger feedback check AFTER loadAll() has populated the name field
+  // (initSubmission runs before DOMContentLoaded, so name is empty at that point)
+  if (typeof _submissionFeedbackCheck === 'function') {
+    _submissionFeedbackCheck();
+  } else {
+    // Fallback: dispatch a change event on the class field to trigger the listener in submission.js
+    var clsField = document.getElementById('studentClass');
+    if (clsField && clsField.value) {
+      clsField.dispatchEvent(new Event('change'));
+    }
+  }
 });
 </script>
 

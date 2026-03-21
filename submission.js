@@ -88,6 +88,15 @@
       if (_nameEl) _nameEl.addEventListener('blur', _tryFeedbackCheck);
       if (_classEl) _classEl.addEventListener('change', _tryFeedbackCheck);
     }
+
+    // Expose a global function so Write-It-Right.html can re-trigger feedback check
+    // after loadAll() populates the name field (which happens AFTER initSubmission)
+    window._submissionFeedbackCheck = function() {
+      if (!_feedbackChecked && config.getStudentName() && config.getStudentClass()) {
+        _feedbackChecked = true;
+        checkForFeedback();
+      }
+    };
   };
 
   // ===== STYLES =====
