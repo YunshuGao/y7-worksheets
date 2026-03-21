@@ -69,9 +69,25 @@
 
     retryPendingSubmission();
 
-    window.addEventListener('online', function () { updateOnlineStatus(true); });
+    window.addEventListener('online', function () { updateOnlineStatus(true); retryPendingSubmission(); });
     window.addEventListener('offline', function () { updateOnlineStatus(false); });
     updateOnlineStatus(navigator.onLine);
+
+    // Re-check feedback when student fills in name (may not be available at init time)
+    var _feedbackChecked = !!(APPS_SCRIPT_URL && config.getStudentName());
+    if (!_feedbackChecked) {
+      var _nameEl = document.getElementById('f-name') || document.getElementById('studentName');
+      var _classEl = document.getElementById('f-class') || document.getElementById('studentClass');
+      function _tryFeedbackCheck() {
+        if (_feedbackChecked) return;
+        if (config.getStudentName() && config.getStudentClass()) {
+          _feedbackChecked = true;
+          checkForFeedback();
+        }
+      }
+      if (_nameEl) _nameEl.addEventListener('blur', _tryFeedbackCheck);
+      if (_classEl) _classEl.addEventListener('change', _tryFeedbackCheck);
+    }
   };
 
   // ===== STYLES =====
@@ -600,7 +616,7 @@
           showToast('Previous submission sent!');
         })
         .catch(function () {});
-    } catch (e) { localStorage.removeItem(pendingKey); }
+    } catch (e) { console.warn('submission.js: could not parse pending submission, keeping for next try:', e.message); }
   }
 
   // ===== HELPERS =====

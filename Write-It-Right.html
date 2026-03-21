@@ -800,7 +800,7 @@ body.fade-none .scaffold-partial { display: none; }
 
 <!-- Progress Bar -->
 <div class="progress-bar-container">
-  <span id="progressLabel">Progress: 0 / 6 modules</span>
+  <span id="progressLabel">Progress: 0 / 8 modules</span>
   <div class="progress-track">
     <div class="progress-fill" id="progressFill"></div>
   </div>
@@ -1460,7 +1460,7 @@ body.fade-none .scaffold-partial { display: none; }
     <div style="margin:16px 0;">
       <strong>Question 1:</strong>
       <div class="vscc-question" id="vsccQ1" style="background:var(--grey-light);padding:14px;border-radius:8px;margin-top:6px;font-size:1rem;line-height:2;">
-        <span class="vscc-word show-beginning vscc-verb" data-role="verb" onclick="toggleVSCC(this)">Describe</span>
+        <span class="vscc-word" data-role="verb" onclick="toggleVSCC(this)">Describe</span>
         <span class="vscc-word" data-role="subject" onclick="toggleVSCC(this)">the design process</span>
         <span class="vscc-word" data-role="content" onclick="toggleVSCC(this)">and its five stages.</span>
       </div>
@@ -2789,9 +2789,9 @@ let appData = {
   diagnosticDone: false,
   diagnosticScore: 0,
   currentModule: 0,
-  moduleScores: { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0 },
-  moduleCompleted: { 0: false, 1: false, 2: false, 3: false, 4: false, 5: false, 6: false, 7: false },
-  fadeLevels: { 1: 'full', 2: 'full', 3: 'full', 4: 'full', 5: 'full', 6: 'full' },
+  moduleScores: { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0 },
+  moduleCompleted: { 0: false, 1: false, 2: false, 3: false, 4: false, 5: false, 6: false, 7: false, 8: false },
+  fadeLevels: { 1: 'full', 2: 'full', 3: 'full', 4: 'full', 5: 'full', 6: 'full', 7: 'full', 8: 'full' },
   responses: {},
   checklists: {},
   quizState: {
@@ -2910,10 +2910,8 @@ function _showSaveStatus(state) {
 
 /* ── Save on page close / tab switch ── */
 window.addEventListener('beforeunload', function() {
-  // Force immediate backup
+  // Use sendBeacon only (fetch is unreliable during page unload)
   if (_backupTimer) clearTimeout(_backupTimer);
-  _doBackup();
-  // Also use sendBeacon as a fallback (more reliable on tab close)
   var name = (appData.studentName || '').trim();
   var cls = (appData.studentClass || '').trim();
   if (name && cls) {
@@ -2927,7 +2925,7 @@ window.addEventListener('beforeunload', function() {
         subject: 'technology',
         data: appData
       });
-      navigator.sendBeacon(BACKUP_URL, payload);
+      navigator.sendBeacon(BACKUP_URL, new Blob([payload], {type: 'text/plain'}));
     } catch(e) {}
   }
 });
@@ -2944,7 +2942,20 @@ function loadAll() {
   if (saved) {
     try {
       const parsed = JSON.parse(saved);
+      // Deep merge to preserve new defaults for nested objects
+      const savedQuiz = parsed.quizState || {};
+      const savedScores = parsed.moduleScores || {};
+      const savedCompleted = parsed.moduleCompleted || {};
+      const savedFade = parsed.fadeLevels || {};
+      const savedResponses = parsed.responses || {};
+      const savedChecklists = parsed.checklists || {};
       appData = { ...appData, ...parsed };
+      appData.quizState = { ...appData.quizState, ...savedQuiz };
+      appData.moduleScores = { ...{ 0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0 }, ...savedScores };
+      appData.moduleCompleted = { ...{ 0:false,1:false,2:false,3:false,4:false,5:false,6:false,7:false,8:false }, ...savedCompleted };
+      appData.fadeLevels = { ...{ 1:'full',2:'full',3:'full',4:'full',5:'full',6:'full',7:'full',8:'full' }, ...savedFade };
+      appData.responses = { ...appData.responses, ...savedResponses };
+      appData.checklists = { ...appData.checklists, ...savedChecklists };
     } catch (e) { console.warn('Failed to load saved data'); }
   }
   document.getElementById('studentName').value = appData.studentName || '';
@@ -3287,7 +3298,7 @@ function calculateFade(completedModule) {
 }
 
 function getMaxScore(moduleNum) {
-  const maxScores = { 0: 12, 1: 10, 2: 10, 3: 8, 4: 10, 5: 8, 6: 10 };
+  const maxScores = { 0: 12, 1: 10, 2: 10, 3: 8, 4: 10, 5: 8, 6: 10, 7: 15, 8: 15 };
   return maxScores[moduleNum] || 10;
 }
 
@@ -3552,14 +3563,14 @@ function placeWord(zone) {
     sortSelected.classList.add('placed', 'correct-place');
     document.getElementById('sortZone' + zone + 'Words').appendChild(sortSelected);
     sortScore++;
+    sortPlaced++;
   } else {
     sortSelected.classList.add('incorrect-place');
     setTimeout(() => { sortSelected.classList.remove('selected', 'incorrect-place'); }, 600);
   }
-  sortPlaced++;
   sortSelected = null;
 
-  if (sortPlaced >= sortTotal || document.querySelectorAll('.draggable-pill:not(.placed)').length === 0) {
+  if (document.querySelectorAll('.draggable-pill:not(.placed)').length === 0) {
     const resultEl = document.getElementById('sortResult');
     resultEl.style.display = 'block';
     resultEl.textContent = 'You sorted ' + sortScore + ' out of ' + sortTotal + ' words correctly!';
@@ -3739,7 +3750,7 @@ function finishModule6() {
   if ((document.getElementById('capWWW')?.value || '').trim().length > 5) score += 1;
 
   appData.moduleScores[6] = Math.min(score, 10);
-  completeModule(6);
+  if (!completeModule(6)) return;
 
   // Show final results
   document.getElementById('capFinalSection').style.display = 'none';
@@ -3786,8 +3797,10 @@ const JIGSAW_SENTENCES_BEGINNING = [
   { text: 'This helped us find problems early and improve our designs.', role: 'E', colour: 'var(--orange)' },
   { text: 'So the design process helps us make better products.', role: 'L', colour: 'var(--purple)' }
 ];
-// Choose sentences based on band
-const JIGSAW_SENTENCES = (appData.band === 'beginning') ? JIGSAW_SENTENCES_BEGINNING : JIGSAW_SENTENCES_FULL;
+// Choose sentences based on band (evaluated dynamically, not at parse time)
+function getJigsawSentences() {
+  return (appData.band === 'beginning') ? JIGSAW_SENTENCES_BEGINNING : JIGSAW_SENTENCES_FULL;
+}
 
 let jigsawOrder = [];
 let jigsawShuffled = [];
@@ -3796,7 +3809,7 @@ function initJigsaw() {
   const container = document.getElementById('jigsawContainer');
   if (!container) return;
   jigsawOrder = [];
-  jigsawShuffled = [...JIGSAW_SENTENCES].sort(() => Math.random() - 0.5);
+  jigsawShuffled = [...getJigsawSentences()].sort(() => Math.random() - 0.5);
   container.innerHTML = '';
   jigsawShuffled.forEach((s, i) => {
     const div = document.createElement('div');
@@ -4283,7 +4296,7 @@ function finishModule8() {
   // Up to 6 bonus points for writing (1 per 3 filled textareas)
   score += Math.min(Math.floor(filled / 3) * 2, 6);
   appData.moduleScores[8] = Math.min(score, 15);
-  completeModule(8);
+  if (!completeModule(8)) return;
 }
 
 function finishModule7() {
@@ -4500,22 +4513,24 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- Submission System -->
 <script src="submission.js"></script>
 <script>
-initSubmission({
-  storageKey: 'y7wir-data',
-  worksheetTitle: 'Write It Right',
-  getStudentName: function() {
-    return (document.getElementById('studentName').value || '').trim();
-  },
-  getStudentClass: function() {
-    return (document.getElementById('studentClass').value || '').trim();
-  },
-  getData: function() {
-    try { return JSON.parse(localStorage.getItem('y7wir-data')); }
-    catch(e) { return null; }
-  },
-  containerSelector: '.topbar',
-  insertMode: 'after'
-});
+try {
+  initSubmission({
+    storageKey: 'y7wir-data',
+    worksheetTitle: 'Write It Right',
+    getStudentName: function() {
+      return (document.getElementById('studentName').value || '').trim();
+    },
+    getStudentClass: function() {
+      return (document.getElementById('studentClass').value || '').trim();
+    },
+    getData: function() {
+      try { return JSON.parse(localStorage.getItem('y7wir-data')); }
+      catch(e) { return null; }
+    },
+    containerSelector: '.topbar',
+    insertMode: 'after'
+  });
+} catch(e) { console.warn('Submission system not available:', e.message); }
 </script>
 </body>
 </html>
