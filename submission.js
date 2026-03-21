@@ -373,7 +373,7 @@
     var msgBg = isRevision ? '#fef5f5' : '#f0f7ff';
     html += '<div class="fb-message" style="border-left-color:' + msgBorder + ';background:' + msgBg + ';">' +
       '<div class="fb-quote">\u201C' + esc(feedbackData.text) + '\u201D</div>' +
-      '<div class="fb-date">From your teacher \u00b7 ' + formatDate(feedbackData.date) + '</div>' +
+      '<div class="fb-date">From Ms Gao \u00b7 ' + formatDate(feedbackData.date) + '</div>' +
       '</div>';
 
     // Sentence starters (only for revision mode)
