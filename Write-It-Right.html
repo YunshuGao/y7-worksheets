@@ -2891,18 +2891,16 @@ function _getRememberedStudent() {
 
 /* ── Throttled server backup (silent, never blocks the student) ── */
 function _scheduleBackup() {
+  // Debounce: save 1 second after last change (not 5 sec — too slow, causes data loss on refresh)
   if (_backupTimer) clearTimeout(_backupTimer);
-  _backupTimer = setTimeout(_doBackup, 5000); // 5 sec after last keystroke
+  _backupTimer = setTimeout(_doBackup, 1000);
 }
 
-function _doBackup() {
+function _buildPayload() {
   var name = (appData.studentName || '').trim();
   var cls = (appData.studentClass || '').trim();
-  if (!name || !cls) return; // can't backup without identity
-  var json = JSON.stringify(appData);
-  if (json === _lastBackupJson) return; // nothing changed since last backup
-  _lastBackupJson = json;
-  var payload = {
+  if (!name || !cls) return null;
+  return JSON.stringify({
     action: 'submit',
     studentName: name,
     studentClass: cls,
@@ -2910,12 +2908,19 @@ function _doBackup() {
     worksheetTitle: 'Write It Right',
     subject: 'technology',
     data: appData
-  };
+  });
+}
+
+function _doBackup() {
+  var payloadStr = _buildPayload();
+  if (!payloadStr) return;
+  if (payloadStr === _lastBackupJson) return; // nothing changed
+  _lastBackupJson = payloadStr;
   _showSaveStatus('saving');
   fetch(BACKUP_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain' },
-    body: JSON.stringify(payload),
+    body: payloadStr,
     redirect: 'follow'
   }).then(function(r) {
     if (r.ok) _showSaveStatus('saved');
@@ -2957,23 +2962,27 @@ function _showSaveStatus(state) {
 
 /* ── Save on page close / tab switch ── */
 window.addEventListener('beforeunload', function() {
-  // Use sendBeacon only (fetch is unreliable during page unload)
+  // CRITICAL: Save on page close/refresh — this is the last chance to save
+  // sendBeacon CANNOT follow Apps Script 302 redirects, so we use fetch+keepalive
   if (_backupTimer) clearTimeout(_backupTimer);
-  var name = (appData.studentName || '').trim();
-  var cls = (appData.studentClass || '').trim();
-  if (name && cls) {
+  var payloadStr = _buildPayload();
+  if (!payloadStr) return;
+  if (payloadStr === _lastBackupJson) return; // already saved
+  try {
+    // fetch with keepalive: true survives page unload AND follows redirects
+    fetch(BACKUP_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: payloadStr,
+      redirect: 'follow',
+      keepalive: true
+    }).catch(function() {});
+    _lastBackupJson = payloadStr;
+  } catch(e) {
+    // Absolute last resort: sendBeacon (may not work with Apps Script redirects)
     try {
-      var payload = JSON.stringify({
-        action: 'submit',
-        studentName: name,
-        studentClass: cls,
-        worksheetId: 'y7wir-data',
-        worksheetTitle: 'Write It Right',
-        subject: 'technology',
-        data: appData
-      });
-      navigator.sendBeacon(BACKUP_URL, new Blob([payload], {type: 'text/plain'}));
-    } catch(e) {}
+      navigator.sendBeacon(BACKUP_URL, new Blob([payloadStr], {type: 'text/plain'}));
+    } catch(e2) {}
   }
 });
 // Also backup when tab becomes hidden (student switches tabs)
@@ -2982,6 +2991,21 @@ document.addEventListener('visibilitychange', function() {
     if (_backupTimer) clearTimeout(_backupTimer);
     _doBackup();
   }
+});
+// pagehide is more reliable than beforeunload on mobile/Chromebook
+window.addEventListener('pagehide', function() {
+  if (_backupTimer) clearTimeout(_backupTimer);
+  var payloadStr = _buildPayload();
+  if (!payloadStr || payloadStr === _lastBackupJson) return;
+  try {
+    fetch(BACKUP_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: payloadStr,
+      redirect: 'follow',
+      keepalive: true
+    }).catch(function() {});
+  } catch(e) {}
 });
 
 function loadAll() {
