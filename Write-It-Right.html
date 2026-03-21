@@ -42,17 +42,17 @@ body {
   background: var(--grey-light);
   color: var(--grey-dark);
   line-height: 1.6;
-  padding-top: 60px;
+  padding-top: 90px;
 }
 
-/* ========== Top Bar ========== */
+/* ========== Top Bar (Row 1: Identity) ========== */
 .topbar {
   position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
   background: linear-gradient(135deg, var(--blue-dark), var(--blue));
   color: var(--white);
   display: flex; align-items: center; gap: 12px;
-  padding: 10px 20px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  padding: 8px 20px;
+  box-shadow: none;
   flex-wrap: wrap;
 }
 .topbar .badge {
@@ -93,6 +93,47 @@ body {
   transition: background 0.2s;
 }
 .topbar button:hover { background: rgba(255,255,255,0.3); }
+
+/* ========== Action Bar (Row 2: Submit + Save + Status) ========== */
+.action-bar {
+  position: fixed; left: 0; right: 0; z-index: 999;
+  background: #f0f7f5;
+  border-bottom: 2px solid var(--teal);
+  display: flex; align-items: center; gap: 10px;
+  padding: 6px 20px;
+  flex-wrap: wrap;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.action-bar .ab-submit {
+  background: var(--teal); color: #fff; border: none;
+  padding: 7px 18px; border-radius: 8px; font-size: 0.85rem;
+  font-weight: 700; cursor: pointer; transition: background 0.2s;
+  display: flex; align-items: center; gap: 6px;
+}
+.action-bar .ab-submit:hover { background: #148a6d; }
+.action-bar .ab-submit.loading { opacity: 0.7; pointer-events: none; }
+.action-bar .ab-submit .spinner {
+  display: none; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff; border-radius: 50%; animation: spin 0.6s linear infinite;
+}
+.action-bar .ab-submit.loading .spinner { display: inline-block; }
+.action-bar .ab-status {
+  font-size: 0.78rem; color: var(--grey); padding: 0 6px;
+}
+.action-bar .ab-cloud {
+  font-size: 0.75rem; padding: 3px 10px; border-radius: 12px;
+  background: rgba(46,204,113,0.15); color: #27ae60;
+  transition: opacity 0.5s;
+}
+.action-bar .ab-divider {
+  width: 1px; height: 20px; background: #ccc; margin: 0 4px;
+}
+.action-bar .ab-secondary {
+  background: none; border: 1px solid #ccc; color: #555;
+  padding: 4px 12px; border-radius: 6px; font-size: 0.78rem;
+  cursor: pointer; transition: background 0.2s;
+}
+.action-bar .ab-secondary:hover { background: #e8e8e8; }
 
 /* ========== Progress Bar ========== */
 .progress-bar-container {
@@ -743,12 +784,13 @@ body.fade-none .scaffold-partial { display: none; }
 }
 @media (max-width: 500px) {
   .topbar { flex-direction: column; align-items: flex-start; }
+  .action-bar { flex-wrap: wrap; gap: 6px; padding: 6px 12px; }
   .match-grid { grid-template-columns: 1fr; }
 }
 
 /* ========== Print ========== */
 @media print {
-  .topbar, .tab-bar, .progress-bar-container, .save-overlay { display: none !important; }
+  .topbar, .action-bar, .tab-bar, .progress-bar-container, .save-overlay { display: none !important; }
   body { padding-top: 0; background: white; }
   .module { display: block !important; max-width: 100%; page-break-inside: avoid; }
   .section-card { box-shadow: none; border: 1px solid #ddd; page-break-inside: avoid; }
@@ -781,7 +823,7 @@ body.fade-none .scaffold-partial { display: none; }
   <p>Student Name: <span id="printName">_______________</span> | Band: <span id="printBand">___</span></p>
 </div>
 
-<!-- Top Bar -->
+<!-- Top Bar (Row 1: Identity) -->
 <div class="topbar">
   <span class="badge">Year 7</span>
   <h1>Write It Right</h1>
@@ -792,10 +834,16 @@ body.fade-none .scaffold-partial { display: none; }
     <option value="7TECI" style="color:#333;">7TECI</option>
     <option value="7TECJ" style="color:#333;">7TECJ</option>
   </select>
-  <span class="band-badge" id="bandBadge">Not assessed yet</span>
-  <button onclick="openSaveModal()" title="Save or load your work across devices" style="background:rgba(26,138,125,0.5); border-color:rgba(26,138,125,0.7);">&#128190; Save / Load</button>
-  <button onclick="window.print()" title="Print / Save as PDF">Print</button>
-  <button onclick="confirmReset()" title="Start over">Reset</button>
+</div>
+
+<!-- Hidden band badge (used by JS setBand function) -->
+<span class="band-badge" id="bandBadge" style="display:none;">Not assessed yet</span>
+
+<!-- Action Bar (Row 2: Submit + Cloud Status) -->
+<div class="action-bar" id="actionBar">
+  <span class="ab-cloud" id="cloudSaveStatus">&#9729;&#65039; Auto-saving to cloud</span>
+  <span style="flex:1;"></span>
+  <button class="ab-secondary" onclick="confirmReset()" title="Start over" style="color:#c0392b; border-color:#e0b0b0;">Reset</button>
 </div>
 
 <!-- Progress Bar -->
@@ -2875,36 +2923,35 @@ function _doBackup() {
   }).catch(function() { _showSaveStatus('error'); });
 }
 
-/* ── Visual auto-save indicator ── */
+/* ── Visual auto-save indicator (uses #cloudSaveStatus in action bar) ── */
 var _saveStatusTimer = null;
 function _showSaveStatus(state) {
-  var el = document.getElementById('autoSaveStatus');
-  if (!el) {
-    el = document.createElement('span');
-    el.id = 'autoSaveStatus';
-    el.style.cssText = 'font-size:11px;padding:2px 8px;border-radius:10px;margin-left:8px;transition:opacity 0.5s;vertical-align:middle;';
-    var topbar = document.querySelector('.topbar');
-    if (topbar) topbar.appendChild(el);
-  }
+  var el = document.getElementById('cloudSaveStatus');
+  if (!el) return;
   if (state === 'saving') {
     el.textContent = '☁️ Saving...';
-    el.style.background = 'rgba(255,255,255,0.2)';
-    el.style.color = '#fff';
-    el.style.opacity = '1';
+    el.style.background = 'rgba(52,152,219,0.15)';
+    el.style.color = '#2980b9';
   } else if (state === 'saved') {
     el.textContent = '☁️ Saved ✓';
-    el.style.background = 'rgba(46,204,113,0.3)';
-    el.style.color = '#fff';
-    el.style.opacity = '1';
+    el.style.background = 'rgba(46,204,113,0.15)';
+    el.style.color = '#27ae60';
     if (_saveStatusTimer) clearTimeout(_saveStatusTimer);
-    _saveStatusTimer = setTimeout(function() { el.style.opacity = '0'; }, 3000);
+    _saveStatusTimer = setTimeout(function() {
+      el.textContent = '☁️ Auto-saving to cloud';
+      el.style.background = 'rgba(46,204,113,0.15)';
+      el.style.color = '#27ae60';
+    }, 3000);
   } else {
     el.textContent = '⚠️ Save failed — will retry';
-    el.style.background = 'rgba(231,76,60,0.3)';
-    el.style.color = '#fff';
-    el.style.opacity = '1';
+    el.style.background = 'rgba(231,76,60,0.15)';
+    el.style.color = '#c0392b';
     if (_saveStatusTimer) clearTimeout(_saveStatusTimer);
-    _saveStatusTimer = setTimeout(function() { el.style.opacity = '0'; }, 5000);
+    _saveStatusTimer = setTimeout(function() {
+      el.textContent = '☁️ Auto-saving to cloud';
+      el.style.background = 'rgba(46,204,113,0.15)';
+      el.style.color = '#27ae60';
+    }, 5000);
   }
 }
 
@@ -3276,8 +3323,10 @@ function setBand(band, doSave = true) {
   document.body.classList.remove('band-beginning', 'band-developing', 'band-consolidating');
   document.body.classList.add('band-' + band);
   const badge = document.getElementById('bandBadge');
-  badge.textContent = band.charAt(0).toUpperCase() + band.slice(1);
-  badge.className = 'band-badge ' + band;
+  if (badge) {
+    badge.textContent = band.charAt(0).toUpperCase() + band.slice(1);
+    badge.className = 'band-badge ' + band;
+  }
   if (doSave) saveAll();
 }
 
@@ -4319,6 +4368,15 @@ function finishModule7() {
 
 /* ========== INIT ========== */
 document.addEventListener('DOMContentLoaded', function() {
+  // Position action bar below topbar dynamically
+  var topbar = document.querySelector('.topbar');
+  var actionBar = document.getElementById('actionBar');
+  if (topbar && actionBar) {
+    var h = topbar.offsetHeight;
+    actionBar.style.top = h + 'px';
+    document.body.style.paddingTop = (h + actionBar.offsetHeight) + 'px';
+  }
+
   loadAll();
   // Restore diagnostic state if already completed
   if (appData.diagnosticDone) {
@@ -4527,8 +4585,8 @@ try {
       try { return JSON.parse(localStorage.getItem('y7wir-data')); }
       catch(e) { return null; }
     },
-    containerSelector: '.topbar',
-    insertMode: 'after'
+    containerSelector: '#actionBar',
+    insertMode: 'prepend'
   });
 } catch(e) { console.warn('Submission system not available:', e.message); }
 </script>

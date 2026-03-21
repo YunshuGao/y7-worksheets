@@ -216,6 +216,8 @@
     btn.onclick = handleSubmit;
     if (config.insertMode === 'append') {
       container.appendChild(btn);
+    } else if (config.insertMode === 'prepend') {
+      container.insertBefore(btn, container.firstChild);
     } else {
       container.parentNode.insertBefore(btn, container.nextSibling);
     }
