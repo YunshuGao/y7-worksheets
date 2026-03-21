@@ -2828,9 +2828,31 @@ body.fade-none .scaffold-partial { display: none; }
 
 <script>
 /* ========== DATA STORE ========== */
-const APP_VERSION = '2.1.0'; // increment on each deploy to track cache issues
+const APP_VERSION = '2.2.0'; // increment on each deploy to track cache issues
 const STORAGE_KEY = 'y7wir-data';
-console.log('[Write It Right] Version ' + APP_VERSION + ' loaded at ' + new Date().toLocaleTimeString());
+
+// === STORAGE DIAGNOSTIC — detect if browser is blocking storage ===
+var _storageWorks = { local: false, session: false };
+try {
+  localStorage.setItem('_test', '1');
+  _storageWorks.local = localStorage.getItem('_test') === '1';
+  localStorage.removeItem('_test');
+} catch(e) { _storageWorks.local = false; }
+try {
+  sessionStorage.setItem('_test', '1');
+  _storageWorks.session = sessionStorage.getItem('_test') === '1';
+  sessionStorage.removeItem('_test');
+} catch(e) { _storageWorks.session = false; }
+
+var _lsData = null;
+try { _lsData = localStorage.getItem(STORAGE_KEY); } catch(e) {}
+var _ssData = null;
+try { _ssData = sessionStorage.getItem(STORAGE_KEY); } catch(e) {}
+
+console.log('[WIR v' + APP_VERSION + '] Storage check — localStorage: ' + _storageWorks.local +
+  ', sessionStorage: ' + _storageWorks.session +
+  ', existing LS data: ' + (!!_lsData) + ' (' + (_lsData ? _lsData.length : 0) + ' chars)' +
+  ', existing SS data: ' + (!!_ssData) + ' (' + (_ssData ? _ssData.length : 0) + ' chars)');
 
 let appData = {
   studentName: '',
@@ -2868,8 +2890,10 @@ function saveAll() {
   appData.studentClass = document.getElementById('studentClass').value;
   var json = JSON.stringify(appData);
   // Save to BOTH localStorage AND sessionStorage (sessionStorage always survives refresh)
-  try { localStorage.setItem(STORAGE_KEY, json); } catch(e) {}
-  try { sessionStorage.setItem(STORAGE_KEY, json); } catch(e) {}
+  var lsOk = false, ssOk = false;
+  try { localStorage.setItem(STORAGE_KEY, json); lsOk = true; } catch(e) { console.warn('[WIR] localStorage BLOCKED:', e); }
+  try { sessionStorage.setItem(STORAGE_KEY, json); ssOk = true; } catch(e) { console.warn('[WIR] sessionStorage BLOCKED:', e); }
+  console.log('[WIR] saveAll — LS:' + lsOk + ' SS:' + ssOk + ' size:' + json.length + ' name:' + appData.studentName);
   updatePrintFields();
   // Remember name/class in a cookie so we can auto-restore next session
   _rememberStudent(appData.studentName, appData.studentClass);
@@ -3015,8 +3039,14 @@ window.addEventListener('pagehide', function() {
 
 function loadAll() {
   // Try localStorage first, fall back to sessionStorage (survives refresh even if localStorage is blocked)
-  var saved = localStorage.getItem(STORAGE_KEY);
-  if (!saved) saved = sessionStorage.getItem(STORAGE_KEY);
+  var saved = null;
+  try { saved = localStorage.getItem(STORAGE_KEY); } catch(e) {}
+  var source = saved ? 'localStorage' : 'none';
+  if (!saved) {
+    try { saved = sessionStorage.getItem(STORAGE_KEY); } catch(e) {}
+    if (saved) source = 'sessionStorage';
+  }
+  console.log('[WIR] loadAll — source: ' + source + ', data length: ' + (saved ? saved.length : 0));
   if (saved) {
     try {
       const parsed = JSON.parse(saved);
