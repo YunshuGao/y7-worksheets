@@ -2828,7 +2828,7 @@ body.fade-none .scaffold-partial { display: none; }
 
 <script>
 /* ========== DATA STORE ========== */
-const APP_VERSION = '2.3.0'; // increment on each deploy to track cache issues
+const APP_VERSION = '2.4.0'; // increment on each deploy to track cache issues
 const STORAGE_KEY = 'y7wir-data';
 
 // === STORAGE DIAGNOSTIC — detect if browser is blocking storage ===
@@ -2900,6 +2900,42 @@ function saveAll() {
   // Throttled server backup
   _scheduleBackup();
 }
+
+/* ── Periodic auto-save: catches ALL changes every 2 seconds ── */
+var _lastPeriodicJson = '';
+setInterval(function() {
+  var nameEl = document.getElementById('studentName');
+  var classEl = document.getElementById('studentClass');
+  if (!nameEl || !classEl) return;
+  var currentName = nameEl.value;
+  var currentClass = classEl.value;
+  // Sync DOM values into appData (catches autofill, paste, extensions)
+  if (currentName !== appData.studentName || currentClass !== appData.studentClass) {
+    console.log('[WIR] Periodic save detected change: "' + appData.studentName + '" → "' + currentName + '"');
+    appData.studentName = currentName;
+    appData.studentClass = currentClass;
+  }
+  var json = JSON.stringify(appData);
+  if (json !== _lastPeriodicJson) {
+    _lastPeriodicJson = json;
+    try { localStorage.setItem(STORAGE_KEY, json); } catch(e) {}
+    try { sessionStorage.setItem(STORAGE_KEY, json); } catch(e) {}
+    _rememberStudent(currentName, currentClass);
+  }
+}, 2000);
+
+/* ── Also save on name/class blur and change (belt + suspenders) ── */
+document.addEventListener('DOMContentLoaded', function() {
+  var nameEl = document.getElementById('studentName');
+  var classEl = document.getElementById('studentClass');
+  if (nameEl) {
+    nameEl.addEventListener('change', saveAll);
+    nameEl.addEventListener('blur', saveAll);
+  }
+  if (classEl) {
+    classEl.addEventListener('blur', saveAll);
+  }
+});
 
 /* ── Cookie helpers (cookies often survive Chromebook wipes) ── */
 function _rememberStudent(name, cls) {
@@ -4642,7 +4678,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <!-- Submission System -->
-<script src="submission.js?v=2.3.1"></script>
+<script src="submission.js?v=2.4.0"></script>
 <script>
 try {
   initSubmission({
