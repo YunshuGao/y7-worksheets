@@ -125,6 +125,41 @@ textarea.short{min-height:60px}
 .score-banner.silver{background:linear-gradient(135deg,#c0c0c0,#a8a8a8);color:#1e293b}
 .score-banner.gold{background:linear-gradient(135deg,#ffd700,#daa520);color:#1e293b}
 .score-banner.platinum{background:linear-gradient(135deg,#e5e4e2,#a78bfa);color:#1e293b}
+/* ── Submit area ──────────────────────────── */
+.submit-area{background:#0f172a;border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;text-align:center}
+.submit-area h2{color:#4ade80;margin-bottom:0.5rem}
+.submit-area p{color:#94a3b8;font-size:0.9rem;margin-bottom:1rem}
+.submit-btn{background:linear-gradient(135deg,#4ade80,#22c55e);color:#0f172a;border:none;padding:0.7rem 2rem;border-radius:10px;font-size:1.1rem;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(74,222,128,.3)}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(74,222,128,.4)}
+.submit-btn:active{transform:translateY(0)}
+.submit-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.submit-ok{color:#4ade80;font-weight:600;margin-top:0.5rem;font-size:0.9rem}
+/* ── Teacher mode ─────────────────────────── */
+.teacher-toggle{position:fixed;bottom:1rem;right:1rem;z-index:200;background:#1e293b;color:#94a3b8;border:1px solid #334155;border-radius:8px;padding:0.4rem 0.8rem;font-size:0.75rem;cursor:pointer;opacity:0.4;transition:opacity .2s}
+.teacher-toggle:hover{opacity:1;color:#f1f5f9;border-color:#4ade80}
+.teacher-panel{display:none;background:#fff;border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;box-shadow:0 2px 12px rgba(0,0,0,.15);border:2px solid #4ade80}
+.teacher-panel.active{display:block}
+.teacher-panel h2{color:#0f172a;margin-bottom:0.3rem}
+.teacher-panel .tp-desc{color:#64748b;font-size:0.85rem;margin-bottom:1rem}
+.tp-upload-zone{border:2px dashed #cbd5e1;border-radius:10px;padding:2rem;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:1rem}
+.tp-upload-zone:hover,.tp-upload-zone.drag-over{border-color:#4ade80;background:#f0fdf4}
+.tp-upload-zone input[type="file"]{display:none}
+.tp-student-list{max-height:300px;overflow-y:auto;margin-bottom:1rem}
+.tp-student-card{background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:8px;padding:0.8rem;margin-bottom:0.5rem;cursor:pointer;transition:all .2s}
+.tp-student-card:hover{border-color:#38bdf8;background:#eff6ff}
+.tp-student-card.expanded{border-color:#4ade80;background:#fff}
+.tp-student-card h4{font-size:0.95rem;color:#0f172a;margin-bottom:0.2rem}
+.tp-student-card .tp-meta{font-size:0.8rem;color:#64748b}
+.tp-detail{display:none;margin-top:0.8rem;padding-top:0.8rem;border-top:1px solid #e2e8f0}
+.tp-student-card.expanded .tp-detail{display:block}
+.tp-section{margin-bottom:0.8rem}
+.tp-section h5{font-size:0.85rem;color:#4338ca;margin-bottom:0.3rem}
+.tp-section .tp-answer{font-size:0.85rem;color:#1e293b;background:#f1f5f9;padding:0.4rem 0.6rem;border-radius:6px;white-space:pre-wrap}
+.tp-section .tp-score{font-size:0.8rem;font-weight:600;margin-top:0.2rem}
+.tp-score.good{color:#16a34a}
+.tp-score.ok{color:#d97706}
+.tp-score.needs-work{color:#dc2626}
+.tp-clear-btn{background:#ef4444;color:#fff;border:none;padding:0.4rem 1rem;border-radius:6px;font-size:0.8rem;cursor:pointer;margin-top:0.5rem}
 /* ── Footer ───────────────────────────────── */
 .footer{text-align:center;padding:2rem 1rem;color:#94a3b8;font-size:0.75rem}
 </style>
@@ -408,11 +443,37 @@ textarea.short{min-height:60px}
   </div>
 </section>
 
+<!-- ═══ SUBMIT TO TEACHER ════════════════════ -->
+<div class="submit-area" id="submitArea">
+  <h2>📤 Submit to Teacher</h2>
+  <p>Click the button below to download your work as a file. Upload it to Google Classroom.</p>
+  <button class="submit-btn" id="submitBtn" onclick="submitWork()">Download My Work</button>
+  <div id="submitStatus"></div>
+</div>
+
+<!-- ═══ TEACHER MODE PANEL ═══════════════════ -->
+<div class="teacher-panel" id="teacherPanel">
+  <h2>👩‍🏫 Teacher Review Mode</h2>
+  <p class="tp-desc">Load student JSON files to review their work. Drag and drop or click to upload — supports multiple files at once.</p>
+  <div class="tp-upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+    <div style="font-size:2rem;margin-bottom:0.5rem">📂</div>
+    <div style="font-weight:600;color:#0f172a">Drop student JSON files here</div>
+    <div style="font-size:0.85rem;color:#64748b;margin-top:0.3rem">or click to browse</div>
+    <input type="file" id="fileInput" accept=".json" multiple onchange="handleFiles(this.files)">
+  </div>
+  <div style="font-size:0.85rem;color:#64748b;margin-bottom:0.5rem">Loaded: <strong id="loadedCount">0</strong> students</div>
+  <div class="tp-student-list" id="studentList"></div>
+  <button class="tp-clear-btn" onclick="clearStudents()">Clear All</button>
+</div>
+
 <div class="footer">
   Review 1 — Year 7 Technology Mandatory — Engineering Technologies & Systems — Bridge It<br>
   © 2026 Arthur Phillip High School
 </div>
 </div><!-- /container -->
+
+<!-- Teacher mode toggle button (fixed bottom-right) -->
+<button class="teacher-toggle" id="teacherToggle" onclick="toggleTeacher()">🔑 Teacher</button>
 
 <!-- ═══ JAVASCRIPT ═══════════════════════════ -->
 <script>
@@ -663,6 +724,251 @@ function setTL(btn, color){
   tl.querySelectorAll('button').forEach(b=>b.classList.remove('selected'));
   btn.classList.add('selected');
   saveAll();
+}
+
+// ── Submit work as JSON ──────────────────────
+function submitWork(){
+  saveAll();
+  const name = (appData.studentName || 'Unknown').trim();
+  const cls = (appData.studentClass || 'NoClass').trim();
+  if(!name || name === 'Unknown'){
+    alert('Please type your name in the top bar before submitting.');
+    return;
+  }
+  if(!cls || cls === 'NoClass'){
+    alert('Please select your class in the top bar before submitting.');
+    return;
+  }
+  // Calculate auto-scores
+  const scores = calcScores();
+  const submission = {
+    ...appData,
+    _meta: {
+      worksheet: 'T1-Review1-DesignTheoryReview',
+      submittedAt: new Date().toISOString(),
+      scores: scores
+    }
+  };
+  const json = JSON.stringify(submission, null, 2);
+  const blob = new Blob([json], {type:'application/json'});
+  const safeName = name.replace(/[^a-zA-Z0-9 ]/g,'').replace(/\s+/g,'-');
+  const filename = `Review1-${cls}-${safeName}.json`;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
+  const status = document.getElementById('submitStatus');
+  status.innerHTML = `<div class="submit-ok">✅ Downloaded as <strong>${filename}</strong><br>Now upload this file to Google Classroom.</div>`;
+}
+
+function calcScores(){
+  // Elements naming
+  let elScore = 0;
+  for(let i=0;i<7;i++){
+    if((appData['el'+(i+1)+'n']||'').trim().toLowerCase() === ELEMENTS[i]) elScore++;
+  }
+  // Element matching
+  let elMatchScore = 0;
+  Object.entries(EL_MATCH_KEY).forEach(([id,ans])=>{
+    if(appData[id] === ans) elMatchScore++;
+  });
+  // Principles naming
+  let prScore = 0;
+  for(let i=0;i<7;i++){
+    if((appData['pr'+(i+1)+'n']||'').trim().toLowerCase() === PRINCIPLES[i]) prScore++;
+  }
+  // Sort challenge
+  let sortScore = 0;
+  if(appData.sortState){
+    SORT_TERMS.forEach(t=>{ if(appData.sortState[t.name] === t.type) sortScore++; });
+  }
+  // Design process
+  let dpScore = 0;
+  for(let i=0;i<4;i++){
+    if(appData['dp'+(i+1)] === DP_KEY[i]) dpScore++;
+  }
+  // Forces
+  let forceScore = 0;
+  Object.entries(FORCE_KEY).forEach(([id,ans])=>{
+    if(appData[id] === ans) forceScore++;
+  });
+  return {
+    elements: elScore + '/7',
+    elementMatch: elMatchScore + '/7',
+    principles: prScore + '/7',
+    sort: sortScore + '/14',
+    designProcess: dpScore + '/4',
+    forces: forceScore + '/5',
+    total: (elScore+elMatchScore+prScore+sortScore+dpScore+forceScore) + '/44'
+  };
+}
+
+// ── Teacher mode ─────────────────────────────
+let teacherMode = false;
+let loadedStudents = [];
+
+function toggleTeacher(){
+  teacherMode = !teacherMode;
+  const panel = document.getElementById('teacherPanel');
+  const toggle = document.getElementById('teacherToggle');
+  const submitArea = document.getElementById('submitArea');
+  if(teacherMode){
+    panel.classList.add('active');
+    toggle.textContent = '🔒 Exit Teacher Mode';
+    toggle.style.borderColor = '#ef4444';
+    toggle.style.color = '#ef4444';
+    toggle.style.opacity = '1';
+    submitArea.style.display = 'none';
+    panel.scrollIntoView({behavior:'smooth'});
+  } else {
+    panel.classList.remove('active');
+    toggle.textContent = '🔑 Teacher';
+    toggle.style.borderColor = '#334155';
+    toggle.style.color = '#94a3b8';
+    toggle.style.opacity = '0.4';
+    submitArea.style.display = '';
+  }
+}
+
+// Drag and drop
+const uploadZone = document.getElementById('uploadZone');
+if(uploadZone){
+  uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
+  uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
+  uploadZone.addEventListener('drop', e => {
+    e.preventDefault();
+    uploadZone.classList.remove('drag-over');
+    handleFiles(e.dataTransfer.files);
+  });
+}
+
+function handleFiles(files){
+  Array.from(files).forEach(file => {
+    if(!file.name.endsWith('.json')) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const data = JSON.parse(e.target.result);
+        data._filename = file.name;
+        // Avoid duplicates by name+class
+        const key = (data.studentName||'')+'|'+(data.studentClass||'');
+        const existing = loadedStudents.findIndex(s => (s.studentName||'')+'|'+(s.studentClass||'') === key);
+        if(existing >= 0) loadedStudents[existing] = data;
+        else loadedStudents.push(data);
+        renderStudentList();
+      } catch(err){ alert('Could not read ' + file.name + ': ' + err.message); }
+    };
+    reader.readAsText(file);
+  });
+}
+
+function renderStudentList(){
+  document.getElementById('loadedCount').textContent = loadedStudents.length;
+  const list = document.getElementById('studentList');
+  list.innerHTML = '';
+  // Sort by class then name
+  const sorted = [...loadedStudents].sort((a,b) => {
+    const c = (a.studentClass||'').localeCompare(b.studentClass||'');
+    return c !== 0 ? c : (a.studentName||'').localeCompare(b.studentName||'');
+  });
+  sorted.forEach((s, idx) => {
+    const scores = s._meta?.scores || {};
+    const total = scores.total || '—';
+    const sa = s.selfAssess || {};
+    const saStr = Object.values(sa).filter(v=>v).map(v => v==='green'?'🟢':v==='orange'?'🟠':'🔴').join(' ');
+
+    const card = document.createElement('div');
+    card.className = 'tp-student-card';
+    card.onclick = () => card.classList.toggle('expanded');
+    card.innerHTML = `
+      <h4>${esc(s.studentName||'Unknown')} <span style="font-weight:400;color:#64748b;font-size:0.85rem">${esc(s.studentClass||'')}</span></h4>
+      <div class="tp-meta">Score: <strong>${total}</strong> &nbsp;|&nbsp; Self-assess: ${saStr || '—'} &nbsp;|&nbsp; ${s._meta?.submittedAt ? new Date(s._meta.submittedAt).toLocaleString() : 'No timestamp'}</div>
+      <div class="tp-detail">
+        ${renderSection('Brain Dump', s.brainDump)}
+        ${renderScoreSection('Elements Named', scores.elements, s, 'el', ELEMENTS)}
+        ${renderScoreSection('Element Matching', scores.elementMatch)}
+        ${renderScoreSection('Principles Named', scores.principles, s, 'pr', PRINCIPLES)}
+        ${renderScoreSection('Sort Challenge', scores.sort)}
+        ${renderScoreSection('Design Process Order', scores.designProcess)}
+        ${renderScoreSection('Forces Matching', scores.forces)}
+        ${renderSection('Product Analysis — Chair', formatPA(s,'1'))}
+        ${renderSection('Product Analysis — Bottle', formatPA(s,'2'))}
+        ${renderSection('Product Analysis — Smartphone', formatPA(s,'3'))}
+        ${renderSection('Design Process Descriptions', formatDP(s))}
+        ${renderSection('Paper Boat Reflection', s.dpReflection)}
+        ${renderSection('Forces Reflection', s.forceReflect)}
+        ${renderSection('Exit: Elements from Memory', s.exitEl)}
+        ${renderSection('Exit: Principles from Memory', s.exitPr)}
+        ${renderSection('Confident Topic', s.exitConf)}
+        ${renderSection('Needs Revision', s.exitRevise)}
+        ${renderSA(sa)}
+      </div>
+    `;
+    list.appendChild(card);
+  });
+}
+
+function esc(s){ const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+
+function renderSection(title, content){
+  if(!content) return '';
+  return `<div class="tp-section"><h5>${title}</h5><div class="tp-answer">${esc(content)}</div></div>`;
+}
+
+function renderScoreSection(title, score, data, prefix, answers){
+  if(!score) return '';
+  const parts = score.split('/');
+  const num = parseInt(parts[0]), den = parseInt(parts[1]);
+  const pct = den > 0 ? num/den : 0;
+  const cls = pct >= 0.8 ? 'good' : pct >= 0.5 ? 'ok' : 'needs-work';
+  let detail = '';
+  if(data && prefix && answers){
+    const items = [];
+    for(let i=0;i<answers.length;i++){
+      const val = (data[prefix+(i+1)+'n']||'').trim().toLowerCase();
+      const correct = val === answers[i];
+      items.push(`<span style="color:${correct?'#16a34a':'#dc2626'}">${val||'(empty)'}</span>`);
+    }
+    detail = `<div style="font-size:0.8rem;margin-top:0.2rem">${items.join(', ')}</div>`;
+  }
+  return `<div class="tp-section"><h5>${title}</h5><div class="tp-score ${cls}">${score} (${Math.round(pct*100)}%)</div>${detail}</div>`;
+}
+
+function formatPA(s, n){
+  const a = s['pa'+n+'a'], f = s['pa'+n+'f'], p = s['pa'+n+'p'];
+  if(!a && !f && !p) return '';
+  return `Aesthetics: ${a||'(empty)'}\nFunction: ${f||'(empty)'}\nPurpose: ${p||'(empty)'}`;
+}
+
+function formatDP(s){
+  const parts = [];
+  if(s.dpDesc1) parts.push('Exploring: ' + s.dpDesc1);
+  if(s.dpDesc2) parts.push('Developing: ' + s.dpDesc2);
+  if(s.dpDesc3) parts.push('Producing: ' + s.dpDesc3);
+  if(s.dpDesc4) parts.push('Testing: ' + s.dpDesc4);
+  return parts.join('\n') || '';
+}
+
+function renderSA(sa){
+  if(!sa || !Object.values(sa).some(v=>v)) return '';
+  const labels = ['Elements','Principles','Product Analysis','Design Process','Forces'];
+  const keys = ['sa1','sa2','sa3','sa4','sa5'];
+  const rows = keys.map((k,i) => {
+    const v = sa[k];
+    const icon = v==='green'?'🟢':v==='orange'?'🟠':v==='red'?'🔴':'—';
+    return `${labels[i]}: ${icon}`;
+  }).join(' &nbsp;|&nbsp; ');
+  return `<div class="tp-section"><h5>Self-Assessment</h5><div style="font-size:0.85rem">${rows}</div></div>`;
+}
+
+function clearStudents(){
+  if(confirm('Clear all loaded students?')){
+    loadedStudents = [];
+    renderStudentList();
+  }
 }
 
 // ── Init ─────────────────────────────────────
