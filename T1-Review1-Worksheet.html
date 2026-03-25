@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Review 1 — Design Theory Review</title>
+<style>
+/* ── Reset & Base ─────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#f8fafc;color:#1e293b;line-height:1.6;padding-bottom:4rem}
+/* ── Print ────────────────────────────────── */
+@media print{
+  body{background:#fff;padding:0;font-size:11pt}
+  .topbar,.no-print,.submit-area{display:none!important}
+  .container{max-width:100%;padding:0 1cm}
+  section{break-inside:avoid;border:1px solid #ccc;box-shadow:none!important}
+  .check-btn,.show-answer-btn{display:none!important}
+  input,textarea,select{border:1px solid #999!important;background:#fff!important}
+}
+/* ── Topbar ───────────────────────────────── */
+.topbar{position:sticky;top:0;z-index:100;background:#0f172a;color:#f1f5f9;padding:0.5rem 1rem;display:flex;flex-wrap:wrap;align-items:center;gap:0.5rem;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.topbar label{font-size:0.8rem;color:#94a3b8}
+.topbar input,.topbar select{padding:0.35rem 0.6rem;border:1px solid #334155;border-radius:6px;background:#1e293b;color:#f1f5f9;font-size:0.9rem}
+.topbar input:focus,.topbar select:focus{outline:none;border-color:#4ade80}
+.topbar .title{font-weight:700;font-size:1rem;color:#4ade80;margin-right:auto}
+.save-indicator{font-size:0.75rem;color:#4ade80;opacity:0;transition:opacity .3s}
+.save-indicator.show{opacity:1}
+/* ── Container ────────────────────────────── */
+.container{max-width:900px;margin:0 auto;padding:1rem}
+/* ── Header ───────────────────────────────── */
+.header{background:linear-gradient(135deg,#0f172a,#1e293b);color:#f1f5f9;border-radius:12px;padding:1.5rem 2rem;margin-bottom:1.5rem;position:relative;overflow:hidden}
+.header::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#4ade80,#38bdf8,#a78bfa)}
+.header h1{font-size:1.6rem;color:#4ade80;margin-bottom:0.3rem}
+.header .subtitle{font-size:1rem;color:#94a3b8}
+.header .meta{display:flex;gap:1.5rem;margin-top:0.8rem;flex-wrap:wrap}
+.header .meta span{font-size:0.8rem;color:#64748b;background:#0f172a;padding:0.2rem 0.7rem;border-radius:20px}
+/* ── LI / SC ──────────────────────────────── */
+.li-sc{background:#eff6ff;border-left:4px solid #38bdf8;border-radius:8px;padding:1rem 1.2rem;margin-bottom:1.5rem}
+.li-sc h3{color:#0369a1;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.3rem}
+.li-sc p{font-size:0.95rem;margin-bottom:0.5rem}
+.li-sc ul{list-style:none;padding:0}
+.li-sc ul li{padding:0.2rem 0;font-size:0.9rem}
+.li-sc ul li::before{content:'✓ ';color:#059669;font-weight:700}
+/* ── Sections ─────────────────────────────── */
+section{background:#fff;border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+section h2{font-size:1.15rem;color:#0f172a;margin-bottom:0.2rem;display:flex;align-items:center;gap:0.5rem}
+section h2 .badge{font-size:0.7rem;padding:0.15rem 0.5rem;border-radius:20px;color:#fff;font-weight:600}
+section .section-desc{font-size:0.85rem;color:#64748b;margin-bottom:1rem}
+.section-number{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;background:#0f172a;color:#4ade80;border-radius:50%;font-size:0.8rem;font-weight:700;flex-shrink:0}
+/* ── Inputs ───────────────────────────────── */
+textarea,input[type="text"]{width:100%;padding:0.5rem 0.7rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:0.9rem;font-family:inherit;transition:border-color .2s;resize:vertical}
+textarea:focus,input[type="text"]:focus{outline:none;border-color:#38bdf8;box-shadow:0 0 0 3px rgba(56,189,248,.15)}
+textarea.tall{min-height:120px}
+textarea.short{min-height:60px}
+/* ── Tables ───────────────────────────────── */
+.review-table{width:100%;border-collapse:separate;border-spacing:0;border-radius:8px;overflow:hidden;margin:0.8rem 0}
+.review-table th{background:#0f172a;color:#4ade80;padding:0.5rem 0.8rem;text-align:left;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.04em}
+.review-table td{padding:0.5rem 0.8rem;border-bottom:1px solid #e2e8f0;font-size:0.9rem}
+.review-table tr:nth-child(even) td{background:#f8fafc}
+.review-table input[type="text"]{border:1px solid #cbd5e1;border-radius:4px;padding:0.3rem 0.5rem;font-size:0.85rem}
+/* ── Helper / Word bank ───────────────────── */
+.helper{background:#fefce8;border:1px dashed #facc15;border-radius:8px;padding:0.7rem 1rem;margin:0.8rem 0;font-size:0.85rem;color:#854d0e}
+.helper strong{color:#92400e}
+.word-bank{display:flex;flex-wrap:wrap;gap:0.4rem;margin:0.5rem 0}
+.word-bank span{background:#e0e7ff;color:#3730a3;padding:0.2rem 0.6rem;border-radius:20px;font-size:0.8rem;font-weight:500}
+/* ── Extension tag ────────────────────────── */
+.ext-tag{display:inline-block;background:#fb923c;color:#fff;font-size:0.7rem;padding:0.1rem 0.5rem;border-radius:20px;font-weight:600;vertical-align:middle}
+/* ── Sort Challenge ───────────────────────── */
+.sort-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin:0.8rem 0}
+.sort-item{padding:0.5rem 1rem;border-radius:8px;text-align:center;font-weight:600;font-size:0.9rem;cursor:pointer;transition:all .2s;border:2px solid #e2e8f0;background:#fff;user-select:none}
+.sort-item:hover{transform:scale(1.03)}
+.sort-item.element{background:#dcfce7;border-color:#4ade80;color:#166534}
+.sort-item.principle{background:#dbeafe;border-color:#38bdf8;color:#1e40af}
+.sort-item.wrong{background:#fee2e2;border-color:#ef4444;color:#991b1b;animation:shake .3s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.sort-headers{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.3rem}
+.sort-headers div{text-align:center;font-weight:700;font-size:0.85rem;padding:0.4rem;border-radius:8px}
+.sort-headers .el-header{background:#4ade80;color:#0f172a}
+.sort-headers .pr-header{background:#38bdf8;color:#0f172a}
+/* ── Matching ─────────────────────────────── */
+.match-row{display:flex;align-items:center;gap:0.5rem;margin:0.4rem 0;flex-wrap:wrap}
+.match-row .term{font-weight:600;min-width:120px}
+.match-row select{padding:0.3rem 0.5rem;border:1.5px solid #e2e8f0;border-radius:6px;font-size:0.85rem}
+/* ── Product cards ────────────────────────── */
+.product-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem;margin:0.8rem 0}
+.product-card{background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:10px;padding:1rem;transition:border-color .2s}
+.product-card:hover{border-color:#38bdf8}
+.product-card h4{color:#0f172a;margin-bottom:0.5rem;font-size:1rem}
+.product-card label{font-size:0.8rem;font-weight:600;color:#4338ca;display:block;margin-top:0.5rem}
+.product-card textarea{min-height:50px;font-size:0.85rem}
+/* ── Sequence ─────────────────────────────── */
+.sequence-slots{display:flex;flex-direction:column;gap:0.5rem;margin:0.8rem 0}
+.seq-slot{display:flex;align-items:center;gap:0.5rem}
+.seq-num{width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:#0f172a;color:#fbbf24;border-radius:50%;font-weight:700;font-size:0.9rem;flex-shrink:0}
+.seq-slot select{flex:1;padding:0.4rem 0.6rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:0.9rem}
+/* ── Forces ───────────────────────────────── */
+.force-card{display:flex;gap:1rem;align-items:flex-start;background:#f8fafc;border-radius:10px;padding:1rem;margin:0.5rem 0;border-left:4px solid #e2e8f0}
+.force-card.compression{border-left-color:#4ade80}
+.force-card.tension{border-left-color:#38bdf8}
+.force-card.gravity{border-left-color:#a78bfa}
+.force-card .force-icon{font-size:1.5rem;flex-shrink:0}
+.force-card .force-name{font-weight:700;font-size:1rem}
+.force-card .force-def{font-size:0.85rem;color:#64748b}
+/* ── Check / Buttons ──────────────────────── */
+.check-btn{background:#4ade80;color:#0f172a;border:none;padding:0.5rem 1.2rem;border-radius:8px;font-weight:700;font-size:0.85rem;cursor:pointer;transition:all .2s;margin-top:0.5rem}
+.check-btn:hover{background:#22c55e;transform:translateY(-1px)}
+.show-answer-btn{background:#a78bfa;color:#fff;border:none;padding:0.4rem 1rem;border-radius:8px;font-weight:600;font-size:0.8rem;cursor:pointer;margin-left:0.5rem}
+.show-answer-btn:hover{background:#8b5cf6}
+.feedback-box{margin-top:0.5rem;padding:0.5rem 0.8rem;border-radius:8px;font-size:0.85rem;font-weight:500}
+.feedback-box.correct{background:#dcfce7;color:#166534;border:1px solid #86efac}
+.feedback-box.incorrect{background:#fee2e2;color:#991b1b;border:1px solid #fca5a5}
+.feedback-box.partial{background:#fef3c7;color:#92400e;border:1px solid #fcd34d}
+/* ── Exit ticket ──────────────────────────── */
+.traffic-light{display:flex;gap:0.5rem;margin:0.3rem 0}
+.traffic-light button{width:36px;height:36px;border-radius:50%;border:2px solid #e2e8f0;cursor:pointer;font-size:0.9rem;transition:all .2s}
+.traffic-light button.selected{transform:scale(1.15);border-width:3px}
+.tl-green{background:#dcfce7}.tl-green.selected{border-color:#16a34a;background:#86efac}
+.tl-orange{background:#fef3c7}.tl-orange.selected{border-color:#d97706;background:#fcd34d}
+.tl-red{background:#fee2e2}.tl-red.selected{border-color:#dc2626;background:#fca5a5}
+.criteria-row{display:flex;align-items:center;justify-content:space-between;padding:0.4rem 0;border-bottom:1px solid #f1f5f9;gap:0.5rem;flex-wrap:wrap}
+.criteria-text{flex:1;font-size:0.9rem;min-width:200px}
+/* ── Score banner ─────────────────────────── */
+.score-banner{text-align:center;padding:0.8rem;border-radius:10px;margin:0.5rem 0;font-weight:700;font-size:1.1rem}
+.score-banner.bronze{background:linear-gradient(135deg,#cd7f32,#b87333);color:#fff}
+.score-banner.silver{background:linear-gradient(135deg,#c0c0c0,#a8a8a8);color:#1e293b}
+.score-banner.gold{background:linear-gradient(135deg,#ffd700,#daa520);color:#1e293b}
+.score-banner.platinum{background:linear-gradient(135deg,#e5e4e2,#a78bfa);color:#1e293b}
+/* ── Footer ───────────────────────────────── */
+.footer{text-align:center;padding:2rem 1rem;color:#94a3b8;font-size:0.75rem}
+</style>
+</head>
+<body>
+<!-- ═══ TOPBAR ═══════════════════════════════ -->
+<div class="topbar">
+  <span class="title">Review 1 — Design Theory</span>
+  <label>Name <input type="text" id="studentName" placeholder="Your name" onchange="saveAll()"></label>
+  <label>Class
+    <select id="studentClass" onchange="saveAll()">
+      <option value="">Class…</option>
+      <option value="7ECE">7ECE</option>
+      <option value="7ECI">7ECI</option>
+      <option value="7TECJ">7TECJ</option>
+    </select>
+  </label>
+  <label>Folio pp. <input type="text" id="folioPages" placeholder="e.g. 25-28" style="width:80px" onchange="saveAll()"></label>
+  <span class="save-indicator" id="saveInd">✓ Saved</span>
+</div>
+
+<div class="container">
+<!-- ═══ HEADER ═══════════════════════════════ -->
+<div class="header">
+  <h1>Design Theory Review</h1>
+  <div class="subtitle">Year 7 Technology Mandatory — Engineering Technologies & Systems — Bridge It</div>
+  <div class="meta">
+    <span>📅 25/03/2026</span>
+    <span>⏱ 75 min</span>
+    <span>📖 Review Lesson 1 of 2</span>
+    <span>🎯 TE4-1DP · TE4-2DP · TE4-3DP</span>
+  </div>
+</div>
+
+<!-- ═══ LEARNING INTENTION ═══════════════════ -->
+<div class="li-sc">
+  <h3>Learning Intention</h3>
+  <p>We are reviewing and consolidating our understanding of design elements, principles, the design process, and engineering structures.</p>
+  <h3 style="margin-top:0.5rem">Success Criteria</h3>
+  <ul>
+    <li>I can name and explain the 7 elements and 7 principles of design</li>
+    <li>I can analyse products using aesthetics, function, and purpose</li>
+    <li>I can sequence the 4 stages of the design process</li>
+    <li>I can identify forces (compression, tension, gravity) in structures</li>
+  </ul>
+</div>
+
+<!-- ═══ SECTION 1: BRAIN DUMP ════════════════ -->
+<section id="sec1">
+  <h2><span class="section-number">1</span> Brain Dump — Do Now <span class="badge" style="background:#94a3b8">5 min</span></h2>
+  <p class="section-desc">Write down <strong>everything</strong> you remember about design from this term. Words, ideas, activities, forces — anything counts!</p>
+  <textarea id="brainDump" class="tall" placeholder="Start typing everything you remember about design..." oninput="saveAll();countBrainDump()"></textarea>
+  <div style="margin-top:0.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+    <span style="font-size:0.85rem;color:#64748b">Items listed: <strong id="bdCount">0</strong></span>
+    <div id="bdBadge" class="score-banner" style="display:none;padding:0.3rem 0.8rem;font-size:0.85rem"></div>
+  </div>
+  <div class="helper">
+    <strong>💡 Support:</strong> Think about: key vocabulary · names of elements · steps in a process · things you built · forces you learned about
+  </div>
+</section>
+
+<!-- ═══ SECTION 2: ELEMENTS OF DESIGN ════════ -->
+<section id="sec2">
+  <h2><span class="section-number">2</span> The 7 Elements of Design <span class="badge" style="background:#4ade80;color:#0f172a">Round 1</span></h2>
+  <p class="section-desc">Elements are the <strong>building blocks</strong> of every design.</p>
+  <div class="helper">
+    <strong>🧠 Mnemonic:</strong> <em>Please Let Seven Funny Cats Tickle Turtles</em> = Point, Line, Shape, Form, Colour, Tone, Texture
+  </div>
+
+  <h3 style="font-size:0.9rem;margin:0.8rem 0 0.3rem">Fill in each element and its definition:</h3>
+  <table class="review-table">
+    <thead><tr><th>#</th><th>Hint</th><th>Element Name</th><th>Definition</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>P____</td><td><input type="text" id="el1n" oninput="saveAll()" placeholder="Element name"></td><td><input type="text" id="el1d" oninput="saveAll()" placeholder="Definition"></td></tr>
+      <tr><td>2</td><td>L____</td><td><input type="text" id="el2n" oninput="saveAll()" placeholder="Element name"></td><td><input type="text" id="el2d" oninput="saveAll()" placeholder="Definition"></td></tr>
+      <tr><td>3</td><td>S____</td><td><input type="text" id="el3n" oninput="saveAll()" placeholder="Element name"></td><td><input type="text" id="el3d" oninput="saveAll()" placeholder="Definition"></td></tr>
+      <tr><td>4</td><td>F____</td><td><input type="text" id="el4n" oninput="saveAll()" placeholder="Element name"></td><td><input type="text" id="el4d" oninput="saveAll()" placeholder="Definition"></td></tr>
+      <tr><td>5</td><td>C____</td><td><input type="text" id="el5n" oninput="saveAll()" placeholder="Element name"></td><td><input type="text" id="el5d" oninput="saveAll()" placeholder="Definition"></td></tr>
+      <tr><td>6</td><td>T____</td><td><input type="text" id="el6n" oninput="saveAll()" placeholder="Element name"></td><td><input type="text" id="el6d" oninput="saveAll()" placeholder="Definition"></td></tr>
+      <tr><td>7</td><td>T____</td><td><input type="text" id="el7n" oninput="saveAll()" placeholder="Element name"></td><td><input type="text" id="el7d" oninput="saveAll()" placeholder="Definition"></td></tr>
+    </tbody>
+  </table>
+  <button class="check-btn" onclick="checkElements()">Check My Answers</button>
+  <div id="elFeedback" class="feedback-box" style="display:none"></div>
+
+  <h3 style="font-size:0.9rem;margin:1rem 0 0.3rem">Match each element to a real-world example:</h3>
+  <div class="match-row"><span class="term">Point</span> →
+    <select id="elMatch1" onchange="saveAll()"><option value="">Choose…</option><option value="a">Bricks in a wall</option><option value="b">A full stop on a page</option><option value="c">A basketball</option><option value="d">Sandpaper surface</option><option value="e">Shadow on a face</option><option value="f">The edge of a ruler</option><option value="g">A red traffic light</option></select></div>
+  <div class="match-row"><span class="term">Line</span> →
+    <select id="elMatch2" onchange="saveAll()"><option value="">Choose…</option><option value="a">Bricks in a wall</option><option value="b">A full stop on a page</option><option value="c">A basketball</option><option value="d">Sandpaper surface</option><option value="e">Shadow on a face</option><option value="f">The edge of a ruler</option><option value="g">A red traffic light</option></select></div>
+  <div class="match-row"><span class="term">Shape</span> →
+    <select id="elMatch3" onchange="saveAll()"><option value="">Choose…</option><option value="a">Bricks in a wall</option><option value="b">A full stop on a page</option><option value="c">A basketball</option><option value="d">Sandpaper surface</option><option value="e">Shadow on a face</option><option value="f">The edge of a ruler</option><option value="g">A red traffic light</option></select></div>
+  <div class="match-row"><span class="term">Form</span> →
+    <select id="elMatch4" onchange="saveAll()"><option value="">Choose…</option><option value="a">Bricks in a wall</option><option value="b">A full stop on a page</option><option value="c">A basketball</option><option value="d">Sandpaper surface</option><option value="e">Shadow on a face</option><option value="f">The edge of a ruler</option><option value="g">A red traffic light</option></select></div>
+  <div class="match-row"><span class="term">Colour</span> →
+    <select id="elMatch5" onchange="saveAll()"><option value="">Choose…</option><option value="a">Bricks in a wall</option><option value="b">A full stop on a page</option><option value="c">A basketball</option><option value="d">Sandpaper surface</option><option value="e">Shadow on a face</option><option value="f">The edge of a ruler</option><option value="g">A red traffic light</option></select></div>
+  <div class="match-row"><span class="term">Tone</span> →
+    <select id="elMatch6" onchange="saveAll()"><option value="">Choose…</option><option value="a">Bricks in a wall</option><option value="b">A full stop on a page</option><option value="c">A basketball</option><option value="d">Sandpaper surface</option><option value="e">Shadow on a face</option><option value="f">The edge of a ruler</option><option value="g">A red traffic light</option></select></div>
+  <div class="match-row"><span class="term">Texture</span> →
+    <select id="elMatch7" onchange="saveAll()"><option value="">Choose…</option><option value="a">Bricks in a wall</option><option value="b">A full stop on a page</option><option value="c">A basketball</option><option value="d">Sandpaper surface</option><option value="e">Shadow on a face</option><option value="f">The edge of a ruler</option><option value="g">A red traffic light</option></select></div>
+  <button class="check-btn" onclick="checkElMatch()" style="margin-top:0.5rem">Check Matching</button>
+  <div id="elMatchFeedback" class="feedback-box" style="display:none"></div>
+</section>
+
+<!-- ═══ SECTION 3: PRINCIPLES OF DESIGN ══════ -->
+<section id="sec3">
+  <h2><span class="section-number">3</span> The 7 Principles of Design <span class="badge" style="background:#38bdf8;color:#0f172a">Round 1</span></h2>
+  <p class="section-desc">Principles are the <strong>rules</strong> for arranging elements in a design.</p>
+  <div class="helper">
+    <strong>🧠 Mnemonic:</strong> <em>Big Cats Eat Many Purple Parrots Usually</em> = Balance, Contrast, Emphasis, Movement, Pattern, Proportion, Unity
+  </div>
+
+  <h3 style="font-size:0.9rem;margin:0.8rem 0 0.3rem">Fill in each principle and its definition:</h3>
+  <table class="review-table">
+    <thead><tr><th>#</th><th>Hint</th><th>Principle Name</th><th>Definition</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>B______</td><td><input type="text" id="pr1n" oninput="saveAll()" placeholder="Principle name"></td><td><input type="text" id="pr1d" oninput="saveAll()" placeholder="Definition"></td></tr>
+      <tr><td>2</td><td>C_______</td><td><input type="text" id="pr2n" oninput="saveAll()" placeholder="Principle name"></td><td><input type="text" id="pr2d" oninput="saveAll()" placeholder="Definition"></td></tr>
+      <tr><td>3</td><td>E_______</td><td><input type="text" id="pr3n" oninput="saveAll()" placeholder="Principle name"></td><td><input type="text" id="pr3d" oninput="saveAll()" placeholder="Definition"></td></tr>
+      <tr><td>4</td><td>M_______</td><td><input type="text" id="pr4n" oninput="saveAll()" placeholder="Principle name"></td><td><input type="text" id="pr4d" oninput="saveAll()" placeholder="Definition"></td></tr>
+      <tr><td>5</td><td>P______</td><td><input type="text" id="pr5n" oninput="saveAll()" placeholder="Principle name"></td><td><input type="text" id="pr5d" oninput="saveAll()" placeholder="Definition"></td></tr>
+      <tr><td>6</td><td>P__________</td><td><input type="text" id="pr6n" oninput="saveAll()" placeholder="Principle name"></td><td><input type="text" id="pr6d" oninput="saveAll()" placeholder="Definition"></td></tr>
+      <tr><td>7</td><td>U____</td><td><input type="text" id="pr7n" oninput="saveAll()" placeholder="Principle name"></td><td><input type="text" id="pr7d" oninput="saveAll()" placeholder="Definition"></td></tr>
+    </tbody>
+  </table>
+  <button class="check-btn" onclick="checkPrinciples()">Check My Answers</button>
+  <div id="prFeedback" class="feedback-box" style="display:none"></div>
+</section>
+
+<!-- ═══ SECTION 4: SORT CHALLENGE ════════════ -->
+<section id="sec4">
+  <h2><span class="section-number">4</span> Element or Principle? — Sort Challenge <span class="badge" style="background:#a78bfa">Round 2</span></h2>
+  <p class="section-desc">Click each term to sort it. Click once = <span style="color:#166534;font-weight:600">Element</span>, click twice = <span style="color:#1e40af;font-weight:600">Principle</span>, click again = reset.</p>
+
+  <div class="sort-headers">
+    <div class="el-header">🟢 ELEMENT (Building Block)</div>
+    <div class="pr-header">🔵 PRINCIPLE (Rule)</div>
+  </div>
+  <div class="sort-grid" id="sortGrid"></div>
+  <button class="check-btn" onclick="checkSort()">Check My Sort</button>
+  <div id="sortFeedback" class="feedback-box" style="display:none"></div>
+  <div style="margin-top:0.3rem;font-size:0.8rem;color:#64748b">Score: <strong id="sortScore">—</strong> / 14</div>
+</section>
+
+<!-- ═══ SECTION 5: PRODUCT ANALYSIS ══════════ -->
+<section id="sec5">
+  <h2><span class="section-number">5</span> Product Analysis <span class="badge" style="background:#a78bfa">Round 3</span></h2>
+  <p class="section-desc">Analyse each product using <strong>Aesthetics</strong> (how it looks), <strong>Function</strong> (what it does), and <strong>Purpose</strong> (why it was designed).</p>
+  <div class="helper"><strong>💡 Support:</strong> Aesthetics = appearance, colours, shape, style · Function = what the product does, features · Purpose = the problem it solves, who it's for</div>
+
+  <div class="product-cards">
+    <div class="product-card">
+      <h4>🪑 Product 1: School Chair</h4>
+      <label>Aesthetics (how it looks):</label>
+      <textarea id="pa1a" oninput="saveAll()" placeholder="Describe the appearance..."></textarea>
+      <label>Function (what it does):</label>
+      <textarea id="pa1f" oninput="saveAll()" placeholder="What is its function?"></textarea>
+      <label>Purpose (why it was designed):</label>
+      <textarea id="pa1p" oninput="saveAll()" placeholder="Why does it exist?"></textarea>
+    </div>
+    <div class="product-card">
+      <h4>🥤 Product 2: Sports Drink Bottle</h4>
+      <label>Aesthetics (how it looks):</label>
+      <textarea id="pa2a" oninput="saveAll()" placeholder="Describe the appearance..."></textarea>
+      <label>Function (what it does):</label>
+      <textarea id="pa2f" oninput="saveAll()" placeholder="What is its function?"></textarea>
+      <label>Purpose (why it was designed):</label>
+      <textarea id="pa2p" oninput="saveAll()" placeholder="Why does it exist?"></textarea>
+    </div>
+    <div class="product-card">
+      <h4>📱 Product 3: Smartphone</h4>
+      <label>Aesthetics (how it looks):</label>
+      <textarea id="pa3a" oninput="saveAll()" placeholder="Describe the appearance..."></textarea>
+      <label>Function (what it does):</label>
+      <textarea id="pa3f" oninput="saveAll()" placeholder="What is its function?"></textarea>
+      <label>Purpose (why it was designed):</label>
+      <textarea id="pa3p" oninput="saveAll()" placeholder="Why does it exist?"></textarea>
+    </div>
+  </div>
+  <p style="margin-top:0.5rem"><span class="ext-tag">EXTENSION</span> Compare all three products — what do they have in common? How are their designs different?</p>
+  <textarea id="paExt" oninput="saveAll()" class="short" placeholder="Extension: Compare the three products..."></textarea>
+</section>
+
+<!-- ═══ SECTION 6: DESIGN PROCESS ════════════ -->
+<section id="sec6">
+  <h2><span class="section-number">6</span> The Design Process <span class="badge" style="background:#fbbf24;color:#0f172a">Round 4</span></h2>
+  <p class="section-desc">Put the 4 stages of the design process in the <strong>correct order</strong>.</p>
+
+  <div class="sequence-slots">
+    <div class="seq-slot"><span class="seq-num">1</span>
+      <select id="dp1" onchange="saveAll()"><option value="">Choose stage…</option><option value="exploring">Exploring</option><option value="developing">Developing Ideas</option><option value="producing">Producing</option><option value="testing">Testing & Evaluating</option></select></div>
+    <div class="seq-slot"><span class="seq-num">2</span>
+      <select id="dp2" onchange="saveAll()"><option value="">Choose stage…</option><option value="exploring">Exploring</option><option value="developing">Developing Ideas</option><option value="producing">Producing</option><option value="testing">Testing & Evaluating</option></select></div>
+    <div class="seq-slot"><span class="seq-num">3</span>
+      <select id="dp3" onchange="saveAll()"><option value="">Choose stage…</option><option value="exploring">Exploring</option><option value="developing">Developing Ideas</option><option value="producing">Producing</option><option value="testing">Testing & Evaluating</option></select></div>
+    <div class="seq-slot"><span class="seq-num">4</span>
+      <select id="dp4" onchange="saveAll()"><option value="">Choose stage…</option><option value="exploring">Exploring</option><option value="developing">Developing Ideas</option><option value="producing">Producing</option><option value="testing">Testing & Evaluating</option></select></div>
+  </div>
+  <button class="check-btn" onclick="checkDP()">Check Order</button>
+  <div id="dpFeedback" class="feedback-box" style="display:none"></div>
+
+  <h3 style="font-size:0.9rem;margin:1rem 0 0.3rem">What do you do in each stage?</h3>
+  <div style="display:grid;gap:0.5rem">
+    <div><strong style="color:#4ade80">Exploring:</strong><textarea id="dpDesc1" oninput="saveAll()" class="short" placeholder="What happens in the Exploring stage?"></textarea></div>
+    <div><strong style="color:#a78bfa">Developing Ideas:</strong><textarea id="dpDesc2" oninput="saveAll()" class="short" placeholder="What happens in the Developing Ideas stage?"></textarea></div>
+    <div><strong style="color:#38bdf8">Producing:</strong><textarea id="dpDesc3" oninput="saveAll()" class="short" placeholder="What happens in the Producing stage?"></textarea></div>
+    <div><strong style="color:#f472b6">Testing & Evaluating:</strong><textarea id="dpDesc4" oninput="saveAll()" class="short" placeholder="What happens in the Testing & Evaluating stage?"></textarea></div>
+  </div>
+
+  <h3 style="font-size:0.9rem;margin:1rem 0 0.3rem">Reflection: Paper Boat Project</h3>
+  <p style="font-size:0.85rem;color:#64748b;margin-bottom:0.3rem">Which stages of the design process did you use when building Paper Boat No. 2? Give an example for each stage.</p>
+  <textarea id="dpReflection" oninput="saveAll()" class="tall" placeholder="In the Paper Boat project, I used the Exploring stage when I..."></textarea>
+
+  <p style="margin-top:0.5rem"><span class="ext-tag">EXTENSION</span> Why is the design process a <strong>cycle</strong> and not a straight line? What happens after Testing & Evaluating?</p>
+  <textarea id="dpExt" oninput="saveAll()" class="short" placeholder="The design process is a cycle because..."></textarea>
+</section>
+
+<!-- ═══ SECTION 7: ENGINEERING FORCES ════════ -->
+<section id="sec7">
+  <h2><span class="section-number">7</span> Engineering Forces <span class="badge" style="background:#f472b6">Round 5</span></h2>
+  <p class="section-desc">Every structure must deal with these three forces.</p>
+
+  <div class="force-card compression">
+    <span class="force-icon">⬇️⬆️</span>
+    <div><span class="force-name" style="color:#166534">COMPRESSION</span><div class="force-def">Pushing / squashing force — pushes things together</div>
+    <div style="font-size:0.8rem;color:#64748b;margin-top:0.2rem">Example: Pillars of a building being pushed down by weight above</div></div>
+  </div>
+  <div class="force-card tension">
+    <span class="force-icon">↔️</span>
+    <div><span class="force-name" style="color:#1e40af">TENSION</span><div class="force-def">Pulling / stretching force — pulls things apart</div>
+    <div style="font-size:0.8rem;color:#64748b;margin-top:0.2rem">Example: Cables on a suspension bridge being pulled tight</div></div>
+  </div>
+  <div class="force-card gravity">
+    <span class="force-icon">⬇️</span>
+    <div><span class="force-name" style="color:#5b21b6">GRAVITY</span><div class="force-def">Downward force pulling everything towards Earth</div>
+    <div style="font-size:0.8rem;color:#64748b;margin-top:0.2rem">Example: A ball falling, weight pushing down on a bridge deck</div></div>
+  </div>
+
+  <h3 style="font-size:0.9rem;margin:1rem 0 0.3rem">Match the force to the scenario:</h3>
+  <div class="match-row"><span class="term" style="min-width:240px">A rubber band being stretched</span> →
+    <select id="fm1" onchange="saveAll()"><option value="">Choose…</option><option value="compression">Compression</option><option value="tension">Tension</option><option value="gravity">Gravity</option></select></div>
+  <div class="match-row"><span class="term" style="min-width:240px">An apple falling from a tree</span> →
+    <select id="fm2" onchange="saveAll()"><option value="">Choose…</option><option value="compression">Compression</option><option value="tension">Tension</option><option value="gravity">Gravity</option></select></div>
+  <div class="match-row"><span class="term" style="min-width:240px">Legs of a chair supporting you</span> →
+    <select id="fm3" onchange="saveAll()"><option value="">Choose…</option><option value="compression">Compression</option><option value="tension">Tension</option><option value="gravity">Gravity</option></select></div>
+  <div class="match-row"><span class="term" style="min-width:240px">A fishing line holding a fish</span> →
+    <select id="fm4" onchange="saveAll()"><option value="">Choose…</option><option value="compression">Compression</option><option value="tension">Tension</option><option value="gravity">Gravity</option></select></div>
+  <div class="match-row"><span class="term" style="min-width:240px">You standing on a cardboard box</span> →
+    <select id="fm5" onchange="saveAll()"><option value="">Choose…</option><option value="compression">Compression</option><option value="tension">Tension</option><option value="gravity">Gravity</option></select></div>
+  <button class="check-btn" onclick="checkForces()">Check Forces</button>
+  <div id="forceFeedback" class="feedback-box" style="display:none"></div>
+
+  <h3 style="font-size:0.9rem;margin:1rem 0 0.3rem">Think about your Paper Tower:</h3>
+  <p style="font-size:0.85rem;color:#64748b;margin-bottom:0.3rem">Which forces were acting on your paper tower? Where did each force act?</p>
+  <textarea id="forceReflect" oninput="saveAll()" class="short" placeholder="In my paper tower, compression acted on... tension acted on... gravity pulled..."></textarea>
+</section>
+
+<!-- ═══ SECTION 8: EXIT TICKET ═══════════════ -->
+<section id="sec8">
+  <h2><span class="section-number">8</span> Exit Ticket & Self-Assessment <span class="badge" style="background:#94a3b8">5 min</span></h2>
+
+  <h3 style="font-size:0.9rem;margin:0.5rem 0 0.3rem">Write ALL 7 elements of design from memory (no peeking!):</h3>
+  <input type="text" id="exitEl" oninput="saveAll()" placeholder="1. ___, 2. ___, 3. ___, 4. ___, 5. ___, 6. ___, 7. ___">
+
+  <h3 style="font-size:0.9rem;margin:0.8rem 0 0.3rem">Write ALL 7 principles of design from memory (no peeking!):</h3>
+  <input type="text" id="exitPr" oninput="saveAll()" placeholder="1. ___, 2. ___, 3. ___, 4. ___, 5. ___, 6. ___, 7. ___">
+
+  <h3 style="font-size:0.9rem;margin:0.8rem 0 0.3rem">One topic I feel CONFIDENT about:</h3>
+  <input type="text" id="exitConf" oninput="saveAll()" placeholder="I feel confident about...">
+
+  <h3 style="font-size:0.9rem;margin:0.8rem 0 0.3rem">One topic I need to REVISE more:</h3>
+  <input type="text" id="exitRevise" oninput="saveAll()" placeholder="I need to revise...">
+
+  <h3 style="font-size:0.9rem;margin:1rem 0 0.5rem">Self-Assessment — Traffic Light</h3>
+  <div id="selfAssess">
+    <div class="criteria-row"><span class="criteria-text">I can name the 7 elements of design</span><div class="traffic-light" data-key="sa1"><button class="tl-green" onclick="setTL(this,'green')">🟢</button><button class="tl-orange" onclick="setTL(this,'orange')">🟠</button><button class="tl-red" onclick="setTL(this,'red')">🔴</button></div></div>
+    <div class="criteria-row"><span class="criteria-text">I can name the 7 principles of design</span><div class="traffic-light" data-key="sa2"><button class="tl-green" onclick="setTL(this,'green')">🟢</button><button class="tl-orange" onclick="setTL(this,'orange')">🟠</button><button class="tl-red" onclick="setTL(this,'red')">🔴</button></div></div>
+    <div class="criteria-row"><span class="criteria-text">I can analyse products (Aesthetics/Function/Purpose)</span><div class="traffic-light" data-key="sa3"><button class="tl-green" onclick="setTL(this,'green')">🟢</button><button class="tl-orange" onclick="setTL(this,'orange')">🟠</button><button class="tl-red" onclick="setTL(this,'red')">🔴</button></div></div>
+    <div class="criteria-row"><span class="criteria-text">I can sequence the 4 stages of the design process</span><div class="traffic-light" data-key="sa4"><button class="tl-green" onclick="setTL(this,'green')">🟢</button><button class="tl-orange" onclick="setTL(this,'orange')">🟠</button><button class="tl-red" onclick="setTL(this,'red')">🔴</button></div></div>
+    <div class="criteria-row"><span class="criteria-text">I can identify forces in structures</span><div class="traffic-light" data-key="sa5"><button class="tl-green" onclick="setTL(this,'green')">🟢</button><button class="tl-orange" onclick="setTL(this,'orange')">🟠</button><button class="tl-red" onclick="setTL(this,'red')">🔴</button></div></div>
+  </div>
+</section>
+
+<div class="footer">
+  Review 1 — Year 7 Technology Mandatory — Engineering Technologies & Systems — Bridge It<br>
+  © 2026 Arthur Phillip High School
+</div>
+</div><!-- /container -->
+
+<!-- ═══ JAVASCRIPT ═══════════════════════════ -->
+<script>
+const STORAGE_KEY = 'y7-review1-data';
+
+// ── Sort challenge data ──────────────────────
+const SORT_TERMS = [
+  {name:'Texture',type:'element'},{name:'Balance',type:'principle'},
+  {name:'Colour',type:'element'},{name:'Unity',type:'principle'},
+  {name:'Line',type:'element'},{name:'Emphasis',type:'principle'},
+  {name:'Form',type:'element'},{name:'Pattern',type:'principle'},
+  {name:'Shape',type:'element'},{name:'Contrast',type:'principle'},
+  {name:'Tone',type:'element'},{name:'Proportion',type:'principle'},
+  {name:'Point',type:'element'},{name:'Movement',type:'principle'}
+];
+let sortState = {}; // {name: 'element'|'principle'|''}
+
+// ── Answer keys ──────────────────────────────
+const ELEMENTS = ['point','line','shape','form','colour','tone','texture'];
+const PRINCIPLES = ['balance','contrast','emphasis','movement','pattern','proportion','unity'];
+const EL_MATCH_KEY = {elMatch1:'b',elMatch2:'f',elMatch3:'a',elMatch4:'c',elMatch5:'g',elMatch6:'e',elMatch7:'d'};
+const FORCE_KEY = {fm1:'tension',fm2:'gravity',fm3:'compression',fm4:'tension',fm5:'compression'};
+const DP_KEY = ['exploring','developing','producing','testing'];
+
+// ── appData ──────────────────────────────────
+let appData = {};
+
+function gv(id){ const el=document.getElementById(id); return el?(el.value||''):'' }
+function sv(id,v){ const el=document.getElementById(id); if(el) el.value=v||'' }
+
+function saveAll(){
+  appData.studentName = gv('studentName');
+  appData.studentClass = gv('studentClass');
+  appData.folioPages = gv('folioPages');
+  appData.brainDump = gv('brainDump');
+  // Elements
+  for(let i=1;i<=7;i++){ appData['el'+i+'n']=gv('el'+i+'n'); appData['el'+i+'d']=gv('el'+i+'d'); }
+  for(let i=1;i<=7;i++) appData['elMatch'+i]=gv('elMatch'+i);
+  // Principles
+  for(let i=1;i<=7;i++){ appData['pr'+i+'n']=gv('pr'+i+'n'); appData['pr'+i+'d']=gv('pr'+i+'d'); }
+  // Sort
+  appData.sortState = {...sortState};
+  // Product analysis
+  for(let i=1;i<=3;i++){ appData['pa'+i+'a']=gv('pa'+i+'a'); appData['pa'+i+'f']=gv('pa'+i+'f'); appData['pa'+i+'p']=gv('pa'+i+'p'); }
+  appData.paExt = gv('paExt');
+  // Design process
+  for(let i=1;i<=4;i++){ appData['dp'+i]=gv('dp'+i); appData['dpDesc'+i]=gv('dpDesc'+i); }
+  appData.dpReflection = gv('dpReflection');
+  appData.dpExt = gv('dpExt');
+  // Forces
+  for(let i=1;i<=5;i++) appData['fm'+i]=gv('fm'+i);
+  appData.forceReflect = gv('forceReflect');
+  // Exit ticket
+  appData.exitEl = gv('exitEl');
+  appData.exitPr = gv('exitPr');
+  appData.exitConf = gv('exitConf');
+  appData.exitRevise = gv('exitRevise');
+  // Self-assessment
+  appData.selfAssess = {};
+  document.querySelectorAll('.traffic-light').forEach(tl=>{
+    const key = tl.dataset.key;
+    const sel = tl.querySelector('.selected');
+    appData.selfAssess[key] = sel ? (sel.classList.contains('tl-green')?'green':sel.classList.contains('tl-orange')?'orange':'red') : '';
+  });
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+  flashSave();
+}
+
+function loadAll(){
+  try{ const s=JSON.parse(localStorage.getItem(STORAGE_KEY)); if(s) appData=s; }catch(e){}
+  sv('studentName', appData.studentName);
+  sv('studentClass', appData.studentClass);
+  sv('folioPages', appData.folioPages);
+  sv('brainDump', appData.brainDump);
+  for(let i=1;i<=7;i++){ sv('el'+i+'n',appData['el'+i+'n']); sv('el'+i+'d',appData['el'+i+'d']); }
+  for(let i=1;i<=7;i++) sv('elMatch'+i,appData['elMatch'+i]);
+  for(let i=1;i<=7;i++){ sv('pr'+i+'n',appData['pr'+i+'n']); sv('pr'+i+'d',appData['pr'+i+'d']); }
+  if(appData.sortState) sortState={...appData.sortState};
+  for(let i=1;i<=3;i++){ sv('pa'+i+'a',appData['pa'+i+'a']); sv('pa'+i+'f',appData['pa'+i+'f']); sv('pa'+i+'p',appData['pa'+i+'p']); }
+  sv('paExt', appData.paExt);
+  for(let i=1;i<=4;i++){ sv('dp'+i,appData['dp'+i]); sv('dpDesc'+i,appData['dpDesc'+i]); }
+  sv('dpReflection', appData.dpReflection);
+  sv('dpExt', appData.dpExt);
+  for(let i=1;i<=5;i++) sv('fm'+i,appData['fm'+i]);
+  sv('forceReflect', appData.forceReflect);
+  sv('exitEl', appData.exitEl);
+  sv('exitPr', appData.exitPr);
+  sv('exitConf', appData.exitConf);
+  sv('exitRevise', appData.exitRevise);
+  // Self-assess
+  if(appData.selfAssess){
+    Object.entries(appData.selfAssess).forEach(([key,val])=>{
+      if(!val) return;
+      const tl = document.querySelector(`.traffic-light[data-key="${key}"]`);
+      if(tl){
+        const btn = tl.querySelector('.tl-'+val);
+        if(btn) btn.classList.add('selected');
+      }
+    });
+  }
+  buildSortGrid();
+  countBrainDump();
+}
+
+function flashSave(){
+  const ind=document.getElementById('saveInd');
+  ind.classList.add('show');
+  clearTimeout(ind._t);
+  ind._t=setTimeout(()=>ind.classList.remove('show'),1500);
+}
+
+// ── Brain dump counter ───────────────────────
+function countBrainDump(){
+  const text = gv('brainDump').trim();
+  if(!text){ document.getElementById('bdCount').textContent='0'; document.getElementById('bdBadge').style.display='none'; return; }
+  // Count items: split by newlines, commas, bullet points, or numbered items
+  const items = text.split(/[\n,;•·\-]|(?:\d+\.\s)/).map(s=>s.trim()).filter(s=>s.length>1);
+  const count = items.length;
+  document.getElementById('bdCount').textContent = count;
+  const badge = document.getElementById('bdBadge');
+  if(count >= 20){ badge.textContent='💎 PLATINUM!'; badge.className='score-banner platinum'; badge.style.display='inline-block'; }
+  else if(count >= 15){ badge.textContent='🥇 GOLD!'; badge.className='score-banner gold'; badge.style.display='inline-block'; }
+  else if(count >= 10){ badge.textContent='🥈 SILVER'; badge.className='score-banner silver'; badge.style.display='inline-block'; }
+  else if(count >= 5){ badge.textContent='🥉 BRONZE'; badge.className='score-banner bronze'; badge.style.display='inline-block'; }
+  else{ badge.style.display='none'; }
+}
+
+// ── Check elements ───────────────────────────
+function checkElements(){
+  let correct = 0;
+  for(let i=0;i<7;i++){
+    const nameInput = document.getElementById('el'+(i+1)+'n');
+    const val = nameInput.value.trim().toLowerCase();
+    if(val === ELEMENTS[i]){ correct++; nameInput.style.borderColor='#4ade80'; }
+    else{ nameInput.style.borderColor = val?'#ef4444':'#e2e8f0'; }
+  }
+  const fb = document.getElementById('elFeedback');
+  fb.style.display='block';
+  if(correct===7){ fb.className='feedback-box correct'; fb.textContent=`Perfect! ${correct}/7 element names correct! 🎉`; }
+  else if(correct>=5){ fb.className='feedback-box partial'; fb.textContent=`${correct}/7 correct — almost there! Check the ones in red.`; }
+  else{ fb.className='feedback-box incorrect'; fb.textContent=`${correct}/7 correct. Use the mnemonic: Please Let Seven Funny Cats Tickle Turtles`; }
+}
+
+// ── Check element matching ───────────────────
+function checkElMatch(){
+  let correct=0;
+  Object.entries(EL_MATCH_KEY).forEach(([id,answer])=>{
+    const sel = document.getElementById(id);
+    if(sel.value===answer){ correct++; sel.style.borderColor='#4ade80'; }
+    else{ sel.style.borderColor=sel.value?'#ef4444':'#e2e8f0'; }
+  });
+  const fb=document.getElementById('elMatchFeedback');
+  fb.style.display='block';
+  if(correct===7){ fb.className='feedback-box correct'; fb.textContent=`All 7 matched correctly! 🎉`; }
+  else{ fb.className='feedback-box partial'; fb.textContent=`${correct}/7 correct. Try again with the ones in red.`; }
+}
+
+// ── Check principles ─────────────────────────
+function checkPrinciples(){
+  let correct = 0;
+  for(let i=0;i<7;i++){
+    const nameInput = document.getElementById('pr'+(i+1)+'n');
+    const val = nameInput.value.trim().toLowerCase();
+    if(val === PRINCIPLES[i]){ correct++; nameInput.style.borderColor='#4ade80'; }
+    else{ nameInput.style.borderColor = val?'#ef4444':'#e2e8f0'; }
+  }
+  const fb = document.getElementById('prFeedback');
+  fb.style.display='block';
+  if(correct===7){ fb.className='feedback-box correct'; fb.textContent=`Perfect! ${correct}/7 principle names correct! 🎉`; }
+  else if(correct>=5){ fb.className='feedback-box partial'; fb.textContent=`${correct}/7 correct — almost there! Check the ones in red.`; }
+  else{ fb.className='feedback-box incorrect'; fb.textContent=`${correct}/7 correct. Use the mnemonic: Big Cats Eat Many Purple Parrots Usually`; }
+}
+
+// ── Sort challenge ───────────────────────────
+function buildSortGrid(){
+  const grid = document.getElementById('sortGrid');
+  grid.innerHTML = '';
+  SORT_TERMS.forEach(term=>{
+    const div = document.createElement('div');
+    div.className = 'sort-item';
+    div.textContent = term.name;
+    div.dataset.name = term.name;
+    // Apply saved state
+    const state = sortState[term.name] || '';
+    if(state === 'element') div.classList.add('element');
+    else if(state === 'principle') div.classList.add('principle');
+    div.addEventListener('click', ()=> toggleSort(div, term.name));
+    grid.appendChild(div);
+  });
+}
+
+function toggleSort(div, name){
+  const current = sortState[name] || '';
+  if(current === ''){ sortState[name]='element'; div.className='sort-item element'; }
+  else if(current === 'element'){ sortState[name]='principle'; div.className='sort-item principle'; }
+  else{ sortState[name]=''; div.className='sort-item'; }
+  saveAll();
+}
+
+function checkSort(){
+  let correct = 0;
+  SORT_TERMS.forEach(term=>{
+    const div = document.querySelector(`.sort-item[data-name="${term.name}"]`);
+    const guess = sortState[term.name] || '';
+    if(guess === term.type){ correct++; }
+    else if(guess){ div.classList.add('wrong'); setTimeout(()=>div.classList.remove('wrong'),500); }
+  });
+  document.getElementById('sortScore').textContent = correct;
+  const fb=document.getElementById('sortFeedback');
+  fb.style.display='block';
+  if(correct===14){ fb.className='feedback-box correct'; fb.textContent='All 14 sorted correctly! Design Master! 💎'; }
+  else if(correct>=12){ fb.className='feedback-box partial'; fb.textContent=`${correct}/14 correct. Almost perfect! The wrong ones flashed red — try again.`; }
+  else{ fb.className='feedback-box incorrect'; fb.textContent=`${correct}/14 correct. Remember: Elements = building blocks, Principles = rules.`; }
+}
+
+// ── Check design process ─────────────────────
+function checkDP(){
+  let correct=0;
+  for(let i=0;i<4;i++){
+    const sel = document.getElementById('dp'+(i+1));
+    if(sel.value===DP_KEY[i]){ correct++; sel.style.borderColor='#4ade80'; }
+    else{ sel.style.borderColor=sel.value?'#ef4444':'#e2e8f0'; }
+  }
+  const fb=document.getElementById('dpFeedback');
+  fb.style.display='block';
+  if(correct===4){ fb.className='feedback-box correct'; fb.textContent='Correct order! Exploring → Developing Ideas → Producing → Testing & Evaluating 🎉'; }
+  else{ fb.className='feedback-box incorrect'; fb.textContent=`${correct}/4 in the right position. Remember: Explore first, then Develop, Produce, and Test.`; }
+}
+
+// ── Check forces ─────────────────────────────
+function checkForces(){
+  let correct=0;
+  Object.entries(FORCE_KEY).forEach(([id,answer])=>{
+    const sel = document.getElementById(id);
+    if(sel.value===answer){ correct++; sel.style.borderColor='#4ade80'; }
+    else{ sel.style.borderColor=sel.value?'#ef4444':'#e2e8f0'; }
+  });
+  const fb=document.getElementById('forceFeedback');
+  fb.style.display='block';
+  if(correct===5){ fb.className='feedback-box correct'; fb.textContent='All 5 correct! You know your forces! 💪'; }
+  else{ fb.className='feedback-box partial'; fb.textContent=`${correct}/5 correct. Remember: Compression = push/squash, Tension = pull/stretch, Gravity = pulls down.`; }
+}
+
+// ── Traffic light ────────────────────────────
+function setTL(btn, color){
+  const tl = btn.parentElement;
+  tl.querySelectorAll('button').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  saveAll();
+}
+
+// ── Init ─────────────────────────────────────
+document.addEventListener('DOMContentLoaded', loadAll);
+</script>
+</body>
+</html>
