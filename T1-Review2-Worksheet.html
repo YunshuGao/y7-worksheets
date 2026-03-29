@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Review 2 — Technical Drawing Review</title>
+<style>
+/* ── Reset & Base ─────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#f8fafc;color:#1e293b;line-height:1.6;padding-bottom:4rem}
+@media print{
+  body{background:#fff;padding:0;font-size:11pt}
+  .topbar,.no-print,.submit-area,.teacher-toggle{display:none!important}
+  .container{max-width:100%;padding:0 1cm}
+  section{break-inside:avoid;border:1px solid #ccc;box-shadow:none!important}
+  .check-btn{display:none!important}
+  input,textarea,select{border:1px solid #999!important;background:#fff!important}
+}
+/* ── Topbar ───────────────────────────────── */
+.topbar{position:sticky;top:0;z-index:100;background:#0f172a;color:#f1f5f9;padding:0.5rem 1rem;display:flex;flex-wrap:wrap;align-items:center;gap:0.5rem;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.topbar label{font-size:0.8rem;color:#94a3b8}
+.topbar input,.topbar select{padding:0.35rem 0.6rem;border:1px solid #334155;border-radius:6px;background:#1e293b;color:#f1f5f9;font-size:0.9rem}
+.topbar input:focus,.topbar select:focus{outline:none;border-color:#fb923c}
+.topbar .title{font-weight:700;font-size:1rem;color:#fb923c;margin-right:auto}
+.save-indicator{font-size:0.75rem;color:#fb923c;opacity:0;transition:opacity .3s}
+.save-indicator.show{opacity:1}
+/* ── Container ────────────────────────────── */
+.container{max-width:900px;margin:0 auto;padding:1rem}
+/* ── Header ───────────────────────────────── */
+.header{background:linear-gradient(135deg,#0f172a,#1e293b);color:#f1f5f9;border-radius:12px;padding:1.5rem 2rem;margin-bottom:1.5rem;position:relative;overflow:hidden}
+.header::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#fb923c,#38bdf8,#a78bfa)}
+.header h1{font-size:1.6rem;color:#fb923c;margin-bottom:0.3rem}
+.header .subtitle{font-size:1rem;color:#94a3b8}
+.header .meta{display:flex;gap:1.5rem;margin-top:0.8rem;flex-wrap:wrap}
+.header .meta span{font-size:0.8rem;color:#64748b;background:#0f172a;padding:0.2rem 0.7rem;border-radius:20px}
+/* ── LI / SC ──────────────────────────────── */
+.li-sc{background:#fff7ed;border-left:4px solid #fb923c;border-radius:8px;padding:1rem 1.2rem;margin-bottom:1.5rem}
+.li-sc h3{color:#c2410c;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.3rem}
+.li-sc p{font-size:0.95rem;margin-bottom:0.5rem}
+.li-sc ul{list-style:none;padding:0}.li-sc ul li{padding:0.2rem 0;font-size:0.9rem}.li-sc ul li::before{content:'✓ ';color:#059669;font-weight:700}
+/* ── Sections ─────────────────────────────── */
+section{background:#fff;border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+section h2{font-size:1.15rem;color:#0f172a;margin-bottom:0.2rem;display:flex;align-items:center;gap:0.5rem}
+section h2 .badge{font-size:0.7rem;padding:0.15rem 0.5rem;border-radius:20px;color:#fff;font-weight:600}
+.section-number{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;background:#0f172a;color:#fb923c;border-radius:50%;font-size:0.8rem;font-weight:700;flex-shrink:0}
+/* ── Inputs ───────────────────────────────── */
+textarea,input[type="text"]{width:100%;padding:0.5rem 0.7rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:0.9rem;font-family:inherit;transition:border-color .2s;resize:vertical}
+textarea:focus,input[type="text"]:focus{outline:none;border-color:#38bdf8;box-shadow:0 0 0 3px rgba(56,189,248,.15)}
+textarea.tall{min-height:120px}
+textarea.short{min-height:60px}
+/* ── Tables ───────────────────────────────── */
+.review-table{width:100%;border-collapse:separate;border-spacing:0;border-radius:8px;overflow:hidden;margin:0.8rem 0}
+.review-table th{background:#0f172a;color:#fb923c;padding:0.5rem 0.8rem;text-align:left;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.04em}
+.review-table td{padding:0.5rem 0.8rem;border-bottom:1px solid #e2e8f0;font-size:0.9rem}
+.review-table tr:nth-child(even) td{background:#f8fafc}
+.review-table input[type="text"]{border:1px solid #cbd5e1;border-radius:4px;padding:0.3rem 0.5rem;font-size:0.85rem}
+/* ── Helper ───────────────────────────────── */
+.helper{background:#fefce8;border:1px dashed #facc15;border-radius:8px;padding:0.7rem 1rem;margin:0.8rem 0;font-size:0.85rem;color:#854d0e}
+.helper strong{color:#92400e}
+/* ── Extension tag ────────────────────────── */
+.ext-tag{display:inline-block;background:#fb923c;color:#fff;font-size:0.7rem;padding:0.1rem 0.5rem;border-radius:20px;font-weight:600;vertical-align:middle}
+/* ── Sort Challenge ───────────────────────── */
+.sort-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.5rem;margin:0.8rem 0}
+.sort-item{padding:0.5rem 0.8rem;border-radius:8px;text-align:center;font-weight:600;font-size:0.85rem;cursor:pointer;transition:all .2s;border:2px solid #e2e8f0;background:#fff;user-select:none}
+.sort-item:hover{transform:scale(1.03)}
+.sort-item.catA{background:#dcfce7;border-color:#4ade80;color:#166534}
+.sort-item.catB{background:#dbeafe;border-color:#38bdf8;color:#1e40af}
+.sort-item.catC{background:#fef3c7;border-color:#fbbf24;color:#92400e}
+.sort-item.wrong{background:#fee2e2;border-color:#ef4444;animation:shake .3s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.sort-headers{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.5rem;margin-bottom:0.3rem}
+.sort-headers div{text-align:center;font-weight:700;font-size:0.75rem;padding:0.4rem;border-radius:8px;color:#fff}
+/* ── Matching ─────────────────────────────── */
+.match-row{display:flex;align-items:center;gap:0.5rem;margin:0.4rem 0;flex-wrap:wrap}
+.match-row .term{font-weight:600;min-width:200px;font-size:0.9rem}
+.match-row select{padding:0.3rem 0.5rem;border:1.5px solid #e2e8f0;border-radius:6px;font-size:0.85rem;flex:1;max-width:300px}
+/* ── Check / Buttons ──────────────────────── */
+.check-btn{background:#fb923c;color:#0f172a;border:none;padding:0.5rem 1.2rem;border-radius:8px;font-weight:700;font-size:0.85rem;cursor:pointer;transition:all .2s;margin-top:0.5rem}
+.check-btn:hover{background:#f97316;transform:translateY(-1px)}
+.feedback-box{margin-top:0.5rem;padding:0.5rem 0.8rem;border-radius:8px;font-size:0.85rem;font-weight:500;display:none}
+.feedback-box.correct{background:#dcfce7;color:#166534;border:1px solid #86efac}
+.feedback-box.incorrect{background:#fee2e2;color:#991b1b;border:1px solid #fca5a5}
+.feedback-box.partial{background:#fef3c7;color:#92400e;border:1px solid #fcd34d}
+/* ── Scale calc ───────────────────────────── */
+.calc-row{display:flex;gap:0.5rem;align-items:center;margin:0.5rem 0;flex-wrap:wrap}
+.calc-row .q{font-size:0.9rem;min-width:250px;flex:1}
+.calc-row input{width:100px;text-align:center}
+.calc-row .unit{font-size:0.85rem;color:#64748b}
+/* ── Exit ticket ──────────────────────────── */
+.traffic-light{display:flex;gap:0.5rem;margin:0.3rem 0}
+.traffic-light button{width:36px;height:36px;border-radius:50%;border:2px solid #e2e8f0;cursor:pointer;font-size:0.9rem;transition:all .2s}
+.traffic-light button.selected{transform:scale(1.15);border-width:3px}
+.tl-green{background:#dcfce7}.tl-green.selected{border-color:#16a34a;background:#86efac}
+.tl-orange{background:#fef3c7}.tl-orange.selected{border-color:#d97706;background:#fcd34d}
+.tl-red{background:#fee2e2}.tl-red.selected{border-color:#dc2626;background:#fca5a5}
+.criteria-row{display:flex;align-items:center;justify-content:space-between;padding:0.4rem 0;border-bottom:1px solid #f1f5f9;gap:0.5rem;flex-wrap:wrap}
+.criteria-text{flex:1;font-size:0.9rem;min-width:200px}
+/* ── Score banner ─────────────────────────── */
+.score-banner{text-align:center;padding:0.8rem;border-radius:10px;margin:0.5rem 0;font-weight:700;font-size:1.1rem}
+.score-banner.bronze{background:linear-gradient(135deg,#cd7f32,#b87333);color:#fff}
+.score-banner.silver{background:linear-gradient(135deg,#c0c0c0,#a8a8a8);color:#1e293b}
+.score-banner.gold{background:linear-gradient(135deg,#ffd700,#daa520);color:#1e293b}
+.score-banner.platinum{background:linear-gradient(135deg,#e5e4e2,#a78bfa);color:#1e293b}
+/* ── Desc grid ────────────────────────────── */
+.desc-grid{display:grid;gap:0.8rem;margin:0.8rem 0}
+.desc-item label{display:block;font-weight:700;font-size:0.85rem;color:#c2410c;margin-bottom:0.3rem}
+/* ── Submit area ──────────────────────────── */
+.submit-area{background:#0f172a;border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;text-align:center}
+.submit-area h2{color:#fb923c;margin-bottom:0.5rem}
+.submit-area p{color:#94a3b8;font-size:0.9rem;margin-bottom:1rem}
+.submit-btn{background:linear-gradient(135deg,#fb923c,#f97316);color:#0f172a;border:none;padding:0.7rem 2rem;border-radius:10px;font-size:1.1rem;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(251,146,60,.3)}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(251,146,60,.4)}
+.submit-btn:active{transform:translateY(0)}
+.submit-ok{color:#fb923c;font-weight:600;margin-top:0.5rem;font-size:0.9rem}
+/* ── Teacher mode ─────────────────────────── */
+.teacher-toggle{position:fixed;bottom:1rem;right:1rem;z-index:200;background:#1e293b;color:#94a3b8;border:1px solid #334155;border-radius:8px;padding:0.4rem 0.8rem;font-size:0.75rem;cursor:pointer;opacity:0.4;transition:opacity .2s}
+.teacher-toggle:hover{opacity:1;color:#f1f5f9;border-color:#fb923c}
+.teacher-panel{display:none;background:#fff;border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;box-shadow:0 2px 12px rgba(0,0,0,.15);border:2px solid #fb923c}
+.teacher-panel.active{display:block}
+.teacher-panel h2{color:#0f172a;margin-bottom:0.3rem}
+.teacher-panel .tp-desc{color:#64748b;font-size:0.85rem;margin-bottom:1rem}
+.tp-upload-zone{border:2px dashed #cbd5e1;border-radius:10px;padding:2rem;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:1rem}
+.tp-upload-zone:hover,.tp-upload-zone.drag-over{border-color:#fb923c;background:#fff7ed}
+.tp-upload-zone input[type="file"]{display:none}
+.tp-student-list{max-height:300px;overflow-y:auto;margin-bottom:1rem}
+.tp-student-card{background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:8px;padding:0.8rem;margin-bottom:0.5rem;cursor:pointer;transition:all .2s}
+.tp-student-card:hover{border-color:#38bdf8;background:#eff6ff}
+.tp-student-card.expanded{border-color:#fb923c;background:#fff}
+.tp-student-card h4{font-size:0.95rem;color:#0f172a;margin-bottom:0.2rem}
+.tp-student-card .tp-meta{font-size:0.8rem;color:#64748b}
+.tp-detail{display:none;margin-top:0.8rem;padding-top:0.8rem;border-top:1px solid #e2e8f0}
+.tp-student-card.expanded .tp-detail{display:block}
+.tp-section{margin-bottom:0.8rem}
+.tp-section h5{font-size:0.85rem;color:#c2410c;margin-bottom:0.3rem}
+.tp-section .tp-answer{font-size:0.85rem;color:#1e293b;background:#f1f5f9;padding:0.4rem 0.6rem;border-radius:6px;white-space:pre-wrap}
+.tp-section .tp-score{font-size:0.8rem;font-weight:600;margin-top:0.2rem}
+.tp-score.good{color:#16a34a}.tp-score.ok{color:#d97706}.tp-score.needs-work{color:#dc2626}
+.tp-clear-btn{background:#ef4444;color:#fff;border:none;padding:0.4rem 1rem;border-radius:6px;font-size:0.8rem;cursor:pointer;margin-top:0.5rem}
+/* ── Footer ───────────────────────────────── */
+.footer{text-align:center;padding:2rem 1rem;color:#94a3b8;font-size:0.75rem}
+</style>
+</head>
+<body>
+<!-- ═══ TOPBAR ═══════════════════════════════ -->
+<div class="topbar">
+  <span class="title">Review 2 — Technical Drawing</span>
+  <label>Name <input type="text" id="studentName" placeholder="Your name" onchange="saveAll()"></label>
+  <label>Class
+    <select id="studentClass" onchange="saveAll()">
+      <option value="">Class…</option>
+      <option value="7ECE">7ECE</option>
+      <option value="7ECI">7ECI</option>
+      <option value="7TECJ">7TECJ</option>
+    </select>
+  </label>
+  <label>Folio pp. <input type="text" id="folioPages" placeholder="e.g. 48-64" style="width:80px" onchange="saveAll()"></label>
+  <span class="save-indicator" id="saveInd">✓ Saved</span>
+</div>
+
+<div class="container">
+<!-- ═══ HEADER ═══════════════════════════════ -->
+<div class="header">
+  <h1>Technical Drawing Review</h1>
+  <div class="subtitle">Year 7 Technology Mandatory — Engineering Technologies & Systems — Bridge It</div>
+  <div class="meta">
+    <span>📅 27/03/2026</span>
+    <span>⏱ 75 min</span>
+    <span>📖 Review Lesson 2 of 2</span>
+    <span>🎯 TE4-1DP · TE4-2DP · TE4-10TS</span>
+  </div>
+</div>
+
+<!-- ═══ LEARNING INTENTION ═══════════════════ -->
+<div class="li-sc">
+  <h3>Learning Intention</h3>
+  <p>We are reviewing and consolidating our understanding of technical lettering, scale, isometric drawing, and orthogonal (multi-view) drawing.</p>
+  <h3>Success Criteria</h3>
+  <ul>
+    <li>I can recall the basics of technical lettering</li>
+    <li>I can calculate scale conversions (model ↔ real) — this is the big one!</li>
+    <li>I can recall the basics of isometric drawing</li>
+    <li>I can identify front, side, and top views in orthogonal drawing</li>
+    <li>I can sort vocabulary into the correct drawing type</li>
+  </ul>
+</div>
+
+<!-- ═══ 1. BRAIN DUMP ═══════════════════════ -->
+<section>
+  <h2><span class="section-number">1</span> Brain Dump — Do Now <span class="badge" style="background:#fb923c">5 min</span></h2>
+  <p>Write down <strong>everything</strong> you remember about technical drawing from Lessons 11–13. Rules, vocabulary, methods — anything counts!</p>
+  <textarea id="brainDump" class="tall" placeholder="Start typing everything you remember about technical lettering, scale, isometric drawing, and orthogonal drawing..." oninput="countBrainDump();saveAll()"></textarea>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:0.3rem">
+    <div><span style="font-size:0.85rem;color:#64748b">Items listed: </span><strong id="bdCount">0</strong></div>
+    <div id="bdBadge"></div>
+  </div>
+  <div class="helper"><strong>💡 Support:</strong> Think about: lettering rules · what scale means · the 30/120 rule · Y method · Box method · front/side/top views · hidden lines · first angle projection</div>
+</section>
+
+<!-- ═══ 2. TECHNICAL LETTERING (LIGHT) ═════ -->
+<section>
+  <h2><span class="section-number">2</span> Technical Lettering — Quick Recap <span class="badge" style="background:#38bdf8">Round 1</span></h2>
+  <p>On engineering drawings, we use a special style of writing called <strong>technical lettering</strong>.</p>
+
+  <h3>Name 2 rules of technical lettering:</h3>
+  <div class="desc-grid">
+    <div class="desc-item"><label>Rule 1:</label><input type="text" id="lr1" placeholder="e.g. Always use..." onchange="saveAll()"></div>
+    <div class="desc-item"><label>Rule 2:</label><input type="text" id="lr2" placeholder="e.g. Keep letters..." onchange="saveAll()"></div>
+  </div>
+  <div class="helper"><strong>💡 Support:</strong> Think about: UPPERCASE vs lowercase · letter height · spacing · straight vs cursive</div>
+</section>
+
+<!-- ═══ 3. SCALE CALCULATIONS ══════════════ -->
+<section>
+  <h2><span class="section-number">3</span> Scale Calculations <span class="badge" style="background:#a78bfa">Round 2</span></h2>
+  <p>Remember: <strong>Model → Real: multiply</strong> | <strong>Real → Model: divide</strong> | Always convert metres to centimetres first!</p>
+
+  <div class="helper"><strong>🧠 Formulas:</strong> Real size = Model × Scale factor &nbsp;|&nbsp; Model size = Real ÷ Scale factor &nbsp;|&nbsp; 1 m = 100 cm</div>
+
+  <div class="calc-row"><span class="q">1. A table is 1.5 m long. At <strong>1:10</strong> scale, how long is the model?</span><input type="text" id="sc1" placeholder="?" onchange="saveAll()"><span class="unit">cm</span></div>
+  <div class="calc-row"><span class="q">2. A model window is 4 cm wide at <strong>1:20</strong> scale. How wide is the real window?</span><input type="text" id="sc2" placeholder="?" onchange="saveAll()"><span class="unit">cm</span></div>
+  <div class="calc-row"><span class="q">3. A bridge is 50 m long. At <strong>1:100</strong> scale, how long is the drawing?</span><input type="text" id="sc3" placeholder="?" onchange="saveAll()"><span class="unit">cm</span></div>
+  <div class="calc-row"><span class="q">4. A model car is 12 cm long at <strong>1:25</strong> scale. How long is the real car?</span><input type="text" id="sc4" placeholder="?" onchange="saveAll()"><span class="unit">cm</span></div>
+  <div class="calc-row"><span class="q">5. A classroom is 8 m wide. At <strong>1:50</strong> scale, how wide is the drawing?</span><input type="text" id="sc5" placeholder="?" onchange="saveAll()"><span class="unit">cm</span></div>
+  <button class="check-btn" onclick="checkScale()">Check My Answers</button>
+  <div class="feedback-box" id="scFeedback"></div>
+
+  <div class="helper" style="margin-top:0.8rem"><strong>💡 Support — Steps:</strong> 1. Convert m → cm &nbsp; 2. Am I finding model (divide) or real (multiply)? &nbsp; 3. Calculate &nbsp; 4. Does my answer make sense?</div>
+
+  <h3 style="margin-top:1.2rem">Harder Scale Questions:</h3>
+  <div class="calc-row"><span class="q">6. A door is 2 m tall. At <strong>1:20</strong> scale, how tall is the model?</span><input type="text" id="sc6" placeholder="?" onchange="saveAll()"><span class="unit">cm</span></div>
+  <div class="calc-row"><span class="q">7. A model building is 25 cm tall at <strong>1:50</strong> scale. How tall is the real building?</span><input type="text" id="sc7" placeholder="?" onchange="saveAll()"><span class="unit">m</span></div>
+  <div class="calc-row"><span class="q">8. A pool is 25 m long. At <strong>1:200</strong> scale, how long is the drawing?</span><input type="text" id="sc8" placeholder="?" onchange="saveAll()"><span class="unit">cm</span></div>
+  <button class="check-btn" onclick="checkScale2()">Check Questions 6–8</button>
+  <div class="feedback-box" id="sc2Feedback"></div>
+
+  <h3 style="margin-top:1.2rem">Explain in your own words:</h3>
+  <div class="desc-grid">
+    <div class="desc-item"><label>What does the scale 1:10 mean?</label><textarea id="scExplain1" class="short" placeholder="1:10 means..." onchange="saveAll()"></textarea></div>
+    <div class="desc-item"><label>Why do engineers use scale drawings? Give an example.</label><textarea id="scExplain2" class="short" placeholder="Engineers use scale because..." onchange="saveAll()"></textarea></div>
+  </div>
+
+  <p style="margin-top:1rem"><span class="ext-tag">EXTENSION</span> A phone is 15 cm long. At <strong>2:1</strong> scale (enlarging), how long is the drawing? What does 2:1 mean?</p>
+  <div class="calc-row"><span class="q">Extension answer:</span><input type="text" id="scExt" placeholder="?" onchange="saveAll()"><span class="unit">cm</span></div>
+  <textarea id="scExtExplain" class="short" placeholder="2:1 means..." onchange="saveAll()" style="margin-top:0.3rem"></textarea>
+</section>
+
+<!-- ═══ 4. ISOMETRIC DRAWING (LIGHT) ══════ -->
+<section>
+  <h2><span class="section-number">4</span> Isometric Drawing — Quick Recap <span class="badge" style="background:#22c55e">Round 3</span></h2>
+  <p>Isometric drawing lets us show <strong>3D objects</strong> on a flat page. It uses the <strong>30/120 rule</strong>.</p>
+
+  <h3>Answer these questions about isometric drawing:</h3>
+  <div class="desc-grid">
+    <div class="desc-item"><label>What does "isometric" mean?</label><input type="text" id="iso1" placeholder="Isometric means..." onchange="saveAll()"></div>
+    <div class="desc-item"><label>What angle do you draw the horizontal lines at?</label><input type="text" id="iso2" placeholder="The angle is..." onchange="saveAll()"></div>
+    <div class="desc-item"><label>Name ONE method for starting an isometric drawing:</label><input type="text" id="iso3" placeholder="e.g. Y method or..." onchange="saveAll()"></div>
+  </div>
+
+  <h3 style="margin-top:1rem">Match each term:</h3>
+  <div class="match-row"><span class="term">Y Method</span> → <select id="im1" onchange="saveAll()"><option value="">Choose…</option><option>Draw V, H, W lines then complete with parallels</option><option>Draw a full bounding box then carve out the shape</option><option>Adding light, mid-tone, and shadow to a drawing</option></select></div>
+  <div class="match-row"><span class="term">Box Method</span> → <select id="im2" onchange="saveAll()"><option value="">Choose…</option><option>Draw V, H, W lines then complete with parallels</option><option>Draw a full bounding box then carve out the shape</option><option>Adding light, mid-tone, and shadow to a drawing</option></select></div>
+  <div class="match-row"><span class="term">Rendering</span> → <select id="im3" onchange="saveAll()"><option value="">Choose…</option><option>Draw V, H, W lines then complete with parallels</option><option>Draw a full bounding box then carve out the shape</option><option>Adding light, mid-tone, and shadow to a drawing</option></select></div>
+  <button class="check-btn" onclick="checkIsoMatch()">Check Matching</button>
+  <div class="feedback-box" id="imFeedback"></div>
+</section>
+
+<!-- ═══ 5. ORTHOGONAL DRAWING ═════════════ -->
+<section>
+  <h2><span class="section-number">5</span> Orthogonal (Multi-View) Drawing <span class="badge" style="background:#fb923c">Round 4</span></h2>
+  <p>Orthogonal drawing shows an object from <strong>3 separate views</strong> at right angles.</p>
+
+  <h3>First Angle Projection Layout:</h3>
+  <p style="font-size:0.9rem;margin-bottom:0.5rem">Fill in which view goes where:</p>
+  <table class="review-table">
+    <tr><th>Position</th><th>View Name</th></tr>
+    <tr><td>Top-left (main view)</td><td><select id="ov1" onchange="saveAll()"><option value="">Choose…</option><option>Front View</option><option>Side View</option><option>Top View (Plan)</option></select></td></tr>
+    <tr><td>To the RIGHT of the main view</td><td><select id="ov2" onchange="saveAll()"><option value="">Choose…</option><option>Front View</option><option>Side View</option><option>Top View (Plan)</option></select></td></tr>
+    <tr><td>BELOW the main view</td><td><select id="ov3" onchange="saveAll()"><option value="">Choose…</option><option>Front View</option><option>Side View</option><option>Top View (Plan)</option></select></td></tr>
+  </table>
+  <button class="check-btn" onclick="checkOrtho()">Check Layout</button>
+  <div class="feedback-box" id="ovFeedback"></div>
+  <div class="helper"><strong>🧠 Mnemonic:</strong> "Plan goes down under — just like Australia!"</div>
+
+  <h3 style="margin-top:1rem">Match each term to its meaning:</h3>
+  <div class="match-row"><span class="term">Hidden detail lines</span> → <select id="om1" onchange="saveAll()"><option value="">Choose…</option><option>Drawn as dashed lines for edges you can't see</option><option>The view looking directly from above</option><option>Features must line up between views</option><option>Another name for orthogonal drawing</option></select></div>
+  <div class="match-row"><span class="term">Plan view</span> → <select id="om2" onchange="saveAll()"><option value="">Choose…</option><option>Drawn as dashed lines for edges you can't see</option><option>The view looking directly from above</option><option>Features must line up between views</option><option>Another name for orthogonal drawing</option></select></div>
+  <div class="match-row"><span class="term">Alignment</span> → <select id="om3" onchange="saveAll()"><option value="">Choose…</option><option>Drawn as dashed lines for edges you can't see</option><option>The view looking directly from above</option><option>Features must line up between views</option><option>Another name for orthogonal drawing</option></select></div>
+  <div class="match-row"><span class="term">Orthographic</span> → <select id="om4" onchange="saveAll()"><option value="">Choose…</option><option>Drawn as dashed lines for edges you can't see</option><option>The view looking directly from above</option><option>Features must line up between views</option><option>Another name for orthogonal drawing</option></select></div>
+  <button class="check-btn" onclick="checkOrthoMatch()">Check Matching</button>
+  <div class="feedback-box" id="omFeedback"></div>
+</section>
+
+<!-- ═══ 6. SORT CHALLENGE ═════════════════ -->
+<section>
+  <h2><span class="section-number">6</span> Vocabulary Sort — Which Drawing Type? <span class="badge" style="background:#a78bfa">Round 5</span></h2>
+  <p>Click each term to sort it into the correct drawing type. Click once = 🟢 Lettering/Scale, twice = 🔵 Isometric, three times = 🟡 Orthogonal, again = reset.</p>
+  <div class="sort-headers">
+    <div style="background:#4ade80">🟢 LETTERING / SCALE</div>
+    <div style="background:#38bdf8">🔵 ISOMETRIC</div>
+    <div style="background:#fbbf24">🟡 ORTHOGONAL</div>
+  </div>
+  <div class="sort-grid" id="vocabGrid"></div>
+  <button class="check-btn" onclick="checkVocabSort()">Check My Sort</button>
+  <div style="font-size:0.9rem;margin-top:0.3rem">Score: <strong id="vocabScore">—</strong> / 12</div>
+  <div class="feedback-box" id="vocabFeedback"></div>
+</section>
+
+<!-- ═══ 7. COMPARE DRAWING TYPES ═════════ -->
+<section>
+  <h2><span class="section-number">7</span> Compare the Drawing Types <span class="badge" style="background:#22c55e">Round 6</span></h2>
+  <div class="desc-grid">
+    <div class="desc-item"><label>Why would an engineer use isometric drawing instead of orthogonal?</label><textarea id="cmpIso" class="short" placeholder="An engineer would use isometric when..." onchange="saveAll()"></textarea></div>
+    <div class="desc-item"><label>Why would an engineer use orthogonal drawing instead of isometric?</label><textarea id="cmpOrtho" class="short" placeholder="An engineer would use orthogonal when..." onchange="saveAll()"></textarea></div>
+    <div class="desc-item"><label>Why do engineers need scale drawings?</label><textarea id="cmpScale" class="short" placeholder="Engineers need scale drawings because..." onchange="saveAll()"></textarea></div>
+  </div>
+  <p style="margin-top:0.8rem"><span class="ext-tag">EXTENSION</span> How are isometric drawings used in video games? Give an example.</p>
+  <textarea id="cmpExt" class="short" placeholder="Isometric drawings are used in video games..." onchange="saveAll()"></textarea>
+</section>
+
+<!-- ═══ 8. EXIT TICKET ═══════════════════ -->
+<section>
+  <h2><span class="section-number">8</span> Exit Ticket & Self-Assessment <span class="badge" style="background:#fb923c">5 min</span></h2>
+
+  <h3>Name the 3 types of technical drawing we learned:</h3>
+  <textarea id="exitTypes" class="short" placeholder="1. ___, 2. ___, 3. ___" onchange="saveAll()"></textarea>
+
+  <h3>What does 1:20 scale mean? Explain in your own words:</h3>
+  <textarea id="exitScale" class="short" placeholder="1:20 scale means..." onchange="saveAll()"></textarea>
+
+  <h3>Name the 3 views in orthogonal drawing:</h3>
+  <textarea id="exitViews" class="short" placeholder="1. ___, 2. ___, 3. ___" onchange="saveAll()"></textarea>
+
+  <h3>One topic I feel CONFIDENT about:</h3>
+  <textarea id="exitConf" class="short" placeholder="I feel confident about..." onchange="saveAll()"></textarea>
+
+  <h3>One topic I need to REVISE more:</h3>
+  <textarea id="exitRevise" class="short" placeholder="I need to revise..." onchange="saveAll()"></textarea>
+
+  <h3>Self-Assessment — Traffic Light</h3>
+  <div id="selfAssess">
+    <div class="criteria-row"><span class="criteria-text">I can recall technical lettering rules</span><div class="traffic-light"><button class="tl-green" onclick="setTL(this,'green')">🟢</button><button class="tl-orange" onclick="setTL(this,'orange')">🟠</button><button class="tl-red" onclick="setTL(this,'red')">🔴</button></div></div>
+    <div class="criteria-row"><span class="criteria-text">I can calculate scale conversions</span><div class="traffic-light"><button class="tl-green" onclick="setTL(this,'green')">🟢</button><button class="tl-orange" onclick="setTL(this,'orange')">🟠</button><button class="tl-red" onclick="setTL(this,'red')">🔴</button></div></div>
+    <div class="criteria-row"><span class="criteria-text">I can explain the 30/120 rule for isometric</span><div class="traffic-light"><button class="tl-green" onclick="setTL(this,'green')">🟢</button><button class="tl-orange" onclick="setTL(this,'orange')">🟠</button><button class="tl-red" onclick="setTL(this,'red')">🔴</button></div></div>
+    <div class="criteria-row"><span class="criteria-text">I can identify front, side, and plan views</span><div class="traffic-light"><button class="tl-green" onclick="setTL(this,'green')">🟢</button><button class="tl-orange" onclick="setTL(this,'orange')">🟠</button><button class="tl-red" onclick="setTL(this,'red')">🔴</button></div></div>
+    <div class="criteria-row"><span class="criteria-text">I can compare drawing types and explain when to use each</span><div class="traffic-light"><button class="tl-green" onclick="setTL(this,'green')">🟢</button><button class="tl-orange" onclick="setTL(this,'orange')">🟠</button><button class="tl-red" onclick="setTL(this,'red')">🔴</button></div></div>
+  </div>
+</section>
+
+<!-- ═══ SUBMIT ═══════════════════════════════ -->
+<div class="submit-area" id="submitArea">
+  <h2>📤 Submit to Teacher</h2>
+  <p>Click the button below to download your work as a file. Upload it to Google Classroom.</p>
+  <button class="submit-btn" onclick="submitWork()">Download My Work</button>
+  <div id="submitStatus"></div>
+</div>
+
+<!-- ═══ TEACHER PANEL ═══════════════════════ -->
+<div class="teacher-panel" id="teacherPanel">
+  <h2>👩‍🏫 Teacher Review Mode</h2>
+  <p class="tp-desc">Load student JSON files to review their work. Drag and drop or click to upload.</p>
+  <div class="tp-upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+    <div style="font-size:2rem;margin-bottom:0.5rem">📂</div>
+    <div style="font-weight:600;color:#0f172a">Drop student JSON files here</div>
+    <div style="font-size:0.85rem;color:#64748b;margin-top:0.3rem">or click to browse</div>
+    <input type="file" id="fileInput" accept=".json" multiple onchange="handleFiles(this.files)">
+  </div>
+  <div style="font-size:0.85rem;color:#64748b;margin-bottom:0.5rem">Loaded: <strong id="loadedCount">0</strong> students</div>
+  <div class="tp-student-list" id="studentList"></div>
+  <button class="tp-clear-btn" onclick="clearStudents()">Clear All</button>
+</div>
+
+<div class="footer">Review 2 — Year 7 Technology Mandatory — Engineering Technologies & Systems — Bridge It<br>© 2026 Arthur Phillip High School</div>
+</div>
+
+<button class="teacher-toggle" id="teacherToggle" onclick="toggleTeacher()">🔑 Teacher</button>
+
+<script>
+// ── ANSWER KEYS ──────────────────────────────
+const STORAGE_KEY='y7-review2-data';
+let appData={};
+let vocabSortState={};
+
+const SCALE_KEYS={sc1:'15',sc2:'80',sc3:'50',sc4:'300',sc5:'16'};
+const SCALE2_KEYS={sc6:'10',sc7:'12.5',sc8:'12.5'};
+const IM_KEY={im1:'Draw V, H, W lines then complete with parallels',im2:'Draw a full bounding box then carve out the shape',im3:'Adding light, mid-tone, and shadow to a drawing'};
+const OV_KEY={ov1:'Front View',ov2:'Side View',ov3:'Top View (Plan)'};
+const OM_KEY={om1:'Drawn as dashed lines for edges you can\'t see',om2:'The view looking directly from above',om3:'Features must line up between views',om4:'Another name for orthogonal drawing'};
+
+const VOCAB_TERMS=[
+  {name:'Ratio',type:'ls'},{name:'Enlarge (2:1)',type:'ls'},{name:'UPPERCASE',type:'ls'},{name:'Sans-serif',type:'ls'},
+  {name:'30° angle',type:'iso'},{name:'Y Method',type:'iso'},{name:'Box Method',type:'iso'},{name:'Dot Paper',type:'iso'},
+  {name:'Plan View',type:'ortho'},{name:'Front View',type:'ortho'},{name:'Dashed Lines',type:'ortho'},{name:'First Angle',type:'ortho'}
+];
+
+// ── SAVE / LOAD ──────────────────────────────
+function saveAll(){
+  appData.studentName=el('studentName').value;
+  appData.studentClass=el('studentClass').value;
+  appData.folioPages=el('folioPages').value;
+  appData.brainDump=el('brainDump').value;
+  for(let i=1;i<=2;i++) appData['lr'+i]=el('lr'+i).value;
+  for(let i=1;i<=8;i++) appData['sc'+i]=el('sc'+i).value;
+  appData.scExt=el('scExt').value;
+  appData.scExplain1=el('scExplain1').value;
+  appData.scExplain2=el('scExplain2').value;
+  appData.scExtExplain=el('scExtExplain').value;
+  for(let i=1;i<=3;i++) appData['iso'+i]=el('iso'+i).value;
+  for(let i=1;i<=3;i++) appData['im'+i]=el('im'+i).value;
+  for(let i=1;i<=3;i++) appData['ov'+i]=el('ov'+i).value;
+  for(let i=1;i<=4;i++) appData['om'+i]=el('om'+i).value;
+  appData.cmpIso=el('cmpIso').value;appData.cmpOrtho=el('cmpOrtho').value;
+  appData.cmpScale=el('cmpScale').value;appData.cmpExt=el('cmpExt').value;
+  appData.exitTypes=el('exitTypes').value;appData.exitScale=el('exitScale').value;
+  appData.exitViews=el('exitViews').value;appData.exitConf=el('exitConf').value;
+  appData.exitRevise=el('exitRevise').value;
+  const sa={};
+  document.querySelectorAll('.criteria-row').forEach((row,i)=>{
+    const sel=row.querySelector('.selected');
+    if(sel) sa['sa'+(i+1)]=sel.textContent==='🟢'?'green':sel.textContent==='🟠'?'orange':'red';
+  });
+  appData.selfAssess=sa;
+  appData.vocabSortState=vocabSortState;
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(appData));
+  const ind=el('saveInd');ind.classList.add('show');setTimeout(()=>ind.classList.remove('show'),1500);
+}
+
+function loadAll(){
+  const raw=localStorage.getItem(STORAGE_KEY);
+  if(raw) appData=JSON.parse(raw);
+  el('studentName').value=appData.studentName||'';
+  el('studentClass').value=appData.studentClass||'';
+  el('folioPages').value=appData.folioPages||'';
+  el('brainDump').value=appData.brainDump||'';
+  for(let i=1;i<=2;i++) el('lr'+i).value=appData['lr'+i]||'';
+  for(let i=1;i<=8;i++) el('sc'+i).value=appData['sc'+i]||'';
+  el('scExt').value=appData.scExt||'';
+  el('scExplain1').value=appData.scExplain1||'';
+  el('scExplain2').value=appData.scExplain2||'';
+  el('scExtExplain').value=appData.scExtExplain||'';
+  for(let i=1;i<=3;i++) el('iso'+i).value=appData['iso'+i]||'';
+  for(let i=1;i<=3;i++) el('im'+i).value=appData['im'+i]||'';
+  for(let i=1;i<=3;i++) el('ov'+i).value=appData['ov'+i]||'';
+  for(let i=1;i<=4;i++) el('om'+i).value=appData['om'+i]||'';
+  el('cmpIso').value=appData.cmpIso||'';el('cmpOrtho').value=appData.cmpOrtho||'';
+  el('cmpScale').value=appData.cmpScale||'';el('cmpExt').value=appData.cmpExt||'';
+  el('exitTypes').value=appData.exitTypes||'';el('exitScale').value=appData.exitScale||'';
+  el('exitViews').value=appData.exitViews||'';el('exitConf').value=appData.exitConf||'';
+  el('exitRevise').value=appData.exitRevise||'';
+  if(appData.selfAssess){
+    document.querySelectorAll('.criteria-row').forEach((row,i)=>{
+      const val=appData.selfAssess['sa'+(i+1)];
+      if(val) row.querySelectorAll('.traffic-light button').forEach(b=>{
+        const bv=b.textContent==='🟢'?'green':b.textContent==='🟠'?'orange':'red';
+        if(bv===val) b.classList.add('selected');
+      });
+    });
+  }
+  vocabSortState=appData.vocabSortState||{};
+  buildVocabGrid();countBrainDump();
+}
+
+function el(id){return document.getElementById(id);}
+
+// ── Brain dump ───────────────────────────────
+function countBrainDump(){
+  const text=el('brainDump').value.trim();
+  const items=text?text.split(/[\n,;·•]+/).filter(s=>s.trim().length>1).length:0;
+  el('bdCount').textContent=items;
+  const badge=el('bdBadge');
+  if(items>=20) badge.innerHTML='<span class="score-banner platinum" style="font-size:0.8rem;padding:0.2rem 0.8rem">💎 PLATINUM</span>';
+  else if(items>=15) badge.innerHTML='<span class="score-banner gold" style="font-size:0.8rem;padding:0.2rem 0.8rem">🥇 GOLD</span>';
+  else if(items>=10) badge.innerHTML='<span class="score-banner silver" style="font-size:0.8rem;padding:0.2rem 0.8rem">🥈 SILVER</span>';
+  else if(items>=5) badge.innerHTML='<span class="score-banner bronze" style="font-size:0.8rem;padding:0.2rem 0.8rem">🥉 BRONZE</span>';
+  else badge.innerHTML='';
+}
+
+// ── Check scale (Q1-5) ──────────────────────
+function checkScale(){
+  let c=0;
+  Object.entries(SCALE_KEYS).forEach(([id,ans])=>{
+    const inp=el(id);const v=inp.value.trim().replace(/\s/g,'');
+    if(v===ans){c++;inp.style.borderColor='#4ade80';}
+    else{inp.style.borderColor=v?'#ef4444':'#e2e8f0';}
+  });
+  showFB('scFeedback',c,5,'Remember: convert m→cm first, then multiply (for real) or divide (for model)');
+}
+
+// ── Check scale (Q6-8) ──────────────────────
+function checkScale2(){
+  let c=0;
+  const keys={sc6:'10',sc7:'12.5',sc8:'12.5'};
+  Object.entries(keys).forEach(([id,ans])=>{
+    const inp=el(id);const v=inp.value.trim().replace(/\s/g,'');
+    if(v===ans){c++;inp.style.borderColor='#4ade80';}
+    else{inp.style.borderColor=v?'#ef4444':'#e2e8f0';}
+  });
+  showFB('sc2Feedback',c,3,'Q6: 200÷20=10  Q7: 25×50=1250cm=12.5m  Q8: 2500÷200=12.5');
+}
+
+// ── Check iso match ──────────────────────────
+function checkIsoMatch(){
+  let c=0;
+  Object.entries(IM_KEY).forEach(([id,ans])=>{
+    const sel=el(id);
+    if(sel.value===ans){c++;sel.style.borderColor='#4ade80';}
+    else{sel.style.borderColor=sel.value?'#ef4444':'#e2e8f0';}
+  });
+  showFB('imFeedback',c,3);
+}
+
+// ── Check orthogonal layout ──────────────────
+function checkOrtho(){
+  let c=0;
+  Object.entries(OV_KEY).forEach(([id,ans])=>{
+    const sel=el(id);
+    if(sel.value===ans){c++;sel.style.borderColor='#4ade80';}
+    else{sel.style.borderColor=sel.value?'#ef4444':'#e2e8f0';}
+  });
+  showFB('ovFeedback',c,3,'Layout: Front (top-left), Side (right), Plan/Top (below). Plan goes down under!');
+}
+
+// ── Check ortho match ────────────────────────
+function checkOrthoMatch(){
+  let c=0;
+  Object.entries(OM_KEY).forEach(([id,ans])=>{
+    const sel=el(id);
+    if(sel.value===ans){c++;sel.style.borderColor='#4ade80';}
+    else{sel.style.borderColor=sel.value?'#ef4444':'#e2e8f0';}
+  });
+  showFB('omFeedback',c,4);
+}
+
+// ── Vocab sort ───────────────────────────────
+function buildVocabGrid(){
+  const grid=el('vocabGrid');grid.innerHTML='';
+  // Shuffle deterministically based on stored order or default
+  const shuffled=[...VOCAB_TERMS].sort((a,b)=>a.name.localeCompare(b.name));
+  shuffled.forEach(term=>{
+    const div=document.createElement('div');
+    div.className='sort-item';div.textContent=term.name;div.dataset.name=term.name;
+    const state=vocabSortState[term.name]||'';
+    if(state==='ls') div.classList.add('catA');
+    else if(state==='iso') div.classList.add('catB');
+    else if(state==='ortho') div.classList.add('catC');
+    div.addEventListener('click',()=>toggleVocab(div,term.name));
+    grid.appendChild(div);
+  });
+}
+
+function toggleVocab(div,name){
+  const cur=vocabSortState[name]||'';
+  if(cur===''){vocabSortState[name]='ls';div.className='sort-item catA';}
+  else if(cur==='ls'){vocabSortState[name]='iso';div.className='sort-item catB';}
+  else if(cur==='iso'){vocabSortState[name]='ortho';div.className='sort-item catC';}
+  else{vocabSortState[name]='';div.className='sort-item';}
+  saveAll();
+}
+
+function checkVocabSort(){
+  let c=0;
+  VOCAB_TERMS.forEach(term=>{
+    const div=document.querySelector(`.sort-item[data-name="${term.name}"]`);
+    const guess=vocabSortState[term.name]||'';
+    if(guess===term.type){c++;}
+    else if(guess){div.classList.add('wrong');setTimeout(()=>div.classList.remove('wrong'),500);}
+  });
+  el('vocabScore').textContent=c;
+  showFB('vocabFeedback',c,12,'🟢 = Lettering/Scale, 🔵 = Isometric, 🟡 = Orthogonal');
+}
+
+// ── Feedback helper ──────────────────────────
+function showFB(id,score,total,hint){
+  const fb=el(id);fb.style.display='block';
+  if(score===total){fb.className='feedback-box correct';fb.textContent=`All ${total} correct! 🎉`;}
+  else if(score>=total*0.6){fb.className='feedback-box partial';fb.textContent=`${score}/${total} correct. ${hint||'Check the red ones.'}`;}
+  else{fb.className='feedback-box incorrect';fb.textContent=`${score}/${total} correct. ${hint||'Try again!'}`;}
+}
+
+// ── Traffic light ────────────────────────────
+function setTL(btn){
+  btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');saveAll();
+}
+
+// ── Submit ───────────────────────────────────
+function submitWork(){
+  saveAll();
+  const name=(appData.studentName||'').trim();
+  const cls=(appData.studentClass||'').trim();
+  if(!name){alert('Please type your name first.');return;}
+  if(!cls){alert('Please select your class first.');return;}
+  const scores=calcScores();
+  const submission={...appData,_meta:{worksheet:'T1-Review2-TechnicalDrawing',submittedAt:new Date().toISOString(),scores}};
+  const json=JSON.stringify(submission,null,2);
+  const blob=new Blob([json],{type:'application/json'});
+  const safeName=name.replace(/[^a-zA-Z0-9 ]/g,'').replace(/\s+/g,'-');
+  const filename='Review2-'+cls+'-'+safeName+'.json';
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(a.href);
+  el('submitStatus').innerHTML='<div class="submit-ok">✅ Downloaded as <strong>'+filename+'</strong><br>Now upload this file to Google Classroom.</div>';
+}
+
+function calcScores(){
+  // Scale Q1-5
+  let sc1=0;Object.entries(SCALE_KEYS).forEach(([id,ans])=>{if((appData[id]||'').trim()===ans) sc1++;});
+  // Scale Q6-8
+  let sc2=0;const sk2={sc6:'10',sc7:'12.5',sc8:'12.5'};Object.entries(sk2).forEach(([id,ans])=>{if((appData[id]||'').trim()===ans) sc2++;});
+  // Iso match
+  let im=0;Object.entries(IM_KEY).forEach(([id,ans])=>{if(appData[id]===ans) im++;});
+  // Ortho layout
+  let ov=0;Object.entries(OV_KEY).forEach(([id,ans])=>{if(appData[id]===ans) ov++;});
+  // Ortho match
+  let om=0;Object.entries(OM_KEY).forEach(([id,ans])=>{if(appData[id]===ans) om++;});
+  // Vocab sort
+  let vs=0;if(appData.vocabSortState){VOCAB_TERMS.forEach(t=>{if(appData.vocabSortState[t.name]===t.type) vs++;});}
+  const total=sc1+sc2+im+ov+om+vs;
+  return{scaleBasic:sc1+'/5',scaleHard:sc2+'/3',isoMatch:im+'/3',orthoLayout:ov+'/3',orthoMatch:om+'/4',vocabSort:vs+'/12',total:total+'/30'};
+}
+
+// ── Teacher mode ─────────────────────────────
+let teacherMode=false,loadedStudents=[];
+function toggleTeacher(){
+  teacherMode=!teacherMode;
+  const panel=el('teacherPanel'),toggle=el('teacherToggle'),sub=el('submitArea');
+  if(teacherMode){panel.classList.add('active');toggle.textContent='🔒 Exit Teacher Mode';toggle.style.borderColor='#ef4444';toggle.style.color='#ef4444';toggle.style.opacity='1';sub.style.display='none';panel.scrollIntoView({behavior:'smooth'});}
+  else{panel.classList.remove('active');toggle.textContent='🔑 Teacher';toggle.style.borderColor='#334155';toggle.style.color='#94a3b8';toggle.style.opacity='0.4';sub.style.display='';}
+}
+const uploadZone=el('uploadZone');
+if(uploadZone){
+  uploadZone.addEventListener('dragover',e=>{e.preventDefault();uploadZone.classList.add('drag-over');});
+  uploadZone.addEventListener('dragleave',()=>uploadZone.classList.remove('drag-over'));
+  uploadZone.addEventListener('drop',e=>{e.preventDefault();uploadZone.classList.remove('drag-over');handleFiles(e.dataTransfer.files);});
+}
+function handleFiles(files){
+  Array.from(files).forEach(file=>{
+    if(!file.name.endsWith('.json'))return;
+    const reader=new FileReader();
+    reader.onload=e=>{try{const data=JSON.parse(e.target.result);data._filename=file.name;const key=(data.studentName||'')+'|'+(data.studentClass||'');const idx=loadedStudents.findIndex(s=>(s.studentName||'')+'|'+(s.studentClass||'')===key);if(idx>=0)loadedStudents[idx]=data;else loadedStudents.push(data);renderStudentList();}catch(err){alert('Could not read '+file.name);}};
+    reader.readAsText(file);
+  });
+}
+function renderStudentList(){
+  el('loadedCount').textContent=loadedStudents.length;
+  const list=el('studentList');list.innerHTML='';
+  [...loadedStudents].sort((a,b)=>(a.studentClass||'').localeCompare(b.studentClass||'')||(a.studentName||'').localeCompare(b.studentName||'')).forEach(s=>{
+    const scores=s._meta?.scores||{},total=scores.total||'—';
+    const sa=s.selfAssess||{};
+    const saStr=Object.values(sa).filter(v=>v).map(v=>v==='green'?'🟢':v==='orange'?'🟠':'🔴').join(' ');
+    const card=document.createElement('div');card.className='tp-student-card';card.onclick=()=>card.classList.toggle('expanded');
+    card.innerHTML=`<h4>${esc(s.studentName||'Unknown')} <span style="font-weight:400;color:#64748b;font-size:0.85rem">${esc(s.studentClass||'')}</span></h4>
+      <div class="tp-meta">Score: <strong>${total}</strong> | Self-assess: ${saStr||'—'} | ${s._meta?.submittedAt?new Date(s._meta.submittedAt).toLocaleString():'—'}</div>
+      <div class="tp-detail">
+        ${tpSec('Brain Dump',s.brainDump)}
+        ${tpSec('Lettering Rule 1',s.lr1)}${tpSec('Lettering Rule 2',s.lr2)}
+        ${tpScore('Scale Q1-5',scores.scaleBasic)}${tpScore('Scale Q6-8',scores.scaleHard)}
+        ${tpSec('Scale Explain: 1:10',s.scExplain1)}${tpSec('Scale Explain: Why',s.scExplain2)}
+        ${tpScore('Isometric Match',scores.isoMatch)}
+        ${tpScore('Ortho Layout',scores.orthoLayout)}${tpScore('Ortho Match',scores.orthoMatch)}${tpScore('Vocab Sort',scores.vocabSort)}
+        ${tpSec('Compare: Iso vs Ortho',s.cmpIso)}${tpSec('Compare: Why Ortho',s.cmpOrtho)}${tpSec('Compare: Why Scale',s.cmpScale)}
+        ${tpSec('Exit: Drawing Types',s.exitTypes)}${tpSec('Exit: Scale Meaning',s.exitScale)}${tpSec('Exit: Ortho Views',s.exitViews)}
+        ${tpSec('Confident',s.exitConf)}${tpSec('Needs Revision',s.exitRevise)}
+        ${renderSA(sa)}
+      </div>`;
+    list.appendChild(card);
+  });
+}
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function tpSec(title,content){if(!content)return '';return '<div class="tp-section"><h5>'+title+'</h5><div class="tp-answer">'+esc(content)+'</div></div>';}
+function tpScore(title,score){if(!score)return '';const[n,d]=score.split('/').map(Number);const pct=d>0?n/d:0;const cls=pct>=0.8?'good':pct>=0.5?'ok':'needs-work';return '<div class="tp-section"><h5>'+title+'</h5><div class="tp-score '+cls+'">'+score+' ('+Math.round(pct*100)+'%)</div></div>';}
+function renderSA(sa){if(!sa||!Object.values(sa).some(v=>v))return '';const labels=['Lettering','Scale','Isometric','Orthogonal','Compare Types'];return '<div class="tp-section"><h5>Self-Assessment</h5><div style="font-size:0.85rem">'+labels.map((l,i)=>{const v=sa['sa'+(i+1)];return l+': '+(v==='green'?'🟢':v==='orange'?'🟠':v==='red'?'🔴':'—');}).join(' | ')+'</div></div>';}
+function clearStudents(){if(confirm('Clear all?')){loadedStudents=[];renderStudentList();}}
+
+// ── Init ─────────────────────────────────────
+document.addEventListener('DOMContentLoaded',loadAll);
+</script>
+</body>
+</html>
